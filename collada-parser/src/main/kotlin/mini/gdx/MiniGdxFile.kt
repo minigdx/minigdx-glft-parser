@@ -46,13 +46,18 @@ class MiniGdxFile(private val outputFile: File) : ParserListener {
         mesh = mesh.copy(colorIndices = indices)
     }
 
+    override fun pushNormalIndices(indices: List<Int>) {
+        mesh = mesh.copy(normalIndices = indices)
+    }
+
     override fun endMesh() {
         var meshStr = "MESH ${mesh.name}\n"
         meshStr += "POSITIONS ${mesh.positions.map { "${it.x} ${it.y} ${it.z}" }.joinToString(", ")}\n"
         meshStr += "NORMALS ${mesh.normals.map { "${it.x} ${it.y} ${it.z}" }.joinToString(", ")}\n"
-        meshStr += "COLORS ${mesh.colors.map { "${it.x} ${it.y} ${it.z} ${it.z}" }.joinToString(", ")}\n"
+        meshStr += "COLORS ${mesh.colors.map { "${it.x} ${it.y} ${it.z} ${it.w}" }.joinToString(", ")}\n"
         meshStr += "VERTEX_INDICES ${mesh.vertexIndices.joinToString(", ")}\n"
         meshStr += "COLOR_INDICES ${mesh.colorIndices.joinToString(", ")}\n"
+        meshStr += "NORMAL_INDICES ${mesh.normalIndices.joinToString(", ")}\n"
         meshStr += "ENDMESH ${mesh.name}\n"
         outputFile.appendText(meshStr)
     }

@@ -117,6 +117,7 @@ class PClass(
     override fun endParsing(): TagHandler {
         parserListener.pushVertexIndices(vertexIndices)
         parserListener.pushColorIndices(colorIndices)
+        parserListener.pushNormalIndices(normalIndices)
         return super.endParsing()
     }
 }

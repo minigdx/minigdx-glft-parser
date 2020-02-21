@@ -4,6 +4,7 @@ import collada.tags.Vector3
 import collada.tags.Vector4
 
 interface ParserListener {
+
     fun startMesh(name: String)
 
     fun pushPositions(positions: List<Vector3>)
@@ -15,6 +16,8 @@ interface ParserListener {
     fun pushVertexIndices(indices: List<Int>)
 
     fun pushColorIndices(indices: List<Int>)
+
+    fun pushNormalIndices(indices: List<Int>)
 
     fun endMesh()
 }
