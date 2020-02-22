@@ -3,11 +3,15 @@ plugins {
     id("com.gradle.plugin-publish") version "0.10.1"
 }
 
-
+repositories {
+    mavenCentral()
+    jcenter()
+}
 
 subprojects {
     repositories {
         mavenCentral()
+        jcenter()
     }
     apply { plugin("org.jetbrains.kotlin.jvm") }
     apply { plugin("maven-publish") }
@@ -24,6 +28,19 @@ subprojects {
         }
         compileTestKotlin {
             kotlinOptions.jvmTarget = "1.8"
+        }
+    }
+
+    configure<PublishingExtension> {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/dwursteisen/collada-parser")
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
         }
     }
 }
