@@ -17,7 +17,8 @@ subprojects {
     apply { plugin("maven-publish") }
 
     group = "com.github.dwursteisen.collada"
-    version = "1.0-SNAPSHOT"
+    version = project.properties["version"] ?: "1.0-SNAPSHOT"
+
     dependencies {
         implementation(kotlin("stdlib-jdk8"))
     }
