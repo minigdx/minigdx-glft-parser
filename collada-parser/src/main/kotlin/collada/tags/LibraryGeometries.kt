@@ -1,5 +1,9 @@
 package collada.tags
 
+import collada.listener.Vector
+import collada.listener.Vector2
+import collada.listener.Vector3
+import collada.listener.Vector4
 import kotlin.math.max
 
 class LibraryGeometries(override val parent: TagHandler) : TagHandler {
@@ -163,12 +167,6 @@ class Accessor(override val parent: TagHandler) : TagHandler {
 interface NumberFactory {
     fun build(array: FloatArray): List<Vector>
 }
-
-interface Vector
-
-data class Vector2(val x: Number, val y: Number) : Vector
-data class Vector3(val x: Number, val y: Number, val z: Number) : Vector
-data class Vector4(val x: Number, val y: Number, val z: Number, val w: Number) : Vector
 
 object Vector2Factory : NumberFactory {
     override fun build(array: FloatArray): List<Vector> {

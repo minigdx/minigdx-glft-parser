@@ -1,6 +1,6 @@
 package collada.tags
 
-import collada.ParserListener
+import collada.listener.ParserListener
 
 class RootTag(override val parserListener: ParserListener) : TagHandler {
 

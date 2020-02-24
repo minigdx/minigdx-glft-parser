@@ -1,8 +1,9 @@
 package mini.gdx
 
-import collada.ParserListener
-import collada.tags.Vector3
-import collada.tags.Vector4
+import collada.listener.Bone
+import collada.listener.ParserListener
+import collada.listener.Vector3
+import collada.listener.Vector4
 import java.io.File
 
 data class Mesh(
@@ -20,6 +21,7 @@ class MiniGdxFile(private val outputFile: File) : ParserListener {
     init {
         outputFile.writeText("MINIGDX V1\n")
     }
+
     var mesh: Mesh = Mesh("no_ready")
 
     override fun startMesh(name: String) {
@@ -60,5 +62,18 @@ class MiniGdxFile(private val outputFile: File) : ParserListener {
         meshStr += "NORMAL_INDICES ${mesh.normalIndices.joinToString(", ")}\n"
         meshStr += "ENDMESH ${mesh.name}\n"
         outputFile.appendText(meshStr)
+    }
+
+    override fun pushArmature(root: Bone) {
+        fun _pushArmature(root: Bone) {
+            var armatureStr = "BONE_PARENT ${root.id} ${root.parent?.id ?: ""}\n"
+            armatureStr += "BONE_MATRIX ${root.id} ${root.matrix.joinToString(", ")}\n"
+            armatureStr += "BONE_CHILDS ${root.id} ${root.childs.map { it.id }.joinToString(", ")}\n"
+            outputFile.appendText(armatureStr)
+            root.childs.forEach { _pushArmature(it) }
+        }
+        outputFile.appendText("ARMATURE ${root.id}\n")
+        _pushArmature(root)
+        outputFile.appendText("ENDARMATURE ${root.id}\n")
     }
 }

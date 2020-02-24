@@ -1,5 +1,6 @@
 package collada
 
+import collada.listener.ParserListener
 import collada.tags.RootTag
 import collada.tags.TagHandler
 import org.xml.sax.Attributes

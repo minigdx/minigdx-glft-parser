@@ -9,4 +9,5 @@ fun main() {
     Parser(MiniGdxFile(File("monkey_color.3d"))).parse("collada-parser/src/test/resources/monkey_color.dae")
     Parser(MiniGdxFile(File("cube_color.3d"))).parse("collada-parser/src/test/resources/cube_color.dae")
     Parser(MiniGdxFile(File("monkey_color2.3d"))).parse("collada-parser/src/test/resources/monkey_color2.dae")
+    Parser(MiniGdxFile(File("armature.3d"))).parse("collada-parser/src/test/resources/armature.dae")
 }

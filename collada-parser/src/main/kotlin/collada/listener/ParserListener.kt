@@ -1,7 +1,4 @@
-package collada
-
-import collada.tags.Vector3
-import collada.tags.Vector4
+package collada.listener
 
 interface ParserListener {
 
@@ -20,4 +17,6 @@ interface ParserListener {
     fun pushNormalIndices(indices: List<Int>)
 
     fun endMesh()
+
+    fun pushArmature(root: Bone)
 }

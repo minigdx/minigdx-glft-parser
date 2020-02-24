@@ -1,6 +1,6 @@
 package collada.tags
 
-import collada.ParserListener
+import collada.listener.ParserListener
 
 interface TagHandler {
 
