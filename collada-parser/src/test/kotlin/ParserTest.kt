@@ -1,13 +1,22 @@
 import collada.Parser
 import mini.gdx.MiniGdxFile
+import org.junit.jupiter.api.io.TempDir
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.io.File
 
-fun main() {
-    Parser(MiniGdxFile(File("cube.3d"))).parse("collada-parser/src/test/resources/cube.dae")
-    Parser(MiniGdxFile(File("monkey.3d"))).parse("collada-parser/src/test/resources/monkey.dae")
-    Parser(MiniGdxFile(File("sample.3d"))).parse("collada-parser/src/test/resources/sample.dae")
-    Parser(MiniGdxFile(File("monkey_color.3d"))).parse("collada-parser/src/test/resources/monkey_color.dae")
-    Parser(MiniGdxFile(File("cube_color.3d"))).parse("collada-parser/src/test/resources/cube_color.dae")
-    Parser(MiniGdxFile(File("monkey_color2.3d"))).parse("collada-parser/src/test/resources/monkey_color2.dae")
-    Parser(MiniGdxFile(File("armature.3d"))).parse("collada-parser/src/test/resources/armature.dae")
+class ParserTest {
+
+    @TempDir
+    lateinit var dir: File
+
+    @ParameterizedTest(name = "{0}.dae ➡️ {0}.3d")
+    @ValueSource(
+        strings = ["cube", "monkey", "sample", "cube_color", "monkey_color", "monkey_color2", "armature"]
+    )
+    fun parse(name: String) {
+        val outputFile = dir.resolve("$name.3d")
+        Parser(MiniGdxFile(outputFile)).parse("src/test/resources/$name.dae")
+        println(outputFile.readText())
+    }
 }
