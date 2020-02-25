@@ -13,23 +13,13 @@ subprojects {
         mavenCentral()
         jcenter()
     }
-    apply { plugin("org.jetbrains.kotlin.jvm") }
     apply { plugin("maven-publish") }
 
     group = "com.github.dwursteisen.collada"
-    version = project.properties["version"] ?: "1.0-SNAPSHOT"
+    version = project.properties["version"] ?: "unspecified"
 
-    dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-    }
-
-    tasks {
-        compileKotlin {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-        compileTestKotlin {
-            kotlinOptions.jvmTarget = "1.8"
-        }
+    if(version == "unspecified") {
+        version = "1.0-SNAPSHOT"
     }
 
     configure<PublishingExtension> {

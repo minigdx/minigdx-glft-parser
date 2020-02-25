@@ -1,7 +1,21 @@
-apply { plugin("java-gradle-plugin") }
+plugins {
+    `java-library`
+    kotlin("jvm")
+    id("java-gradle-plugin")
+}
+
+tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+}
 
 dependencies {
     api(gradleApi())
+    implementation(kotlin("stdlib-jdk8"))
     implementation(project(":collada-parser"))
 
     testImplementation(gradleTestKit())
