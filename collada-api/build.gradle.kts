@@ -43,7 +43,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.14.0")
             }
         }
         val commonTest by getting {
@@ -56,40 +56,40 @@ kotlin {
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
             }
         }
 
         js().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.14.0")
             }
         }
 
         macosX64().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
             }
         }
         iosX64().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
             }
         }
         iosArm64().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
             }
         }
         linuxX64().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
             }
         }
         mingwX64().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
             }
         }
     }
