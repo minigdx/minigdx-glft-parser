@@ -43,7 +43,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 }
 
-collada {
+colladaPlugin {
     create("assets") {
         this.daeDirectory.set(project.file("src/main/resources/"))
         this.target.set(project.buildDir)

@@ -9,7 +9,7 @@ class ColladaPlugin : Plugin<Project> {
         val container = project.container(ColladaExtensions::class.java) { name ->
             ColladaExtensions(name, project)
         }
-        project.extensions.add("collada", container)
+        project.extensions.add("colladaPlugin", container)
 
         val parentTask = project.tasks.create("collada")
 
@@ -19,6 +19,7 @@ class ColladaPlugin : Plugin<Project> {
                 task.daeDirectory.set(ext.daeDirectory)
                 task.daeFiles.set(ext.daeFiles)
                 task.outputDirectory.set(ext.target)
+                task.format.set(ext.format.get())
             }
             parentTask.dependsOn += newTask
         }

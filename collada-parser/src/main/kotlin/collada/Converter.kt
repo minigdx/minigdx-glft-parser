@@ -1,7 +1,6 @@
 package collada
 
 import kotlinx.serialization.ImplicitReflectionSerializer
-import kotlinx.serialization.protobuf.ProtoBuf
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
@@ -58,7 +57,7 @@ class Converter(private val input: File) {
             .chunked(stride, converter)
     }
 
-    private fun createGeometry(geometry: Element): Mesh {
+    private fun createMesh(geometry: Element): Mesh {
         val sources = geometry.getElementsByTag("source")
 
         val positions = sources.first { it.attr("id").endsWith("positions") }
@@ -69,7 +68,7 @@ class Converter(private val input: File) {
             .ifEmpty { listOf(Normal(1f, 1f, 1f)) }
 
         val colors = sources.firstOrNull { it.attr("id").contains("colors") }
-            ?.convertToColors() ?: listOf(Color(0f, 0f, 0f, 1f))
+            ?.convertToColors() ?: listOf(Color(1f, 0f, 0f, 1f))
 
         val triangles = geometry.getElementsByTag("triangles")
             .first()
@@ -93,12 +92,66 @@ class Converter(private val input: File) {
         return Mesh(vertices = vertices, verticesOrder = verticesOrder)
     }
 
+    private fun createArmature(element: Element): Armature {
+
+        fun _createArmature(bone: Element): Bone {
+            val transform = bone.getElementsByTag("matrix").first()
+            val transformation = Transformation(transform.text().split(" ").map { it.toFloat() }.toFloatArray())
+            val childs = bone.children()
+                .filter { it.attr("type") == "JOINT" }
+                .map { _createArmature(it) }
+
+            val boneObj = Bone(
+                id = bone.attr("sid"),
+                transformation = transformation,
+                childs = childs,
+                weights = emptyList()
+            )
+
+            return boneObj
+        }
+
+        val root = element.getElementsByAttributeValue("type", "NODE")
+            .first()
+        return Armature(_createArmature(root))
+    }
+
     @ImplicitReflectionSerializer
     fun toProtobuf(output: File) {
-        val document = Jsoup.parse(input.readText(), "", Parser.xmlParser())
-        val geometries = document.getElementsByTag("library_geometries").first()
-        val meshs = geometries.getElementsByTag("geometry").map { createGeometry(it) }
-        val data = ProtoBuf.dump(Mesh.serializer(), meshs.first())
+        val model = convertToModel()
+        val data = Model.writeProtobuf(model)
         output.writeBytes(data)
+    }
+
+
+    @ExperimentalStdlibApi
+    @ImplicitReflectionSerializer
+    fun toJson(output: File) {
+        val model = convertToModel()
+        val data = Model.writeJson(model)
+        output.writeBytes(data)
+    }
+
+    private fun convertToModel(): Model {
+        val document = Jsoup.parse(input.readText(), "", Parser.xmlParser())
+        val mesh = document.getElementsByTag("library_geometries")
+            .first()
+            .getElementsByTag("geometry")
+            .first()
+            .let { createMesh(it) }
+
+        val armature = document.getElementsByTag("library_visual_scenes")
+            .first()
+            .getElementsByTag("node")
+            .firstOrNull { it.attr("id") == "Armature" && it.attr("type") == "NODE" }
+            ?.let { createArmature(it) }
+            ?: EmptyArmature
+
+
+        val model = Model(
+            mesh = mesh,
+            armature = armature
+        )
+        return model
     }
 }
