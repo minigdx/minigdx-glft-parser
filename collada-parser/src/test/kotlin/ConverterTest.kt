@@ -1,5 +1,6 @@
 import collada.Converter
 import collada.Mesh
+import collada.Model
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.protobuf.ProtoBuf
 import org.junit.jupiter.api.io.TempDir
@@ -7,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.io.File
 
-class ParserTest {
+class ConverterTest {
 
     @TempDir
     lateinit var dir: File
@@ -21,6 +22,6 @@ class ParserTest {
         val outputFile = dir.resolve("$name.bin")
         Converter(File("src/test/resources/$name.dae")).toProtobuf(outputFile)
 
-        ProtoBuf.load(Mesh.serializer(), outputFile.readBytes())
+        ProtoBuf.load(Model.serializer(), outputFile.readBytes())
     }
 }

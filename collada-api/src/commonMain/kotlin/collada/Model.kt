@@ -3,4 +3,7 @@ package collada
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Transformation(val matrix: FloatArray)
+class Model(
+    val mesh: Mesh,
+    val armature: Armature?
+)
