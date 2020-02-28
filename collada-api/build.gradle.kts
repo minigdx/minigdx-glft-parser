@@ -11,7 +11,6 @@ kotlin {
     }
     js {
         this.useCommonJs()
-        this.browser
         this.nodejs
     }
     mingwX64() {
@@ -64,6 +63,12 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.14.0")
+            }
+        }
+
+        js().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("test-js"))
             }
         }
 

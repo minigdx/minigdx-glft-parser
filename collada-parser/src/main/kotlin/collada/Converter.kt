@@ -6,9 +6,7 @@ import collada.internal.SkinConverter
 import kotlinx.serialization.ImplicitReflectionSerializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
-import sun.invoke.empty.Empty
 import java.io.File
 
 class Converter(private val input: File) {

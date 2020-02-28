@@ -11,7 +11,9 @@ class ColladaPlugin : Plugin<Project> {
         }
         project.extensions.add("colladaPlugin", container)
 
-        val parentTask = project.tasks.create("collada")
+        val parentTask = project.tasks.create("collada").apply {
+            group = "collada"
+        }
 
         container.all { ext ->
             val taskName = ext.name + "Collada"

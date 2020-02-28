@@ -10,7 +10,10 @@ class ArmatureConverter : InternalConverter<ArmatureDescription> {
 
         fun _createArmature(bone: Element): Bone {
             val transform = bone.getElementsByTag("matrix").first()
-            val transformation = Transformation(transform.text().split(" ").map { it.toFloat() }.toFloatArray())
+            val transformation = Transformation(transform.text().split(" ")
+                .map { it.toFloat() }
+                .toFloatArray())
+
             val childs = bone.children()
                 .filter { it.attr("type") == "JOINT" }
                 .map { _createArmature(it) }
