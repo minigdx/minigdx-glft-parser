@@ -12,7 +12,7 @@ class SyncContent<T>(private val content: T) : Content<T> {
 actual class FileHandler {
 
     actual fun readBytes(name: String): Content<ByteArray> {
-        return SyncContent(File(name).readBytes())
+        return SyncContent(File("src/commonTest/resources/$name").readBytes())
     }
 
     actual companion object {

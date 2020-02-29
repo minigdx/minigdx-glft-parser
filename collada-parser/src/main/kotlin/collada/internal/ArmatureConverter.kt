@@ -19,7 +19,7 @@ class ArmatureConverter : InternalConverter<ArmatureDescription> {
                 .map { _createArmature(it) }
 
             val boneObj = Bone(
-                id = bone.attr("sid"),
+                id = bone.attr("id"),
                 transformation = transformation,
                 childs = childs,
                 weights = emptyList()

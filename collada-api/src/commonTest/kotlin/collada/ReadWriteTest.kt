@@ -1,6 +1,5 @@
 package collada
 
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 interface Content<T> {

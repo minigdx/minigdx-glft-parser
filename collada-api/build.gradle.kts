@@ -58,6 +58,11 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
             }
         }
+        jvm().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("test-junit"))
+            }
+        }
 
         js().compilations["main"].defaultSourceSet {
             dependencies {

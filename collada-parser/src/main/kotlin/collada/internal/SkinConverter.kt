@@ -1,8 +1,10 @@
 package collada.internal
 
 import collada.EmptySkin
+import collada.Influence
 import collada.SkinDescription
 import collada.Skin
+import collada.WeightInfluence
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import kotlin.math.round
@@ -33,7 +35,7 @@ class SkinConverter : InternalConverter<SkinDescription> {
             .chunked(2)
             .map {
                 val (id, w) = it
-                Weight(boneIds[id], weights[w])
+                WeightInfluence(boneIds[id], weights[w])
             }
 
         val influence = association.getElementsByTag("vcount")
@@ -54,11 +56,10 @@ class SkinConverter : InternalConverter<SkinDescription> {
             val sumByDouble = it.weights.sumByDouble { it.weight.toDouble() }
             require(it.weights.isEmpty() || round(sumByDouble * 100).toInt() == 100) { "Weight on vertex should be equal to 1.0 (was '$sumByDouble')"}
         }
-        return Skin()
+        return Skin(
+            influences = influences
+        )
     }
-
-    class Weight(val boneId: String, val weight: Float)
-    class Influence(val weights: List<Weight>)
 
     override fun convert(document: Document): SkinDescription {
         return document.getElementsByTag("library_controllers")

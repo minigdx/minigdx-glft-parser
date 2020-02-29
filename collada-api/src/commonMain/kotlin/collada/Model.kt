@@ -13,7 +13,11 @@ class Model(
     @SerialId(1)
     val mesh: Mesh,
     @SerialId(2)
-    @Polymorphic val armature: ArmatureDescription
+    @Polymorphic val armature: ArmatureDescription,
+    @SerialId(3)
+    @Polymorphic val skin: SkinDescription,
+    @SerialId(4)
+    @Polymorphic val animations: AnimationsDescription
 ) {
 
     companion object {
@@ -28,11 +32,20 @@ class Model(
             return deserializer.load(serializer(), data)
         }
 
-        fun serialModule(): SerialModule {
+        private fun serialModule(): SerialModule {
             return SerializersModule {
                 polymorphic<ArmatureDescription> {
                     Armature::class with Armature.serializer()
                     EmptyArmature::class with EmptyArmature.serializer()
+                }
+                polymorphic<AnimationsDescription> {
+                    Animations::class with Animations.serializer()
+                    EmptyAnimations::class with EmptyAnimations.serializer()
+                }
+
+                polymorphic<SkinDescription> {
+                    Skin::class with Skin.serializer()
+                    EmptySkin::class with EmptySkin.serializer()
                 }
             }
         }
