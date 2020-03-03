@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "1.3.70"
     id("com.gradle.plugin-publish") version "0.10.1"
 }
 
@@ -16,11 +16,7 @@ subprojects {
     apply { plugin("maven-publish") }
 
     group = "com.github.dwursteisen.collada"
-    version = project.properties["version"] ?: "unspecified"
-
-    if(version == "unspecified") {
-        version = "1.0-SNAPSHOT"
-    }
+    version = project.properties["version"] ?: "1.0-SNAPSHOT"
 
     configure<PublishingExtension> {
         repositories {

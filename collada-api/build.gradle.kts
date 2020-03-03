@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.3.61"
+    kotlin("plugin.serialization") version "1.3.70"
 }
 
 
@@ -42,7 +42,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-common:0.20.0-1.3.70-eap-274-2")
             }
         }
         val commonTest by getting {
@@ -55,7 +56,8 @@ kotlin {
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:0.20.0-1.3.70-eap-274-2")
             }
         }
         jvm().compilations["test"].defaultSourceSet {
@@ -67,7 +69,8 @@ kotlin {
         js().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:0.20.0-1.3.70-eap-274-2")
             }
         }
 
@@ -79,28 +82,41 @@ kotlin {
 
         macosX64().compilations["main"].defaultSourceSet {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
             }
         }
         iosX64().compilations["main"].defaultSourceSet {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
             }
         }
         iosArm64().compilations["main"].defaultSourceSet {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
             }
         }
         linuxX64().compilations["main"].defaultSourceSet {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
             }
         }
         mingwX64().compilations["main"].defaultSourceSet {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
             }
         }
+    }
+}
+
+configurations {
+    this.all {
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-js:1.3.70")
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-common:1.3.70")
     }
 }

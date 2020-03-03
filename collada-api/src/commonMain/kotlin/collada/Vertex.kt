@@ -1,14 +1,14 @@
 package collada
 
-import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoId
 
 @Serializable
 class Vertex(
-    @SerialId(1)
+    @ProtoId(1)
     val position: Position,
-    @SerialId(2)
+    @ProtoId(2)
     val color: Color,
-    @SerialId(3)
+    @ProtoId(3)
     val normal: Normal
 )

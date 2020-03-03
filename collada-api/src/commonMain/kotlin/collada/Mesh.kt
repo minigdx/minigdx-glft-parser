@@ -1,12 +1,12 @@
 package collada
 
-import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoId
 
 @Serializable
 class Mesh(
-    @SerialId(1)
+    @ProtoId(1)
     val vertices: List<Vertex> = emptyList(),
-    @SerialId(2)
+    @ProtoId(2)
     val verticesOrder: IntArray = intArrayOf()
 )

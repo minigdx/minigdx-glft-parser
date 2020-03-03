@@ -1,7 +1,7 @@
 package collada
 
-import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoId
 
 interface ArmatureDescription
 
@@ -10,6 +10,6 @@ object EmptyArmature : ArmatureDescription
 
 @Serializable
 class Armature(
-    @SerialId(1)
+    @ProtoId(1)
     val rootBone: Bone
 ) : ArmatureDescription

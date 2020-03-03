@@ -26,7 +26,7 @@ class PluginTest {
         buildFile.writeText(
             """
 plugins {
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "1.3.70"
     id("com.github.dwursteisen.collada") version "1.0-SNAPSHOT"
 }
 

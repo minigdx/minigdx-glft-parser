@@ -1,14 +1,14 @@
 package collada
 
-import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoId
 
 @Serializable
 class Normal(
-    @SerialId(1)
+    @ProtoId(1)
     val x: Float,
-    @SerialId(2)
+    @ProtoId(2)
     val y: Float,
-    @SerialId(3)
+    @ProtoId(3)
     val z: Float
 )

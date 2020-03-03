@@ -1,22 +1,22 @@
 package collada
 
 import kotlinx.serialization.Polymorphic
-import kotlinx.serialization.SerialId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoBuf
+import kotlinx.serialization.protobuf.ProtoId
 
 @Serializable
 class Model(
-    @SerialId(1)
+    @ProtoId(1)
     val mesh: Mesh,
-    @SerialId(2)
+    @ProtoId(2)
     @Polymorphic val armature: ArmatureDescription,
-    @SerialId(3)
+    @ProtoId(3)
     @Polymorphic val skin: SkinDescription,
-    @SerialId(4)
+    @ProtoId(4)
     @Polymorphic val animations: AnimationsDescription
 ) {
 
