@@ -15,8 +15,6 @@ class Model(
     @ProtoId(2)
     @Polymorphic val armature: ArmatureDescription,
     @ProtoId(3)
-    @Polymorphic val skin: SkinDescription,
-    @ProtoId(4)
     @Polymorphic val animations: AnimationsDescription
 ) {
 
@@ -41,11 +39,6 @@ class Model(
                 polymorphic<AnimationsDescription> {
                     Animations::class with Animations.serializer()
                     EmptyAnimations::class with EmptyAnimations.serializer()
-                }
-
-                polymorphic<SkinDescription> {
-                    Skin::class with Skin.serializer()
-                    EmptySkin::class with EmptySkin.serializer()
                 }
             }
         }

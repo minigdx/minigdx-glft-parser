@@ -27,22 +27,20 @@ class Converter(private val input: File) {
         output.writeBytes(data)
     }
 
-    private val meshConverter = MeshConverter()
     private val armatureConverter = ArmatureConverter()
     private val skinConverter = SkinConverter()
     private val animationsConverter = AnimationConverter()
 
     private fun convertToModel(): Model {
         val document: Document = Jsoup.parse(input.readText(), "", Parser.xmlParser())
-        val mesh = meshConverter.convert(document)
-        val armature = armatureConverter.convert(document)
         val skin = skinConverter.convert(document)
+        val mesh = MeshConverter(skin).convert(document)
+        val armature = armatureConverter.convert(document)
         val animations = animationsConverter.convert(document)
 
         val model = Model(
             mesh = mesh,
             armature = armature,
-            skin = skin,
             animations = animations
         )
         return model

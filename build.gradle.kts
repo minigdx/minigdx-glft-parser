@@ -18,6 +18,10 @@ subprojects {
     group = "com.github.dwursteisen.collada"
     version = project.properties["version"] ?: "1.0-SNAPSHOT"
 
+    if (version == "unspecified") {
+        version = "1.0-SNAPSHOT"
+    }
+
     configure<PublishingExtension> {
         repositories {
             maven {

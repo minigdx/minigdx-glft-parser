@@ -4,7 +4,7 @@ import collada.*
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-class MeshConverter : InternalConverter<Mesh> {
+class MeshConverter(val skin: Skin) : InternalConverter<Mesh> {
 
     private fun <T> Element.chunkValue(chunkSize: Int, factory: (List<Float>) -> T): List<T> {
         val floatArray = this.getElementsByTag("float_array").first()
@@ -84,7 +84,8 @@ class MeshConverter : InternalConverter<Mesh> {
             Vertex(
                 position = positions[it.key.vertexIndex],
                 color = colors[it.key.colorIndex],
-                normal = normals[it.key.normalIndex]
+                normal = normals[it.key.normalIndex],
+                influence = skin.influences.getOrElse(it.key.vertexIndex) { Influence() }
             )
         }
         return Mesh(vertices = vertices, verticesOrder = verticesOrder)

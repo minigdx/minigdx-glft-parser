@@ -1,18 +1,17 @@
 package collada.internal
 
-import collada.EmptySkin
 import collada.Influence
-import collada.SkinDescription
-import collada.Skin
-import collada.WeightInfluence
+import collada.InfluenceData
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import kotlin.math.round
 
-class SkinConverter : InternalConverter<SkinDescription> {
+class Skin(val influences: List<Influence> = emptyList())
 
-    private fun createSkin(element: Element): Skin {
-        val boneIds = element.getElementsByTag("Name_array")
+class SkinConverter : InternalConverter<Skin> {
+
+    private fun createSkin(element: Element, boneSidToBoneId: Map<String, String>): Skin {
+        val boneSids = element.getElementsByTag("Name_array")
             .first()
             .text()
             .split(" ")
@@ -35,7 +34,8 @@ class SkinConverter : InternalConverter<SkinDescription> {
             .chunked(2)
             .map {
                 val (id, w) = it
-                WeightInfluence(boneIds[id], weights[w])
+                val sid = boneSids[id]
+                InfluenceData(boneSidToBoneId.getValue(sid), weights[w])
             }
 
         val influence = association.getElementsByTag("vcount")
@@ -53,21 +53,30 @@ class SkinConverter : InternalConverter<SkinDescription> {
             influences.add(Influence(ww))
         }
         influences.forEach {
-            val sumByDouble = it.weights.sumByDouble { it.weight.toDouble() }
-            require(it.weights.isEmpty() || round(sumByDouble * 100).toInt() == 100) { "Weight on vertex should be equal to 1.0 (was '$sumByDouble')"}
+            val sumByDouble = it.data.sumByDouble { it.weight.toDouble() }
+            require(it.data.isEmpty() || round(sumByDouble * 100).toInt() == 100) { "Weight on vertex should be equal to 1.0 (was '$sumByDouble')" }
         }
         return Skin(
             influences = influences
         )
     }
 
-    override fun convert(document: Document): SkinDescription {
+    private fun createAssociation(document: Document): Map<String, String> {
+        return document.getElementsByTag("node")
+            .filter { it.attr("type") == "JOINT" }
+            .map { it.attr("sid") to it.attr("id") }
+            .toMap()
+    }
+
+    override fun convert(document: Document): Skin {
+        val boneSidToBoneId = createAssociation(document)
+
         return document.getElementsByTag("library_controllers")
             .firstOrNull()
             ?.getElementsByTag("skin")
             ?.firstOrNull()
-            ?.let { createSkin(it) }
-            ?: EmptySkin
+            ?.let { createSkin(it, boneSidToBoneId) }
+            ?: Skin()
     }
 
 }

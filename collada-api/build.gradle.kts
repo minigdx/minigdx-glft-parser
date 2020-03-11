@@ -53,20 +53,20 @@ kotlin {
             }
         }
 
-        jvm().compilations["main"].defaultSourceSet {
+        val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0-1.3.70-eap-274-2")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:0.20.0-1.3.70-eap-274-2")
             }
         }
-        jvm().compilations["test"].defaultSourceSet {
+        val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
             }
         }
 
-        js().compilations["main"].defaultSourceSet {
+        val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.20.0-1.3.70-eap-274-2")
@@ -74,38 +74,27 @@ kotlin {
             }
         }
 
-        js().compilations["test"].defaultSourceSet {
+        val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
         }
 
-        macosX64().compilations["main"].defaultSourceSet {
-            dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
-            }
-        }
-        iosX64().compilations["main"].defaultSourceSet {
-            dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
-            }
-        }
-        iosArm64().compilations["main"].defaultSourceSet {
-            dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
-            }
-        }
-        linuxX64().compilations["main"].defaultSourceSet {
-            dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
-            }
-        }
-        mingwX64().compilations["main"].defaultSourceSet {
-            dependencies {
+        val macosX64Main by getting
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val linuxX64Main by getting
+        val mingwX64Main by getting
+        val allNatives = listOf(
+            macosX64Main,
+            iosX64Main,
+            iosArm64Main,
+            linuxX64Main,
+            mingwX64Main
+        )
+
+        allNatives.forEach {
+            it.dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0-1.3.70-eap-274-2")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0-1.3.70-eap-274-2")
             }
