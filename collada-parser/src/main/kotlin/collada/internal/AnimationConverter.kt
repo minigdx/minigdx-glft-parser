@@ -36,6 +36,7 @@ class AnimationConverter : InternalConverter<AnimationsDescription> {
 
         return frames
     }
+
     private fun toAnimation(element: Element): Animation {
         val name = element.attr("id")
         val frames = element.children().flatMap { toBoneData(element) }
@@ -53,7 +54,7 @@ class AnimationConverter : InternalConverter<AnimationsDescription> {
 
     override fun convert(document: Document): AnimationsDescription {
         val root = document.getElementsByTag("library_animations")
-            .firstOrNull() ?: return EmptyAnimations
+            .firstOrNull { it.getElementsByTag("channel").isNotEmpty() } ?: return EmptyAnimations
 
         return Animations(animations = root.children().map { toAnimation(it) })
     }

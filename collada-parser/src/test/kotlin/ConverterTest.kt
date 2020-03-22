@@ -18,17 +18,15 @@ class ConverterTest {
     @ExperimentalStdlibApi
     @ImplicitReflectionSerializer
     @ParameterizedTest(name = "{0}.dae ➡️ {0}.json and {0}.protobuf")
-    @ValueSource(
-        strings = ["cube", "monkey", "sample", "cube_color", "monkey_color", "monkey_color2", "armature"]
-    )
+    @ValueSource(strings = ["cube", "monkey", "sample", "cube_color", "monkey_color", "monkey_color2", "armature", "bones"])
     fun parse(name: String) {
         val protobuf = dir.resolve("$name.protobuf")
         Converter(File("src/test/resources/$name.dae")).toProtobuf(protobuf)
-        collada.Model.readProtobuf(protobuf.readBytes())
+        Model.readProtobuf(protobuf.readBytes())
 
         val json = dir.resolve("$name.json")
         Converter(File("src/test/resources/$name.dae")).toJson(json)
-        collada.Model.readJson(json.readBytes())
+        Model.readJson(json.readBytes())
     }
 
     @ExperimentalStdlibApi
