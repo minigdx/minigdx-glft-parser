@@ -28,7 +28,7 @@ class ArmatureConverter : InternalConverter<ArmatureDescription> {
             return boneObj
         }
 
-        val root = element.getElementsByAttributeValue("type", "NODE")
+        val root = element.getElementsByAttributeValue("type", "JOINT")
             .first()
         return Armature(_createArmature(root))
     }

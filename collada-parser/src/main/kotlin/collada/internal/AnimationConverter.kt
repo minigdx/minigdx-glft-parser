@@ -6,7 +6,30 @@ import org.jsoup.nodes.Element
 
 class AnimationConverter : InternalConverter<AnimationsDescription> {
 
-    private fun toBoneData(element: Element): List<KeyFrame> {
+    class KeyFrameData(
+        val time: Float,
+        val transformations: MutableMap<String, Transformation> = mutableMapOf(),
+        val interpolation: String
+    ) {
+        fun toKeyFrame(): KeyFrame {
+            return KeyFrame(
+                time = time,
+                transformations = transformations.toMap(),
+                interpolation = interpolation
+            )
+        }
+    }
+
+    private fun toBoneData(
+        element: Element,
+        keyFrames: MutableMap<Float, KeyFrameData>
+    ) {
+        val boneId = element.getElementsByTag("channel")
+            .first()
+            .attr("target")
+            .split("/")
+            .first()
+
         val (keyframes, transforms, interpolations) = element.getElementsByTag("source")
         val times = keyframes.getElementsByTag("float_array")
             .first()
@@ -26,29 +49,25 @@ class AnimationConverter : InternalConverter<AnimationsDescription> {
             .text()
             .split(" ")
 
-        val frames = times.zip(matrix) { a, b -> a to b }.zip(interpolationsName) { a, b ->
-            KeyFrame(
-                time = a.first,
-                transformation = Transformation(a.second.toFloatArray()),
-                interpolation = b
-            )
+        times.zip(matrix) { a, b -> a to b }.zip(interpolationsName) { a, b ->
+            val currentKeyFrame = keyFrames.getOrPut(a.first) {
+                KeyFrameData(
+                    time = a.first,
+                    interpolation = b
+                )
+            }
+            currentKeyFrame.transformations[boneId] = Transformation(a.second.toFloatArray())
         }
-
-        return frames
     }
 
     private fun toAnimation(element: Element): Animation {
+
         val name = element.attr("id")
-        val frames = element.children().flatMap { toBoneData(element) }
-        val boneId = element.getElementsByTag("channel")
-            .first()
-            .attr("target")
-            .split("/")
-            .first()
+        val keyFrames = mutableMapOf<Float, KeyFrameData>()
+        element.children().forEach { toBoneData(it, keyFrames) }
         return Animation(
             name = name,
-            boneId = boneId,
-            keyFrames = frames
+            keyFrames = keyFrames.values.map { it.toKeyFrame() }
         )
     }
 

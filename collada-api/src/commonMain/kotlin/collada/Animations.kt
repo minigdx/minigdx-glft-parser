@@ -20,8 +20,6 @@ class Animation(
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
-    val boneId: String,
-    @ProtoId(3)
     val keyFrames: List<KeyFrame>
 )
 
@@ -30,7 +28,7 @@ class KeyFrame(
     @ProtoId(1)
     val time: Float,
     @ProtoId(2)
-    val transformation: Transformation,
+    val transformations: Map<String, Transformation> = emptyMap(),
     @ProtoId(3)
     val interpolation: String // not used now
 )
