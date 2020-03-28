@@ -2,11 +2,15 @@ package collada.internal
 
 import collada.Influence
 import collada.InfluenceData
+import collada.Transformation
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import kotlin.math.round
 
-class Skin(val influences: List<Influence> = emptyList())
+class Skin(
+    val influences: List<Influence> = emptyList(),
+    val inverseJointBindTransformation: Map<String, Transformation> = emptyMap()
+)
 
 class SkinConverter : InternalConverter<Skin> {
 
@@ -15,6 +19,18 @@ class SkinConverter : InternalConverter<Skin> {
             .first()
             .text()
             .split(" ")
+
+        val inverseBindTransform = element.getElementsByTag("float_array")
+            .first { it.attr("id").endsWith("bind_poses-array")}
+            .text()
+            .split(" ")
+            .map { it.toFloat() }
+            .chunked(16)
+            .map { Transformation(it.toFloatArray()) }
+            .zip(boneSids) { transformation, sid ->
+                val id = boneSidToBoneId.getValue(sid)
+                id to transformation
+            }.toMap()
 
         val weights = element.getElementsByTag("float_array")
             .first { it.attr("id").endsWith("weights-array") }
@@ -57,7 +73,8 @@ class SkinConverter : InternalConverter<Skin> {
             require(it.data.isEmpty() || round(sumByDouble * 100).toInt() == 100) { "Weight on vertex should be equal to 1.0 (was '$sumByDouble')" }
         }
         return Skin(
-            influences = influences
+            influences = influences,
+            inverseJointBindTransformation = inverseBindTransform
         )
     }
 

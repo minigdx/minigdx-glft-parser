@@ -4,8 +4,16 @@ import collada.*
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-class ArmatureConverter : InternalConverter<ArmatureDescription> {
+class ArmatureConverter(private val skin: Skin) : InternalConverter<ArmatureDescription> {
 
+    private val idt: Transformation = Transformation(
+        floatArrayOf(
+            1f, 0f, 0f, 0f,
+            0f, 1f, 0f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 0f, 1f
+        )
+    )
     private fun createArmature(element: Element): Armature {
 
         fun _createArmature(bone: Element): Bone {
@@ -18,14 +26,13 @@ class ArmatureConverter : InternalConverter<ArmatureDescription> {
                 .filter { it.attr("type") == "JOINT" }
                 .map { _createArmature(it) }
 
-            val boneObj = Bone(
+            return Bone(
                 id = bone.attr("id"),
                 transformation = transformation,
                 childs = childs,
-                weights = emptyList()
+                weights = emptyList(),
+                inverseBindPose = skin.inverseJointBindTransformation.getOrDefault(bone.attr("id"), idt)
             )
-
-            return boneObj
         }
 
         val root = element.getElementsByAttributeValue("type", "JOINT")

@@ -20,5 +20,7 @@ class Bone(
     @ProtoId(3)
     val transformation: Transformation,
     @ProtoId(4)
-    val weights: List<Weight> = emptyList()
+    val weights: List<Weight> = emptyList(),
+    @ProtoId(5)
+    val inverseBindPose: Transformation
 )
