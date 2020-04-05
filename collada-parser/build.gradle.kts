@@ -34,5 +34,9 @@ dependencies {
     implementation(project(":collada-api"))
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jsoup:jsoup:1.12.2")
+
+    implementation("com.adrienben.tools:gltf-loader:1.0.5-SNAPSHOT")
+    implementation("org.jmonkeyengine:jme3-core:3.2.2-stable")
+
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 }

@@ -46,6 +46,7 @@ dependencies {
 colladaPlugin {
     create("assets") {
         this.daeDirectory.set(project.file("src/main/resources/"))
+        this.gltfDirectory.set(project.file("src/main/resources/"))
         this.target.set(project.buildDir)
     }
 }
@@ -71,6 +72,5 @@ tasks {
             .build()
 
         assertEquals(result.task(":collada")?.outcome, TaskOutcome.SUCCESS)
-        // TODO: vérifier que le fichier est présent.
     }
 }

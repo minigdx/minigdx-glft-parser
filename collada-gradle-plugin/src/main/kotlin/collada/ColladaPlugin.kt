@@ -20,6 +20,8 @@ class ColladaPlugin : Plugin<Project> {
             val newTask = project.tasks.register(taskName, ColladaTask::class.java) { task ->
                 task.daeDirectory.set(ext.daeDirectory)
                 task.daeFiles.set(ext.daeFiles)
+                task.gltfDirectory.set(ext.gltfDirectory)
+                task.gltfFiles.set(ext.gltfFiles)
                 task.outputDirectory.set(ext.target)
                 task.format.set(ext.format.get())
             }

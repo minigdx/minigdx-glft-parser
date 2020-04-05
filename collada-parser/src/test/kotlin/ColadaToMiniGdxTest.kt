@@ -1,14 +1,12 @@
-import collada.Converter
-import collada.Mesh
+import collada.ColadaToMiniGdx
 import collada.Model
 import kotlinx.serialization.ImplicitReflectionSerializer
-import kotlinx.serialization.protobuf.ProtoBuf
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.io.File
 
-class ConverterTest {
+class ColadaToMiniGdxTest {
 
     @TempDir
     lateinit var dir: File
@@ -21,11 +19,11 @@ class ConverterTest {
     @ValueSource(strings = ["cube", "monkey", "sample", "cube_color", "monkey_color", "monkey_color2", "armature", "bones"])
     fun parse(name: String) {
         val protobuf = dir.resolve("$name.protobuf")
-        Converter(File("src/test/resources/$name.dae")).toProtobuf(protobuf)
+        ColadaToMiniGdx(File("src/test/resources/$name.dae")).toProtobuf(protobuf)
         Model.readProtobuf(protobuf.readBytes())
 
         val json = dir.resolve("$name.json")
-        Converter(File("src/test/resources/$name.dae")).toJson(json)
+        ColadaToMiniGdx(File("src/test/resources/$name.dae")).toJson(json)
         Model.readJson(json.readBytes())
     }
 
@@ -37,9 +35,9 @@ class ConverterTest {
     )
     fun updateColladaApiTestResources(name: String) {
         val protobuf = colladaApiTestDirectory.resolve("$name.protobuf")
-        Converter(File("src/test/resources/$name.dae")).toProtobuf(protobuf)
+        ColadaToMiniGdx(File("src/test/resources/$name.dae")).toProtobuf(protobuf)
 
         val json = colladaApiTestDirectory.resolve("$name.json")
-        Converter(File("src/test/resources/$name.dae")).toJson(json)
+        ColadaToMiniGdx(File("src/test/resources/$name.dae")).toJson(json)
     }
 }
