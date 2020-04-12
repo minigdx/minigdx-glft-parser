@@ -48,8 +48,8 @@ open class ColladaTask : DefaultTask() {
                 val outputFile = outputDirectory.get().file(it.nameWithoutExtension + format.get().exts)
                 logger.info("Will generate ${outputFile.asFile.absoluteFile}…")
                 val result = when (format.get()) {
-                    Format.JSON -> ColadaToMiniGdx(it).toJson(outputFile.asFile)
-                    Format.PROTOBUF -> ColadaToMiniGdx(it).toProtobuf(outputFile.asFile)
+                    Format.JSON -> ColladaToMiniGdx(it).toJson(outputFile.asFile)
+                    Format.PROTOBUF -> ColladaToMiniGdx(it).toProtobuf(outputFile.asFile)
                     null -> throw IllegalArgumentException("a valid format is expected on your task")
                 }
             }

@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.parser.Parser
 import java.io.File
 
-class ColadaToMiniGdx(override val input: File) : Converter {
+class ColladaToMiniGdx(override val input: File) : Converter {
 
     @ImplicitReflectionSerializer
     override fun toProtobuf(output: File) {
