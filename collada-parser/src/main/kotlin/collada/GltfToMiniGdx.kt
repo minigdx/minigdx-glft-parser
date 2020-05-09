@@ -60,13 +60,13 @@ class GltfToMiniGdx(override val input: File) : Converter {
 
         val influences = joints.zip(weights) { j, w ->
             val data = j.zip(w) { a, b ->
-                if(b <= 0f) {
+                if (b <= 0f) {
                     null
                 } else {
                     InfluenceData(boneIds.getValue(a), b)
                 }
             }
-            Influence(data  = data.filterNotNull())
+            Influence(data = data.filterNotNull())
         }.ifEmpty { positions.map { Influence() } }
 
         val vertices = positions.zip(colors).zip(normals).zip(influences) { pair, influence ->
@@ -91,12 +91,37 @@ class GltfToMiniGdx(override val input: File) : Converter {
         return Model(
             mesh = mesh,
             armature = armature,
-            animations = animations
+            animations = animations,
+            cameras = this.convertToCameras()
+        )
+    }
+
+    private fun GltfAsset.convertToCameras(): List<Camera> = this.cameras.map { cam ->
+        val node = this.nodes.first { it.name == cam.name }
+        val t = node.translation.let { Float3(it.x, it.y, it.z) }.let { translation(it) }
+        val r = node.rotation.let { Quaternion(it.i, it.j, it.k, it.a) }.let { Mat4.from(it) }
+        val s = node.scale.let { Float3(it.x, it.y, it.z) }.let { scale(it) }
+
+        val transformation = transpose(t * r * s)
+
+        Camera(
+            name = cam.name ?: "",
+            type = when(cam.type) {
+                GltfCameraType.ORTHOGRAPHIC -> CameraType.ORTHOGRAPHIC
+                GltfCameraType.PERSPECTIVE -> CameraType.PERSPECTIVE
+            },
+            parameters = CameraParameters(
+                zFar = cam.perspective?.zFar ?: cam.orthographic?.zFar ?: 0f,
+                zNear = cam.perspective?.zNear ?: cam.orthographic?.zNear ?: 0f,
+                perspectiveFov = cam.perspective?.yFov ?: 0f,
+                orthographicScale = cam.orthographic?.xMag ?: 0f
+            ),
+            transformation = Transformation(transformation.toFloatArray())
         )
     }
 
     private fun List<GltfAnimation>.convertToAnimations(): AnimationsDescription {
-        if(this.isEmpty()) {
+        if (this.isEmpty()) {
             return EmptyAnimations
         } else {
             val animations = this.map { animation ->
@@ -107,16 +132,20 @@ class GltfToMiniGdx(override val input: File) : Converter {
                 val rotations = mutableMapOf<Float, MutableMap<String, Mat4>>()
                 val scales = mutableMapOf<Float, MutableMap<String, Mat4>>()
 
-                animation.channels.forEach {channel ->
+                animation.channels.forEach { channel ->
                     val timing = channel.sampler.input.toFloatArray().asList()
-                    val target = when(channel.target.path) {
+                    val target = when (channel.target.path) {
                         GltfAnimationTargetPath.TRANSLATION -> translations
                         GltfAnimationTargetPath.ROTATION -> rotations
                         GltfAnimationTargetPath.SCALE -> scales
                         else -> throw IllegalArgumentException("WEIGHT modificator not supported")
                     }
 
-                    fun fromVec3(timing: List<Float>, accessor: GltfAccessor, transformation: (x: Float, y: Float, z: Float) -> Mat4): Map<Float, Mat4> {
+                    fun fromVec3(
+                        timing: List<Float>,
+                        accessor: GltfAccessor,
+                        transformation: (x: Float, y: Float, z: Float) -> Mat4
+                    ): Map<Float, Mat4> {
                         return accessor.toFloatArray()
                             .toList()
                             .chunked(3)
@@ -127,7 +156,11 @@ class GltfToMiniGdx(override val input: File) : Converter {
                             .toMap()
                     }
 
-                    fun fromVec4(timing: List<Float>, accessor: GltfAccessor, transformation: (x: Float, y: Float, z: Float, w: Float) -> Mat4): Map<Float, Mat4> {
+                    fun fromVec4(
+                        timing: List<Float>,
+                        accessor: GltfAccessor,
+                        transformation: (x: Float, y: Float, z: Float, w: Float) -> Mat4
+                    ): Map<Float, Mat4> {
                         return accessor.toFloatArray()
                             .toList()
                             .chunked(4)
@@ -138,10 +171,20 @@ class GltfToMiniGdx(override val input: File) : Converter {
                             .toMap()
                     }
 
-                    val transformated = when(channel.target.path) {
-                        GltfAnimationTargetPath.TRANSLATION -> fromVec3(timing, channel.sampler.output) { x, y, z -> translation(Float3(x, y, z))}
-                        GltfAnimationTargetPath.ROTATION -> fromVec4(timing, channel.sampler.output) { x, y, z, w -> Mat4.from(Quaternion(x, y, z, w))}
-                        GltfAnimationTargetPath.SCALE -> fromVec3(timing, channel.sampler.output) { x, y, z -> scale(Float3(x, y, z))}
+                    val transformated = when (channel.target.path) {
+                        GltfAnimationTargetPath.TRANSLATION -> fromVec3(
+                            timing,
+                            channel.sampler.output
+                        ) { x, y, z -> translation(Float3(x, y, z)) }
+                        GltfAnimationTargetPath.ROTATION -> fromVec4(
+                            timing,
+                            channel.sampler.output
+                        ) { x, y, z, w -> Mat4.from(Quaternion(x, y, z, w)) }
+                        GltfAnimationTargetPath.SCALE -> fromVec3(timing, channel.sampler.output) { x, y, z ->
+                            scale(
+                                Float3(x, y, z)
+                            )
+                        }
                         else -> throw IllegalArgumentException("WEIGHT modificator not supported")
                     }
 
@@ -164,8 +207,6 @@ class GltfToMiniGdx(override val input: File) : Converter {
                         val r = rotation[it] ?: Mat4.identity()
                         val s = scale[it] ?: Mat4.identity()
                         val t = translation[it] ?: Mat4.identity()
-                        // FIXME: r * s * t
-                        //val mat4 = r * s * t
                         val mat4 = t * r * s
                         it to transpose(mat4)
                     }.toMap()
@@ -192,7 +233,6 @@ class GltfToMiniGdx(override val input: File) : Converter {
     }
 
     private fun GltfSkin?.convertToArmature(): ArmatureDescription {
-        // FIXME: regarder la structure de l'armature parce que c'est bizare.
         if (this == null) {
             return EmptyArmature
         }

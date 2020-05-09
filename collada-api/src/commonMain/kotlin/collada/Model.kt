@@ -15,7 +15,9 @@ class Model(
     @ProtoId(2)
     @Polymorphic val armature: ArmatureDescription,
     @ProtoId(3)
-    @Polymorphic val animations: AnimationsDescription
+    @Polymorphic val animations: AnimationsDescription,
+    @ProtoId(4)
+    val cameras: List<Camera> = emptyList()
 ) {
 
     companion object {
