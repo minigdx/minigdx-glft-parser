@@ -16,7 +16,5 @@ val GltfNode.transformation: Mat4
         val s = scale.let { Float3(it.x, it.z, it.y) }
             .let { scale(it) }
 
-        // From blender to OpenGL Coordinate system
-        val transformation =  t * r * s
-        return transpose(transformation)
+        return t * r * s
     }

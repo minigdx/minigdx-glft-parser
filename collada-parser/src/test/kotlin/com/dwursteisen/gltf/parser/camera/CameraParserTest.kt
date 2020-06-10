@@ -63,7 +63,7 @@ class CameraParser(private val source: GltfAsset) {
                 far = camera.orthographic?.zFar ?: 0f,
                 near = camera.orthographic?.zNear ?: 0f,
                 scale = camera.orthographic?.xMag ?: 0f,
-                transformation = Transformation(transformation.toFloatArray())
+                transformation = Transformation(transformation.asGLArray().toFloatArray())
             )
         }
         return source.convertToCameras(
@@ -80,7 +80,7 @@ class CameraParser(private val source: GltfAsset) {
                 far = camera.perspective?.zFar ?: 0f,
                 near = camera.perspective?.zNear ?: 0f,
                 fov = camera.perspective?.yFov ?: 90f,
-                transformation = Transformation(transformation.toFloatArray())
+                transformation = Transformation(transformation.asGLArray().toFloatArray())
             )
         }
         return source.convertToCameras(
@@ -102,7 +102,7 @@ class CameraParserTest {
 
         val camera = cameras.values.first()
         assertEquals("Orthographic", camera.name)
-        assertMat4Equals(Mat4.identity(), Mat4.of(*camera.transformation.matrix))
+        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*camera.transformation.matrix))
     }
 
     @Test
@@ -112,6 +112,6 @@ class CameraParserTest {
 
         val camera = cameras.values.first()
         assertEquals("Perspective", camera.name)
-        assertMat4Equals(Mat4.identity(), Mat4.of(*camera.transformation.matrix))
+        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*camera.transformation.matrix))
     }
 }
