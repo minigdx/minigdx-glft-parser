@@ -4,10 +4,14 @@ import collada.Transformation
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfCamera
 import com.adrienben.tools.gltf.models.GltfCameraType
-import com.curiouscreature.kotlin.math.*
+import com.curiouscreature.kotlin.math.Float3
+import com.curiouscreature.kotlin.math.Mat4
+import com.curiouscreature.kotlin.math.rotation
+import com.dwursteisen.gltf.parser.support.assertMat4Equals
+import com.dwursteisen.gltf.parser.support.gltf
+import com.dwursteisen.gltf.parser.support.transformation
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.io.File
-import org.junit.jupiter.api.Assertions.*
 
 interface Camera {
     val name: String
@@ -43,26 +47,16 @@ class CameraParser(private val source: GltfAsset) {
 
         return cameras
             .map { node ->
-                val t = node.translation.let { Float3(it.x, it.y, it.z) }
-                    .let { translation(it) }
-
-                val r = node.rotation.let { Quaternion(it.i, it.j, it.k, it.a) }
-                    .let { Mat4.from(it) }
-
-                val s = node.scale.let { Float3(it.x, it.y, it.z) }
-                    .let { scale(it) }
-
-                // Compensation between OpenGL and blender reference.
-                val compensation = rotation(Float3(0f, 1f, 0f), 90f) * rotation(Float3(1f, 0f, 0f), 90f)
-
-                val transformation = transpose(t * r * s * compensation)
-
                 val cam = node.children!!.first { it.camera != null }
+                // Default camera orientation in blender is rotated by 90 on x and y.
+                val transformation = node.transformation *
+                        rotation(Float3(1f, 0f, 0f), -90f) *
+                        rotation(Float3(0f, 1f, 0f), -90f)
                 factory(node.name ?: "", cam.camera!!, transformation)
             }
     }
 
-    fun orthographicCameras(): List<OrthographicCamera> {
+    fun orthographicCameras(): Map<String, OrthographicCamera> {
         val factory = { name: String, camera: GltfCamera, transformation: Mat4 ->
             OrthographicCamera(
                 name = name,
@@ -75,10 +69,11 @@ class CameraParser(private val source: GltfAsset) {
         return source.convertToCameras(
             GltfCameraType.ORTHOGRAPHIC,
             factory
-        )
+        ).map { it.name to it }
+            .toMap()
     }
 
-    fun perspectiveCameras(): List<PerspectiveCamera> {
+    fun perspectiveCameras(): Map<String, PerspectiveCamera> {
         val factory = { name: String, camera: GltfCamera, transformation: Mat4 ->
             PerspectiveCamera(
                 name = name,
@@ -91,44 +86,32 @@ class CameraParser(private val source: GltfAsset) {
         return source.convertToCameras(
             GltfCameraType.PERSPECTIVE,
             factory
-        )
+        ).map { it.name to it }
+            .toMap()
     }
 }
 
 class CameraParserTest {
 
-    private val defaultCameras = "/camera/camera_default.gltf"
+    private val gltf by gltf("/camera/camera_default.gltf")
 
     @Test
     fun `parse | it parses orthographic camera`() {
-        val gltf = GltfAsset.fromFile(defaultCameras.asFile().absolutePath)!!
         val cameras = CameraParser(gltf).orthographicCameras()
         assertEquals(1, cameras.size)
 
-        val camera = cameras.first()
+        val camera = cameras.values.first()
         assertEquals("Orthographic", camera.name)
-        assertEquals(Mat4.identity(), Mat4.of(*camera.transformation.matrix))
+        assertMat4Equals(Mat4.identity(), Mat4.of(*camera.transformation.matrix))
     }
 
     @Test
     fun `parse | it parses perspective camera`() {
-        val gltf = GltfAsset.fromFile(defaultCameras.asFile().absolutePath)!!
         val cameras = CameraParser(gltf).perspectiveCameras()
         assertEquals(1, cameras.size)
 
-        val camera = cameras.first()
+        val camera = cameras.values.first()
         assertEquals("Perspective", camera.name)
-        assertEquals(Mat4.identity(), Mat4.of(*camera.transformation.matrix))
-    }
-
-    private fun assertEquals(expected: Mat4, actual: Mat4) {
-        val array = actual.toArray()
-        expected.toArray().forEachIndexed { i, value ->
-            assertEquals(value, array[i], 0.001f)
-        }
-    }
-
-    private fun String.asFile(): File {
-        return File(CameraParserTest::class.java.getResource(this).toURI())
+        assertMat4Equals(Mat4.identity(), Mat4.of(*camera.transformation.matrix))
     }
 }
