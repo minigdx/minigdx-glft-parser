@@ -35,9 +35,9 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jsoup:jsoup:1.12.2")
 
-    implementation("com.adrienben.tools:gltf-loader:1.0.5-SNAPSHOT")
+    implementation("com.adrienben.tools:gltf-loader:1.0.6-alpha1")
     implementation("org.jmonkeyengine:jme3-core:3.2.2-stable")
-    implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0-SNAPSHOT")
+    implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha15")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 }

@@ -10,6 +10,9 @@ repositories {
 
 subprojects {
     repositories {
+        maven {
+            url = uri("https://dl.bintray.com/dwursteisen/minigdx")
+        }
         mavenCentral()
         jcenter()
     }
