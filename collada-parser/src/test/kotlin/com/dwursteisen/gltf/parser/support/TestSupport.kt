@@ -2,7 +2,7 @@ package com.dwursteisen.gltf.parser.support
 
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.curiouscreature.kotlin.math.Mat4
-import com.dwursteisen.gltf.parser.mesh.Position
+import com.dwursteisen.minigdx.scene.api.model.Position
 import org.junit.jupiter.api.Assertions
 import org.opentest4j.AssertionFailedError
 import java.io.File
