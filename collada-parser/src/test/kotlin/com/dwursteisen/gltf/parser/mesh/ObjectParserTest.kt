@@ -7,10 +7,7 @@ import com.adrienben.tools.gltf.models.GltfNode
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Mat4
 import com.curiouscreature.kotlin.math.translation
-import com.dwursteisen.gltf.parser.support.assertMat4Equals
-import com.dwursteisen.gltf.parser.support.gltf
-import com.dwursteisen.gltf.parser.support.toFloatArray
-import com.dwursteisen.gltf.parser.support.transformation
+import com.dwursteisen.gltf.parser.support.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -79,6 +76,7 @@ class ObjectParser(val gltfAsset: GltfAsset) {
 class ObjectParserTest {
 
     private val cube by gltf("/mesh/cube_translated.gltf")
+    private val plane by gltf("/mesh/plane.gltf")
 
     @Test
     fun `parse | it parses a translated cube`() {
@@ -100,5 +98,21 @@ class ObjectParserTest {
         assertEquals(1, cube.primitives.size)
         // TODO: should try to be close to 8 instead
         assertEquals(24, cube.primitives.first().vertices.size)
+    }
+
+    @Test
+    fun `parse | it parses a plane with correct coordinates`() {
+        val objects = ObjectParser(plane).objects()
+
+        val cube = objects.getValue("Plane").mesh
+        assertEquals(1, cube.primitives.size)
+        assertEquals(4, cube.primitives.first().vertices.size)
+
+        val (a, b, c, d) = cube.primitives.first().vertices
+
+        assertPositionEquals(Position(0f, 0f, 0f), a.position)
+        assertPositionEquals(Position(1f, 0f, 0f), b.position)
+        assertPositionEquals(Position(0f, 0f, -2f), c.position)
+        assertPositionEquals(Position(0f, 3f, 0f), d.position)
     }
 }
