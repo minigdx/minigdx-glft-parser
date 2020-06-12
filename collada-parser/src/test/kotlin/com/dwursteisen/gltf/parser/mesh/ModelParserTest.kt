@@ -15,6 +15,8 @@ class ModelParserTest {
 
     private val cube by gltf("/mesh/cube_translated.gltf")
     private val plane by gltf("/mesh/plane.gltf")
+    private val simpleUv by gltf("/uv/uv.gltf")
+    private val multipleUv by gltf("/uv/multiple_materials.gltf")
 
     @Test
     fun `parse | it parses a translated cube`() {
@@ -52,5 +54,17 @@ class ModelParserTest {
         assertPositionEquals(Position(1f, 0f, 0f), b.position)
         assertPositionEquals(Position(0f, 0f, -2f), c.position)
         assertPositionEquals(Position(0f, 3f, 0f), d.position)
+    }
+
+    @Test
+    fun `parse | it parses a mesh with one material`() {
+        val objects = ModelParser(simpleUv).objects()
+        println(objects)
+    }
+
+    @Test
+    fun `parse | it parses a mesh with more than one material`() {
+        val objects = ModelParser(multipleUv).objects()
+        println(objects)
     }
 }

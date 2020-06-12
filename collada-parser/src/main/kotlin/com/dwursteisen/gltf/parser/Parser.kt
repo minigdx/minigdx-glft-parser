@@ -1,6 +1,5 @@
 package com.dwursteisen.gltf.parser
 
-import collada.Model
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.dwursteisen.gltf.parser.scene.SceneParser
 import com.dwursteisen.minigdx.scene.api.Scene

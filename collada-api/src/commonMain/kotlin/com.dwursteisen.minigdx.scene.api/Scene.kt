@@ -3,6 +3,7 @@ package com.dwursteisen.minigdx.scene.api
 import com.dwursteisen.minigdx.scene.api.camera.Camera
 import com.dwursteisen.minigdx.scene.api.camera.OrthographicCamera
 import com.dwursteisen.minigdx.scene.api.camera.PerspectiveCamera
+import com.dwursteisen.minigdx.scene.api.model.Material
 import com.dwursteisen.minigdx.scene.api.model.Model
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -17,12 +18,18 @@ data class Scene(
     val perspectiveCameras: Map<String, Camera> = emptyMap(),
     @ProtoId(1)
     val orthographicCameras: Map<String, Camera> = emptyMap(),
-    @ProtoId(1)
-    val models: Map<String, Model> = emptyMap()
+    @ProtoId(2)
+    val models: Map<String, Model> = emptyMap(),
+    @ProtoId(3)
+    val materials: Map<String, Material> = emptyMap()
 ) {
 
     val cameras: Map<String, Camera> by lazy {
         perspectiveCameras + orthographicCameras
+    }
+
+    val materialsById: Map<Int, Material> by lazy {
+        materials.values.map { it.id to it }.toMap()
     }
 
     companion object {
