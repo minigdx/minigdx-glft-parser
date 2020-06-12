@@ -37,11 +37,38 @@ class ModelParser(val gltfAsset: GltfAsset) {
                 .chunked(3)
                 .map { Normal(it[0], it[1], it[2]) }
 
-            val vertices = positions.zip(normals) { p, n ->
-                Vertex(p, n)
+            val colors = primitive.attributes["COLOR_0"].toFloatArray()
+                .toList()
+                .chunked(4)
+                .map { Color(it[0], it[1], it[2], it[3]) }
+
+            val uvs = primitive.attributes["TEXCOORD_0"].toFloatArray()
+                .toList()
+                .chunked(2)
+                .map { UV(it[0], it[1]) }
+
+            val vertices = positions.mapIndexed { index, p ->
+                val n = normals[index]
+                val c = if(colors.isNotEmpty()) {
+                    colors[index]
+                } else {
+                    null
+                }
+
+                val uv = if(uvs.isNotEmpty()) {
+                    uvs[index]
+                } else {
+                    null
+                }
+                Vertex(
+                    position = p,
+                    normal = n,
+                    color = c,
+                    uv = uv
+                )
             }
 
-            Primitive(vertices)
+            Primitive(vertices, materialId = primitive.material.index)
         }
         return Mesh(primitives)
     }

@@ -9,6 +9,7 @@ import com.dwursteisen.gltf.parser.support.assertPositionEquals
 import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.model.Position
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class ModelParserTest {
@@ -59,12 +60,19 @@ class ModelParserTest {
     @Test
     fun `parse | it parses a mesh with one material`() {
         val objects = ModelParser(simpleUv).objects()
-        println(objects)
+        val uvs = objects.flatMap { it.value.mesh.primitives }
+            .flatMap { it.vertices }
+            .mapNotNull { it.uv }
+
+        assertTrue(uvs.isNotEmpty())
     }
 
     @Test
     fun `parse | it parses a mesh with more than one material`() {
         val objects = ModelParser(multipleUv).objects()
-        println(objects)
+        val materials = objects.flatMap { it.value.mesh.primitives }
+            .mapNotNull { it.materialId }
+
+        assertEquals(2, materials.size)
     }
 }
