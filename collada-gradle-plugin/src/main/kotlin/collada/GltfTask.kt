@@ -1,5 +1,6 @@
 package collada
 
+import com.dwursteisen.gltf.parser.Parser
 import kotlinx.serialization.ImplicitReflectionSerializer
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileCollection
@@ -14,18 +15,12 @@ enum class Format(val exts: String) {
     PROTOBUF(".protobuf")
 }
 
-open class ColladaTask : DefaultTask() {
+open class GltfTask : DefaultTask() {
 
     init {
-        group = "collada"
+        group = "gltf"
         description = "Parse a collada file."
     }
-
-    @InputFiles
-    val daeFiles = project.createProperty<FileCollection>()
-
-    @InputDirectory
-    val daeDirectory = project.objects.directoryProperty()
 
     @OutputDirectory
     val outputDirectory = project.objects.directoryProperty()
@@ -43,25 +38,13 @@ open class ColladaTask : DefaultTask() {
     @ImplicitReflectionSerializer
     @TaskAction
     fun generate() {
-        if (daeFiles.isPresent) {
-            daeFiles.get().forEach {
-                val outputFile = outputDirectory.get().file(it.nameWithoutExtension + format.get().exts)
-                logger.info("Will generate ${outputFile.asFile.absoluteFile}…")
-                val result = when (format.get()) {
-                    Format.JSON -> ColladaToMiniGdx(it).toJson(outputFile.asFile)
-                    Format.PROTOBUF -> ColladaToMiniGdx(it).toProtobuf(outputFile.asFile)
-                    null -> throw IllegalArgumentException("a valid format is expected on your task")
-                }
-            }
-        }
-
         if (gltfFiles.isPresent) {
             gltfFiles.get().forEach {
                 val outputFile = outputDirectory.get().file(it.nameWithoutExtension + format.get().exts)
                 logger.info("Will generate ${outputFile.asFile.absoluteFile}…")
                 val result = when (format.get()) {
-                    Format.JSON -> GltfToMiniGdx(it).toJson(outputFile.asFile)
-                    Format.PROTOBUF -> GltfToMiniGdx(it).toProtobuf(outputFile.asFile)
+                    Format.JSON -> Parser(it).toJson(outputFile.asFile)
+                    Format.PROTOBUF -> Parser(it).toProtobuf(outputFile.asFile)
                     null -> throw IllegalArgumentException("a valid format is expected on your task")
                 }
             }

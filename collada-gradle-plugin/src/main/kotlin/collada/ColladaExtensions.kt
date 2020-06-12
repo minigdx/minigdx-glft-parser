@@ -6,9 +6,6 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
 
 open class ColladaExtensions(val name: String, project: Project) {
-    val daeDirectory: DirectoryProperty = project.objects.directoryProperty()
-    val daeFiles: FileCollection = daeDirectory.asFileTree.matching { it.include("**/*.dae") }
-
     val gltfDirectory: DirectoryProperty = project.objects.directoryProperty()
     val gltfFiles: FileCollection = gltfDirectory.asFileTree.matching { it.include("**/*.gl*") }
 

@@ -17,9 +17,7 @@ class ColladaPlugin : Plugin<Project> {
 
         container.all { ext ->
             val taskName = ext.name + "Collada"
-            val newTask = project.tasks.register(taskName, ColladaTask::class.java) { task ->
-                task.daeDirectory.set(ext.daeDirectory)
-                task.daeFiles.set(ext.daeFiles)
+            val newTask = project.tasks.register(taskName, GltfTask::class.java) { task ->
                 task.gltfDirectory.set(ext.gltfDirectory)
                 task.gltfFiles.set(ext.gltfFiles)
                 task.outputDirectory.set(ext.target)
