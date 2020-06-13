@@ -6,13 +6,20 @@ import com.dwursteisen.minigdx.scene.api.model.Position
 import org.junit.jupiter.api.Assertions
 import org.opentest4j.AssertionFailedError
 import java.io.File
+import java.lang.IllegalArgumentException
 import kotlin.reflect.KProperty
 
 class GltfDelegate(resourceName: String) {
 
     private val asset by lazy {
-        val path = File(GltfDelegate::class.java.getResource(resourceName).toURI())
-        GltfAsset.fromFile(path.absolutePath)!!
+        val resource = GltfDelegate::class.java.getResource(resourceName) ?: throw IllegalArgumentException(
+            "$resourceName is not a valid Gltf file."
+        )
+
+        val path = File(resource.toURI())
+        GltfAsset.fromFile(path.absolutePath) ?: throw IllegalArgumentException(
+            "${path.absolutePath} is not a valid Gltf file."
+        )
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): GltfAsset {

@@ -4,6 +4,7 @@ import collada.Transformation
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfMesh
 import com.adrienben.tools.gltf.models.GltfNode
+import com.dwursteisen.gltf.parser.support.isEmissiveTexture
 import com.dwursteisen.gltf.parser.support.toFloatArray
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.model.*
@@ -42,20 +43,24 @@ class ModelParser(val gltfAsset: GltfAsset) {
                 .chunked(4)
                 .map { Color(it[0], it[1], it[2], it[3]) }
 
-            val uvs = primitive.attributes["TEXCOORD_0"].toFloatArray()
-                .toList()
-                .chunked(2)
-                .map { UV(it[0], it[1]) }
-
+            val material = gltfAsset.materials.getOrNull(primitive.material.index)
+            val uvs = if (!material.isEmissiveTexture()) {
+                emptyList()
+            } else {
+                primitive.attributes["TEXCOORD_0"].toFloatArray()
+                    .toList()
+                    .chunked(2)
+                    .map { UV(it[0], it[1]) }
+            }
             val vertices = positions.mapIndexed { index, p ->
                 val n = normals[index]
-                val c = if(colors.isNotEmpty()) {
+                val c = if (colors.isNotEmpty()) {
                     colors[index]
                 } else {
                     null
                 }
 
-                val uv = if(uvs.isNotEmpty()) {
+                val uv = if (uvs.isNotEmpty()) {
                     uvs[index]
                 } else {
                     null
@@ -68,7 +73,12 @@ class ModelParser(val gltfAsset: GltfAsset) {
                 )
             }
 
-            Primitive(vertices, materialId = primitive.material.index)
+            val materialId = if(primitive.material.isEmissiveTexture()) {
+                primitive.material.index
+            } else {
+                null
+            }
+            Primitive(vertices, materialId = materialId)
         }
         return Mesh(primitives)
     }

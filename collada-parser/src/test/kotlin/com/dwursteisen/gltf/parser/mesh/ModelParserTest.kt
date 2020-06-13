@@ -8,8 +8,7 @@ import com.dwursteisen.gltf.parser.support.assertMat4Equals
 import com.dwursteisen.gltf.parser.support.assertPositionEquals
 import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.model.Position
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class ModelParserTest {
@@ -55,6 +54,17 @@ class ModelParserTest {
         assertPositionEquals(Position(1f, 0f, 0f), b.position)
         assertPositionEquals(Position(0f, 0f, -2f), c.position)
         assertPositionEquals(Position(0f, 3f, 0f), d.position)
+    }
+
+    @Test
+    fun `parse | it parses a mesh with no material`() {
+        val objects = ModelParser(cube).objects()
+        val uvs = objects.flatMap { it.value.mesh.primitives }
+            .flatMap { it.vertices }
+            .mapNotNull { it.uv }
+
+        assertTrue(uvs.isEmpty())
+        assertNull(objects.getValue("Cube").mesh.primitives.first().materialId)
     }
 
     @Test
