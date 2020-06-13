@@ -57,13 +57,13 @@ class ModelParser(val gltfAsset: GltfAsset) {
                 val c = if (colors.isNotEmpty()) {
                     colors[index]
                 } else {
-                    null
+                    Color.INVALID
                 }
 
                 val uv = if (uvs.isNotEmpty()) {
                     uvs[index]
                 } else {
-                    null
+                    UV.INVALID
                 }
                 Vertex(
                     position = p,
@@ -76,7 +76,7 @@ class ModelParser(val gltfAsset: GltfAsset) {
             val materialId = if(primitive.material.isEmissiveTexture()) {
                 primitive.material.index
             } else {
-                null
+                -1
             }
             Primitive(vertices, materialId = materialId)
         }

@@ -13,6 +13,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
     private val models = ModelParser(gltfAsset)
 
     private val materials = MaterialParser(gltfAsset)
+
     fun parse(): Scene {
         return Scene(
             perspectiveCameras = cameras.perspectiveCameras(),

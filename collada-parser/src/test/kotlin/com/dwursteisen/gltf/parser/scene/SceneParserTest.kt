@@ -1,6 +1,7 @@
 package com.dwursteisen.gltf.parser.scene
 
 import com.adrienben.tools.gltf.models.GltfAsset
+import com.dwursteisen.minigdx.scene.api.Scene
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.io.File
@@ -20,7 +21,8 @@ class SceneParserTest {
                 it.name to SceneParser(GltfAsset.fromFile(it.absolutePath)!!)
             }.forEach {
                 try {
-                    it.second.parse()
+                    val protobuf = Scene.writeProtobuf(it.second.parse())
+                    Scene.readProtobuf(protobuf)
                 } catch (ex: Exception) {
                     fail("Impossible to parse the file ${it.first}", ex)
                 }

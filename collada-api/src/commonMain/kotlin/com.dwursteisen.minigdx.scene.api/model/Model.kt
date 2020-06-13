@@ -34,7 +34,12 @@ data class Color(
     val b: Float,
     @ProtoId(3)
     val alpha: Float = 1.0f
-)
+) {
+
+    companion object {
+        val INVALID = Color(-1f, -1f, -1f)
+    }
+}
 
 @Serializable
 data class UV(
@@ -42,7 +47,12 @@ data class UV(
     val x: Float,
     @ProtoId(1)
     val y: Float
-)
+) {
+
+    companion object {
+        val INVALID = UV(-1f, -1f)
+    }
+}
 
 @Serializable
 data class Vertex(
@@ -51,9 +61,9 @@ data class Vertex(
     @ProtoId(1)
     val normal: Normal,
     @ProtoId(2)
-    val color: Color? = null,
+    val color: Color = Color.INVALID,
     @ProtoId(3)
-    val uv: UV? = null
+    val uv: UV = UV.INVALID
 )
 
 @Serializable
@@ -61,7 +71,7 @@ data class Primitive(
     @ProtoId(0)
     val vertices: List<Vertex> = emptyList(),
     @ProtoId(1)
-    val materialId: Int? = null
+    val materialId: Int = -1
 )
 
 @Serializable

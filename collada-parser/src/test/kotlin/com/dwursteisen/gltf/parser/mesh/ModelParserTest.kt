@@ -8,6 +8,7 @@ import com.dwursteisen.gltf.parser.support.assertMat4Equals
 import com.dwursteisen.gltf.parser.support.assertPositionEquals
 import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.model.Position
+import com.dwursteisen.minigdx.scene.api.model.UV
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -61,10 +62,12 @@ class ModelParserTest {
         val objects = ModelParser(cube).objects()
         val uvs = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
-            .mapNotNull { it.uv }
+            .map { it.uv }
+            .toSet()
 
-        assertTrue(uvs.isEmpty())
-        assertNull(objects.getValue("Cube").mesh.primitives.first().materialId)
+        assertTrue(uvs.contains(UV.INVALID))
+        assertEquals(1, uvs.size)
+        assertEquals(-1, objects.getValue("Cube").mesh.primitives.first().materialId)
     }
 
     @Test
@@ -72,16 +75,17 @@ class ModelParserTest {
         val objects = ModelParser(simpleUv).objects()
         val uvs = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
-            .mapNotNull { it.uv }
+            .map { it.uv }
 
         assertTrue(uvs.isNotEmpty())
+        assertFalse(uvs.contains(UV.INVALID))
     }
 
     @Test
     fun `parse | it parses a mesh with more than one material`() {
         val objects = ModelParser(multipleUv).objects()
         val materials = objects.flatMap { it.value.mesh.primitives }
-            .mapNotNull { it.materialId }
+            .map { it.materialId }
 
         assertEquals(2, materials.size)
     }
