@@ -34,13 +34,6 @@ class CameraParser(private val source: GltfAsset) {
                                 0f,
                                 0f
                             ), -90f
-                        ) *
-                        rotation(
-                            Float3(
-                                0f,
-                                1f,
-                                0f
-                            ), -90f
                         )
                 factory(node.name ?: "", cam.camera!!, transformation)
             }
@@ -69,7 +62,7 @@ class CameraParser(private val source: GltfAsset) {
                 name = name,
                 far = camera.perspective?.zFar ?: 0f,
                 near = camera.perspective?.zNear ?: 0f,
-                fov = camera.perspective?.yFov ?: 90f,
+                fov = camera.perspective?.yFov?.let { it * 100f } ?: 90f,
                 transformation = Transformation(transformation.asGLArray().toFloatArray())
             )
         }

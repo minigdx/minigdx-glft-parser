@@ -44,7 +44,11 @@ fun assertMat4Equals(expected: Mat4, actual: Mat4) {
             Assertions.assertEquals(value, array[i], 0.001f)
         }
     } catch (ex: AssertionFailedError) {
-        throw AssertionFailedError("""expected: $expected but was: $actual.
+        throw AssertionFailedError("""expected: 
+            |$expected 
+            |but was: 
+            |$actual.
+            |
             |
             |expected position: ${expected.position}
             |actual position: ${actual.position}

@@ -26,7 +26,7 @@ class ModelParserTest {
         assertEquals(1, objects.size)
 
         val cube = objects.getValue("Cube")
-        val transformation = translation(Float3(1f, 2f, -3f))
+        val transformation = translation(Float3(1f, 3f, -2f))
 
         assertMat4Equals(transformation, Mat4.fromColumnMajor(*cube.transformation.matrix))
     }

@@ -10,7 +10,7 @@ import com.dwursteisen.gltf.parser.support.toIntArray
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.model.*
 
-class ModelParser(val gltfAsset: GltfAsset) {
+class ModelParser(private val gltfAsset: GltfAsset) {
 
     fun objects(): Map<String, Model> {
         val nodes = gltfAsset.nodes.filter { it.mesh != null }

@@ -6,7 +6,7 @@ import com.curiouscreature.kotlin.math.*
 val GltfNode.transformation: Mat4
     get() {
         // The inversion of z and y is on purpose
-        val t = translation.let { Float3(it.x, -it.z, -it.y) }
+        val t = translation.let { Float3(it.x, it.y, it.z) }
             .let { translation(it) }
 
         val r = rotation.let { Quaternion(it.i, it.j, it.k, it.a) }
