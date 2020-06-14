@@ -23,3 +23,23 @@ fun GltfAccessor?.toFloatArray(): FloatArray {
         floats.toFloatArray()
     } ?: floatArrayOf()
 }
+
+fun GltfAccessor?.toIntArray(): IntArray {
+    if (this == null) {
+        return intArrayOf()
+    }
+    if (componentType != GltfComponentType.UNSIGNED_SHORT) {
+        throw IllegalStateException("The component type is '$componentType'. Expected Float instead.")
+    }
+
+    return bufferView?.let {
+        val data = it.buffer.data
+        val stream = LittleEndien(ByteArrayInputStream(data, it.byteOffset, it.byteLength))
+        val shorts = mutableListOf<Short>()
+        while (stream.available() > 0) {
+            shorts.add(stream.readShort())
+        }
+        shorts.map { it.toInt() }.toIntArray()
+    } ?: intArrayOf()
+}
+

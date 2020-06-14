@@ -6,6 +6,7 @@ import com.adrienben.tools.gltf.models.GltfMesh
 import com.adrienben.tools.gltf.models.GltfNode
 import com.dwursteisen.gltf.parser.support.isEmissiveTexture
 import com.dwursteisen.gltf.parser.support.toFloatArray
+import com.dwursteisen.gltf.parser.support.toIntArray
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.model.*
 
@@ -73,12 +74,16 @@ class ModelParser(val gltfAsset: GltfAsset) {
                 )
             }
 
-            val materialId = if(primitive.material.isEmissiveTexture()) {
+            val materialId = if (primitive.material.isEmissiveTexture()) {
                 primitive.material.index
             } else {
                 -1
             }
-            Primitive(vertices, materialId = materialId)
+            Primitive(
+                vertices = vertices,
+                verticesOrder = primitive.indices.toIntArray(),
+                materialId = materialId
+            )
         }
         return Mesh(primitives)
     }

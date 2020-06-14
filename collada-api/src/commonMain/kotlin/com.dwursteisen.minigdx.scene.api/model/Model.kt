@@ -67,10 +67,12 @@ data class Vertex(
 )
 
 @Serializable
-data class Primitive(
+class Primitive(
     @ProtoId(0)
     val vertices: List<Vertex> = emptyList(),
     @ProtoId(1)
+    val verticesOrder: IntArray = intArrayOf(),
+    @ProtoId(2)
     val materialId: Int = -1
 )
 
