@@ -6,6 +6,7 @@ import com.adrienben.tools.gltf.models.GltfCamera
 import com.adrienben.tools.gltf.models.GltfCameraType
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Mat4
+import com.curiouscreature.kotlin.math.inverse
 import com.curiouscreature.kotlin.math.rotation
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.camera.Camera
@@ -35,7 +36,7 @@ class CameraParser(private val source: GltfAsset) {
                                 0f
                             ), -90f
                         )
-                factory(node.name ?: "", cam.camera!!, transformation)
+                factory(node.name ?: "", cam.camera!!, inverse(transformation))
             }
     }
 
