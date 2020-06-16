@@ -14,6 +14,8 @@ class MaterialParserTest {
     fun `parse | it returns materials`() {
         val result = MaterialParser(uv).materials()
         assertEquals(2, result.size)
+        assertEquals(4, result.values.first().width)
+        assertEquals(1, result.values.first().height)
     }
 
     @Test

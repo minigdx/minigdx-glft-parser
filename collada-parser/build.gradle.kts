@@ -37,7 +37,8 @@ dependencies {
 
     implementation("com.adrienben.tools:gltf-loader:1.0.6-alpha1")
     implementation("org.jmonkeyengine:jme3-core:3.2.2-stable")
-    implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha15")
+    implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha16")
+    implementation("org.l33tlabs.twl:pngdecoder:1.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 }

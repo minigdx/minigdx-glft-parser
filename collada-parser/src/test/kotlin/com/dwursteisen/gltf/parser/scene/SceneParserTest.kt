@@ -39,7 +39,7 @@ class SceneParserTest {
     @Test
     fun `parse | file is parsed correctly`() {
         val scene = SceneParser(scene).parse()
-        val camera = scene.cameras.values.first()
+        val camera = scene.perspectiveCameras.values.first()
         val cube = scene.models.values.first()
 
         val cameraTransformation = Mat4.fromColumnMajor(*camera.transformation.matrix)
