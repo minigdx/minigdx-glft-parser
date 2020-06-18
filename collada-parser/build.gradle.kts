@@ -35,7 +35,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jsoup:jsoup:1.12.2")
 
-    implementation("com.adrienben.tools:gltf-loader:1.0.6-alpha1")
+    implementation("com.adrienben.tools:gltf-loader:1.0.6-alpha3")
     implementation("org.jmonkeyengine:jme3-core:3.2.2-stable")
     implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha16")
     implementation("org.l33tlabs.twl:pngdecoder:1.0")
