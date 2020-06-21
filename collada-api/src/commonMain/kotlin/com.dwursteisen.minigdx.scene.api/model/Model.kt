@@ -54,6 +54,15 @@ data class UV(
     }
 }
 
+
+@Serializable
+class Influence(
+    @ProtoId(1)
+    val jointId: Int,
+    @ProtoId(2)
+    val weight: Float
+)
+
 @Serializable
 data class Vertex(
     @ProtoId(0)
@@ -63,7 +72,9 @@ data class Vertex(
     @ProtoId(2)
     val color: Color = Color.INVALID,
     @ProtoId(3)
-    val uv: UV = UV.INVALID
+    val uv: UV = UV.INVALID,
+    @ProtoId(4)
+    val influences: List<Influence> = emptyList()
 )
 
 @Serializable
@@ -89,5 +100,7 @@ data class Model(
     @ProtoId(1)
     val transformation: Transformation,
     @ProtoId(2)
-    val mesh: Mesh
+    val mesh: Mesh,
+    @ProtoId(3)
+    val armatureId: Int = -1
 )

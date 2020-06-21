@@ -44,6 +44,25 @@ class ModelParser(private val gltfAsset: GltfAsset) {
                 .chunked(4)
                 .map { Color(it[0], it[1], it[2], it[3]) }
 
+            val joints = primitive.attributes["JOINTS_0"].toIntArray()
+                .toList()
+                .chunked(4)
+
+            val weights = primitive.attributes["WEIGHTS_0"].toFloatArray()
+                .toList()
+                .chunked(4)
+
+            val influences = joints.zip(weights) { j, w ->
+                val (j1, j2, j3, j4) = j
+                val (w1, w2, w3, w4) = w
+                listOf(
+                    Influence(j1, w1),
+                    Influence(j2, w2),
+                    Influence(j3, w3),
+                    Influence(j4, w4)
+                )
+            }
+
             val material = gltfAsset.materials.getOrNull(primitive.material.index)
             val uvs = if (!material.isEmissiveTexture()) {
                 emptyList()
@@ -55,22 +74,15 @@ class ModelParser(private val gltfAsset: GltfAsset) {
             }
             val vertices = positions.mapIndexed { index, p ->
                 val n = normals[index]
-                val c = if (colors.isNotEmpty()) {
-                    colors[index]
-                } else {
-                    Color.INVALID
-                }
-
-                val uv = if (uvs.isNotEmpty()) {
-                    uvs[index]
-                } else {
-                    UV.INVALID
-                }
+                val c = colors.getOrElse(index) { Color.INVALID }
+                val uv = uvs.getOrElse(index) { UV.INVALID }
+                val influence = influences.getOrElse(index) { emptyList() }
                 Vertex(
                     position = p,
                     normal = n,
                     color = c,
-                    uv = uv
+                    uv = uv,
+                    influences = influence
                 )
             }
 

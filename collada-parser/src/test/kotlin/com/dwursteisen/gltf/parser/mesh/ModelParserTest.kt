@@ -18,6 +18,8 @@ class ModelParserTest {
     private val plane by gltf("/mesh/plane.gltf")
     private val simpleUv by gltf("/uv/uv.gltf")
     private val multipleUv by gltf("/uv/multiple_materials.gltf")
+    private val cubeWithJoints by gltf("/joints/cube_joints.gltf")
+
 
     @Test
     fun `parse | it parses a translated cube`() {
@@ -88,5 +90,15 @@ class ModelParserTest {
             .map { it.materialId }
 
         assertEquals(2, materials.size)
+    }
+
+    @Test
+    fun `parse | it parses a mesh with influence`() {
+        val objects = ModelParser(cubeWithJoints).objects()
+        val influences = objects.flatMap { it.value.mesh.primitives }
+            .flatMap { it.vertices }
+            .flatMap { it.influences }
+
+        assertTrue(influences.isNotEmpty())
     }
 }

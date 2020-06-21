@@ -13,7 +13,7 @@ import java.io.File
 
 class SceneParserTest {
 
-    private val sources = listOf("camera", "lights", "mesh", "uv")
+    private val sources = listOf("camera", "lights", "mesh", "uv", "joints")
 
     private val scene by gltf("/scene/camera_and_cube.gltf")
 
