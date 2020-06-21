@@ -1,6 +1,7 @@
 package com.dwursteisen.gltf.parser.armature
 
 import com.dwursteisen.gltf.parser.support.gltf
+import com.dwursteisen.minigdx.scene.api.Scene
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -28,7 +29,22 @@ class ArmatureParserTest {
     @Test
     fun `parse | it parse animations`() {
         val parser = ArmatureParser(cubeAnimated)
+        val animations = parser.animations()
         assertEquals(1, parser.armatures().size)
-        assertEquals(1, parser.animations().size)
+        assertEquals(1, animations.size)
+
+        val animation = animations.values.first()
+        assertEquals(25, animation.frames.size)
+    }
+
+    @Test
+    fun `animations | it returns computed animations`() {
+        val parser = ArmatureParser(cubeAnimated)
+        val scene = Scene(
+            armatures = parser.armatures(),
+            animationsList = parser.animations()
+        )
+
+        assertEquals(1, scene.animations.size)
     }
 }

@@ -10,6 +10,7 @@ import com.dwursteisen.minigdx.scene.api.Scene
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.io.File
+import kotlin.test.assertNotNull
 
 class SceneParserTest {
 
@@ -29,7 +30,8 @@ class SceneParserTest {
             }.forEach {
                 try {
                     val protobuf = Scene.writeProtobuf(it.second.parse())
-                    Scene.readProtobuf(protobuf)
+                    val scene = Scene.readProtobuf(protobuf)
+                    assertNotNull(scene.animations)
                 } catch (ex: Exception) {
                     fail("Impossible to parse the file ${it.first}", ex)
                 }

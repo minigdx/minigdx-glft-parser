@@ -1,6 +1,7 @@
 package com.dwursteisen.gltf.parser.scene
 
 import com.adrienben.tools.gltf.models.GltfAsset
+import com.dwursteisen.gltf.parser.armature.ArmatureParser
 import com.dwursteisen.gltf.parser.camera.CameraParser
 import com.dwursteisen.gltf.parser.ligts.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
@@ -17,13 +18,17 @@ class SceneParser(gltfAsset: GltfAsset) {
 
     private val lights = LightParser(gltfAsset)
 
+    private  val armatures = ArmatureParser(gltfAsset)
+
     fun parse(): Scene {
         return Scene(
             perspectiveCameras = cameras.perspectiveCameras(),
             orthographicCameras = cameras.orthographicCameras(),
             models = models.objects(),
             materials = materials.materials(),
-            pointLights = lights.pointLights()
+            pointLights = lights.pointLights(),
+            armatures = armatures.armatures(),
+            animationsList = armatures.animations()
         )
     }
 }

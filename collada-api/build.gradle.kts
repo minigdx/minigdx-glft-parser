@@ -42,6 +42,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("com.github.dwursteisen.kotlin-math:kotlin-math:1.0-SNAPSHOT")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.20.0-1.3.70-eap-274-2")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-common:0.20.0-1.3.70-eap-274-2")
             }
@@ -56,6 +57,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
+                implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0-SNAPSHOT")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0-1.3.70-eap-274-2")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:0.20.0-1.3.70-eap-274-2")
             }
@@ -69,6 +71,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                implementation("com.github.dwursteisen.kotlin-math:kotlin-math-js:1.0-SNAPSHOT")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.20.0-1.3.70-eap-274-2")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:0.20.0-1.3.70-eap-274-2")
             }
@@ -80,11 +83,11 @@ kotlin {
             }
         }
 
-        val macosX64Main by getting
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val linuxX64Main by getting
-        val mingwX64Main by getting
+        val macosX64Main by getting { }
+        val iosX64Main by getting { }
+        val iosArm64Main by getting { }
+        val linuxX64Main by getting { }
+        val mingwX64Main by getting { }
         val allNatives = listOf(
             macosX64Main,
             iosX64Main,

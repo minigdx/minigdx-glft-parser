@@ -114,7 +114,7 @@ class ArmatureParser(private val gltf: GltfAsset) {
 
     private fun GltfAnimation.toAnimation(animationIndex: Int): Animation {
         val byNode = this.channels
-            .filter { it.target.node == null }
+            .filter { it.target.node != null }
             .groupBy { it.target.node!! }
             .mapValues { channels.toKeyframes() }
 
