@@ -11,7 +11,7 @@ repositories {
     jcenter()
 }
 
-allprojects {
+subprojects {
     repositories {
         maven {
             url = uri("https://dl.bintray.com/dwursteisen/minigdx")
@@ -26,18 +26,5 @@ allprojects {
 
     if (version == "unspecified") {
         version = "1.0-SNAPSHOT"
-    }
-
-    configure<PublishingExtension> {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/dwursteisen/collada-parser")
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
-        }
     }
 }
