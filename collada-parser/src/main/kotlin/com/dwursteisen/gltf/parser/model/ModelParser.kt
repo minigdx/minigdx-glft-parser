@@ -20,10 +20,12 @@ class ModelParser(private val gltfAsset: GltfAsset) {
     }
 
     private fun GltfNode.toObject(): Model {
+        val armatureId = this.skin?.index ?: -1
         return Model(
             name = name!!,
             transformation = Transformation(transformation.asGLArray().toFloatArray()),
-            mesh = this.mesh!!.toMesh()
+            mesh = this.mesh!!.toMesh(),
+            armatureId = armatureId
         )
     }
 
