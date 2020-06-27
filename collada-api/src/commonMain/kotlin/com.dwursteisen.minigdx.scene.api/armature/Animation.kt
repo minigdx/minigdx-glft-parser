@@ -9,9 +9,7 @@ class Frame(
     @ProtoId(0)
     val time: Float,
     @ProtoId(1)
-    val jointId: Int,
-    @ProtoId(2)
-    val localTransformation: Transformation
+    val globalTransformations: Array<Transformation>
 )
 
 @Serializable
@@ -19,9 +17,11 @@ class Animation(
     @ProtoId(0)
     val id: Int,
     @ProtoId(1)
-    val name: String,
+    val armatureId: Int,
     @ProtoId(2)
-    val duration: Float,
+    val name: String,
     @ProtoId(3)
+    val duration: Float,
+    @ProtoId(4)
     val frames: List<Frame> = emptyList()
 )

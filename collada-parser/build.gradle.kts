@@ -40,5 +40,6 @@ dependencies {
     implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha17")
     implementation("org.l33tlabs.twl:pngdecoder:1.0")
 
+    testImplementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha17")
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 }

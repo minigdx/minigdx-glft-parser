@@ -28,7 +28,7 @@ class SceneParser(gltfAsset: GltfAsset) {
             materials = materials.materials(),
             pointLights = lights.pointLights(),
             armatures = armatures.armatures(),
-            animationsList = armatures.animations()
+            animations = armatures.animations()
         )
     }
 }

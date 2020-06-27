@@ -7,12 +7,8 @@ import kotlinx.serialization.protobuf.ProtoId
 @Serializable
 class Joint(
     @ProtoId(0)
-    val id: Int,
-    @ProtoId(1)
     val name: String,
-    @ProtoId(2)
-    var childs: List<Joint> = emptyList(),
-    @ProtoId(3)
+    @ProtoId(1)
     val inverseGlobalTransformation: Transformation
 )
 
@@ -23,5 +19,5 @@ class Armature(
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
-    val rootJoint: Joint
+    val joints: Array<Joint>
 )

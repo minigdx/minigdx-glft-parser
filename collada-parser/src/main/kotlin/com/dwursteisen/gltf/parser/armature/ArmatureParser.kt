@@ -4,47 +4,47 @@ import collada.Transformation
 import com.adrienben.tools.gltf.models.*
 import com.curiouscreature.kotlin.math.*
 import com.dwursteisen.gltf.parser.support.toFloatArray
-import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.armature.Animation
 import com.dwursteisen.minigdx.scene.api.armature.Armature
 import com.dwursteisen.minigdx.scene.api.armature.Frame
 import com.dwursteisen.minigdx.scene.api.armature.Joint
 
 typealias KeyFrame = Pair<Float, Mat4>
+typealias GltfIndex = Int
 
 class ArmatureParser(private val gltf: GltfAsset) {
 
-    private fun GltfSkin.toArmature(): Armature {
-        fun convert(j: GltfNode, parentGlobalTransformation: Mat4 = Mat4.identity()): Joint {
-            val globalTransformation = parentGlobalTransformation * j.transformation
-            return Joint(
-                id = j.index,
-                name = j.name ?: "",
-                childs = j.children?.map { convert(it, globalTransformation) } ?: emptyList(),
-                inverseGlobalTransformation = Transformation(inverse(globalTransformation).asGLArray().toFloatArray())
+    private fun GltfSkin.toArmature(index: Int): Armature {
+        val matrices = inverseBindMatrices.toFloatArray()
+            .toList()
+            .chunked(16)
+
+        val joints = this.joints.mapIndexed { index, gltfNode ->
+            Joint(
+                name = gltfNode.name ?: "",
+                inverseGlobalTransformation = Transformation(matrices[index].toFloatArray())
             )
         }
 
         return Armature(
             id = index,
             name = name ?: "",
-            rootJoint = convert(this.joints.first())
+            joints = joints.toTypedArray()
         )
     }
 
     fun armatures(): Map<Int, Armature> {
         val skins = gltf.skin ?: emptyList()
-        return skins.map { it.toArmature() }
+        return skins.mapIndexed { index, skin -> skin.toArmature(index) }
             .map { it.id to it }
             .toMap()
     }
 
-    fun animations(): Map<String, Animation> {
+    fun animations(): Map<Int, List<Animation>> {
         return gltf.animations.mapIndexed { index, it ->
             it.toAnimation(index)
-        }.map {
-            it.name to it
-        }.toMap()
+        }.flatten()
+            .groupBy { it.armatureId }
     }
 
     private fun GltfChannel.convert(chunk: Int, toMat: (List<Float>) -> Mat4): List<KeyFrame> {
@@ -59,6 +59,7 @@ class ArmatureParser(private val gltf: GltfAsset) {
         }
     }
 
+    // should be called for one node!
     private fun List<GltfChannel>.toKeyframes(): List<KeyFrame> {
         val byTargets = this.groupBy { it.target.path }
 
@@ -112,27 +113,55 @@ class ArmatureParser(private val gltf: GltfAsset) {
         }
     }
 
-    private fun GltfAnimation.toAnimation(animationIndex: Int): Animation {
-        val byNode = this.channels
-            .filter { it.target.node != null }
-            .groupBy { it.target.node!! }
-            .mapValues { channels.toKeyframes() }
+    private class AnimationDescription(
+        val name: String,
+        val skinId: Int,
+        val channels: List<GltfChannel>
+    )
 
-        val frames = byNode.flatMap { (node, keyframe) ->
-            keyframe.map {
-                Frame(
-                    time = it.first,
-                    jointId = node.index,
-                    localTransformation = Transformation(it.second.asGLArray().toFloatArray())
-                )
+    private fun GltfAnimation.toAnimation(animationIndex: Int): List<Animation> {
+        return gltf.skin?.mapIndexed { index, skin ->
+            val channels = this.channels.filter { skin.joints.contains(it.target.node) }
+            val transformations: Map<Int, List<KeyFrame>> = channels.groupBy { it.target.node!!.index }
+                .mapValues { it.value.toKeyframes() }
+            val byTime: Map<Float, Map<GltfIndex, Mat4>> = transformations.flatMap { (index, frames) ->
+                frames.map { it.first to (index to it.second) }
+            }.groupBy { it.first }
+                .mapValues { it.value.map { it.second }.toMap() }
+
+            val animation = byTime.mapValues { (_, localTransforms) ->
+                skin.toFrames(localTransforms)
             }
-        }
+            Animation(
+                id = animationIndex,
+                armatureId = index,
+                name = name ?: "",
+                duration = animation.keys.max() ?: 0f,
+                frames = animation.map { (time, globalTransformations) ->
+                    Frame(
+                        time = time,
+                        globalTransformations = globalTransformations.map {
+                            Transformation(
+                                it.asGLArray().toFloatArray()
+                            )
+                        }.toTypedArray()
+                    )
+                }
+            )
+        } ?: emptyList()
+    }
 
-        return Animation(
-            id = animationIndex,
-            name = name ?: "",
-            duration = frames.map { it.time }.max() ?: 0f,
-            frames = frames
-        )
+    private fun GltfSkin.toFrames(localTransforms: Map<GltfIndex, Mat4>): List<Mat4> {
+        val root = this.joints.first()
+        val globals = mutableMapOf<GltfIndex, Mat4>()
+        fun GltfNode.traverse(parent: Mat4 = Mat4.identity()) {
+            val global = parent * localTransforms[index]!!
+            globals[index] = global
+            children?.forEach { it.traverse(global) }
+        }
+        root.traverse()
+        return this.joints.map { node ->
+            globals.getValue(node.index)
+        }
     }
 }
