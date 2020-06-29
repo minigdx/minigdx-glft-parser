@@ -1,4 +1,4 @@
-rootProject.name = "collada-parser"
+rootProject.name = "minigdx-gltf-parser"
 
 include(":collada-parser")
 include(":collada-gradle-plugin")

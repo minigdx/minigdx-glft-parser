@@ -13,6 +13,14 @@ tasks {
     }
 }
 
+configure<PublishingExtension> {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
+
 dependencies {
     api(gradleApi())
     implementation(kotlin("stdlib-jdk8"))

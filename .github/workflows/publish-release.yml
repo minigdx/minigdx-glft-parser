@@ -6,7 +6,11 @@ on:
 
 jobs:
   publish-release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest, ubuntu-latest]
+
+    runs-on: ${{matrix.os}}
 
     steps:
       - name: Checkout latest code
@@ -24,10 +28,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        # The GITHUB_REF tag comes in the format 'refs/tags/xxx'.
-        # So if we split on '/' and take the 3rd value, we can get the release name.
-        run: |
-          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
-          echo "New version: ${NEW_VERSION}"
-          echo "Github username: ${GITHUB_ACTOR}"
-          ./gradlew -Pversion=${NEW_VERSION} publish
+        run: ./gradlew -Pversion="${{github.event.release.tag_name}}" -PcurrentOs=${{ runner.os }} -Pbintray_user=${{secrets.BINTRAY_USER}} -Pbintray_key=${{secrets.BINTRAY_KEY}} bintrayUpload
