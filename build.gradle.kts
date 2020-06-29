@@ -65,7 +65,9 @@ subprojects {
                 setPublications("linuxX64")
             }
         } else {
-            setPublications("maven")
+            if (findProperty("currentOs") == "Linux") {
+                setPublications("maven")
+            }
         }
         pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig> {
             repo = "minigdx"
