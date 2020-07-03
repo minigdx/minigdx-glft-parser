@@ -30,7 +30,7 @@ configure<PublishingExtension> {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0-1.3.70-eap-274-2")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
     implementation(project(":collada-api"))
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jsoup:jsoup:1.12.2")
