@@ -62,7 +62,7 @@ subprojects {
             } else if (findProperty("currentOs") == "Windows") {
                 setPublications("mingwX64")
             } else if (findProperty("currentOs") == "Linux") {
-                setPublications("maven", "linuxX64")
+                setPublications("maven", "linuxX64", "kotlinMultiplatform")
             }
         } else {
             if (findProperty("currentOs") == "Linux") {
