@@ -66,7 +66,11 @@ subprojects {
             }
         } else {
             if (findProperty("currentOs") == "Linux") {
-                setPublications("maven")
+                if (name == "collada-gradle-plugin") {
+                    setPublications("collada-gradle-pluginPluginMarkerMaven", "pluginMaven")
+                } else {
+                    setPublications("maven")
+                }
             }
         }
         pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig> {
