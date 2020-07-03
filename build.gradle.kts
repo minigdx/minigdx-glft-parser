@@ -56,7 +56,7 @@ subprojects {
         user = properties.getProperty("bintray.user") ?: bintrayUser
         key = properties.getProperty("bintray.key") ?: bintrayKey
         publish = true
-        if (name == "collada-api") {
+        if (name == "gltf-api") {
             if (findProperty("currentOs") == "macOS") {
                 setPublications("jvm", "js", "macosX64", "iosArm64", "iosX64", "metadata")
             } else if (findProperty("currentOs") == "Windows") {
@@ -66,8 +66,8 @@ subprojects {
             }
         } else {
             if (findProperty("currentOs") == "Linux") {
-                if (name == "collada-gradle-plugin") {
-                    setPublications("collada-gradle-pluginPluginMarkerMaven", "pluginMaven")
+                if (name == "gltf-gradle-plugin") {
+                    setPublications("gltf-gradle-pluginPluginMarkerMaven", "pluginMaven")
                 } else {
                     setPublications("maven")
                 }

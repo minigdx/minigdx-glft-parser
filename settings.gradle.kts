@@ -1,8 +1,8 @@
 rootProject.name = "minigdx-gltf-parser"
 
-include(":collada-parser")
-include(":collada-gradle-plugin")
-include(":collada-api")
+include(":gltf-parser")
+include(":gltf-gradle-plugin")
+include(":gltf-api")
 
 pluginManagement {
     repositories {
