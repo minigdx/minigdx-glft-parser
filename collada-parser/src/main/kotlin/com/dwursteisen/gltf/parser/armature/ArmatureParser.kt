@@ -152,14 +152,18 @@ class ArmatureParser(private val gltf: GltfAsset) {
     }
 
     private fun GltfSkin.toFrames(localTransforms: Map<GltfIndex, Mat4>): List<Mat4> {
-        val root = this.joints.first()
         val globals = mutableMapOf<GltfIndex, Mat4>()
         fun GltfNode.traverse(parent: Mat4 = Mat4.identity()) {
             val global = parent * localTransforms[index]!!
             globals[index] = global
             children?.forEach { it.traverse(global) }
         }
-        root.traverse()
+        val filterIndex = joints.flatMap { it.children ?: emptyList() }
+            .map { it.index }
+
+        joints.filter { !filterIndex.contains(it.index) }
+            .forEach { root -> root.traverse() }
+
         return this.joints.map { node ->
             globals.getValue(node.index)
         }
