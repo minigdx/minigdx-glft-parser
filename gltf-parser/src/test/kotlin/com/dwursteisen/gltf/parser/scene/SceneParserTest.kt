@@ -14,7 +14,7 @@ import kotlin.test.assertNotNull
 
 class SceneParserTest {
 
-    private val sources = listOf("camera", "lights", "mesh", "uv", "joints")
+    private val sources = listOf("camera", "lights", "mesh", "uv", "joints", "empty")
 
     private val scene by gltf("/scene/camera_and_cube.gltf")
 

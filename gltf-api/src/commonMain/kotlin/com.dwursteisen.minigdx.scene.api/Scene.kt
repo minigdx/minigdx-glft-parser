@@ -1,10 +1,7 @@
 package com.dwursteisen.minigdx.scene.api
 
-import com.dwursteisen.minigdx.scene.api.common.Transformation
-import com.curiouscreature.kotlin.math.Mat4
 import com.dwursteisen.minigdx.scene.api.armature.Animation
 import com.dwursteisen.minigdx.scene.api.armature.Armature
-import com.dwursteisen.minigdx.scene.api.armature.Joint
 import com.dwursteisen.minigdx.scene.api.camera.Camera
 import com.dwursteisen.minigdx.scene.api.camera.OrthographicCamera
 import com.dwursteisen.minigdx.scene.api.camera.PerspectiveCamera
@@ -17,21 +14,6 @@ import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.serialization.protobuf.ProtoId
-
-class AnimationReference(
-    val name: String,
-    val armatureId: Int
-)
-
-class Keyframe(
-    val time: Float,
-    val pose: AnimatedJoint
-)
-
-class AnimatedJoint(
-    val id: Int,
-    val globalTransformation: Transformation
-)
 
 @Serializable
 data class Scene(
@@ -50,18 +32,6 @@ data class Scene(
     @ProtoId(6)
     val animations: Map<Int, List<Animation>> = emptyMap()
 ) {
-
-    private fun Joint.toPose(
-        transformations: Map<Int, Mat4>,
-        parentGlobalTransformation: Mat4 = Mat4.identity()
-    ): AnimatedJoint {
-        return AnimatedJoint(
-            id = 0,
-            globalTransformation = Transformation(
-                floatArrayOf()
-            )
-        )
-    }
 
     companion object {
         @ExperimentalStdlibApi

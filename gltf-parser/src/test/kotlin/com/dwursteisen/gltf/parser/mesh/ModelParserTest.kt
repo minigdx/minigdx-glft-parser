@@ -19,6 +19,7 @@ class ModelParserTest {
     private val simpleUv by gltf("/uv/uv.gltf")
     private val multipleUv by gltf("/uv/multiple_materials.gltf")
     private val cubeWithJoints by gltf("/joints/cube_joints.gltf")
+    private val cubeWithBoxes by gltf("/empty/cube_with_empty.gltf")
 
 
     @Test
@@ -102,5 +103,12 @@ class ModelParserTest {
         assertTrue(influences.isNotEmpty())
 
         assertEquals(0, objects.values.first().armatureId)
+    }
+
+    @Test
+    fun `parse | it parses boxes`() {
+        val objects = ModelParser(cubeWithBoxes).objects()
+        val boxes = objects.values.first().boxes
+        assertEquals(4, boxes.size)
     }
 }
