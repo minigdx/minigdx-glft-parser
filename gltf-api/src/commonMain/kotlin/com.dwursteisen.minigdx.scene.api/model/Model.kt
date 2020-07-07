@@ -88,6 +88,14 @@ class Primitive(
 )
 
 @Serializable
+data class Boxe(
+    @ProtoId(0)
+    val name: String,
+    @ProtoId(1)
+    val transformation: Transformation
+)
+
+@Serializable
 data class Mesh(
     @ProtoId(0)
     val primitives: List<Primitive>
@@ -102,5 +110,7 @@ data class Model(
     @ProtoId(2)
     val mesh: Mesh,
     @ProtoId(3)
-    val armatureId: Int = -1
+    val armatureId: Int = -1,
+    @ProtoId(4)
+    val boxes: List<Boxe> = emptyList()
 )

@@ -27,7 +27,7 @@ subprojects {
     apply { plugin("maven-publish") }
     apply { plugin("com.jfrog.bintray") }
 
-    group = "com.github.dwursteisen.collada"
+    group = "com.github.dwursteisen.gltf"
     version = project.properties["version"] ?: "1.0-SNAPSHOT"
 
     if (version == "unspecified") {

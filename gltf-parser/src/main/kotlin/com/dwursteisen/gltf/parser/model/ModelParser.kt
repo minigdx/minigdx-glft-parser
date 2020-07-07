@@ -27,8 +27,24 @@ class ModelParser(private val gltfAsset: GltfAsset) {
                 transformation.asGLArray().toFloatArray()
             ),
             mesh = this.mesh!!.toMesh(),
-            armatureId = armatureId
+            armatureId = armatureId,
+            boxes = this.children.toBoxes()
         )
+    }
+
+    private fun List<GltfNode>?.toBoxes(): List<Boxe> {
+        val boxes = this?.filter { it.mesh == null &&
+                it.camera == null &&
+                it.skin == null &&
+                it.weights == null
+        } ?: emptyList()
+
+        return boxes.map {
+            Boxe(
+                name = it.name ?: "",
+                transformation = Transformation(it.transformation.asGLArray().toFloatArray())
+            )
+        }
     }
 
     private fun GltfMesh.toMesh(): Mesh {
@@ -101,6 +117,8 @@ class ModelParser(private val gltfAsset: GltfAsset) {
                 materialId = materialId
             )
         }
-        return Mesh(primitives)
+        return Mesh(
+            primitives = primitives
+        )
     }
 }
