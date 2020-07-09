@@ -42,7 +42,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("com.github.dwursteisen.kotlin-math:kotlin-math:1.0.0-alpha17")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.20.0")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-common:0.20.0")
             }
@@ -57,7 +56,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha17")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:0.20.0")
             }
@@ -71,7 +69,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                implementation("com.github.dwursteisen.kotlin-math:kotlin-math-js:1.0.0-alpha17")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.20.0")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:0.20.0")
             }
