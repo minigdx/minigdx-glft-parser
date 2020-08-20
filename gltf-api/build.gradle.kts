@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.3.70"
+    kotlin("plugin.serialization") version "1.4.0"
 }
 
 
@@ -11,7 +11,7 @@ kotlin {
     }
     js {
         this.useCommonJs()
-        this.nodejs
+        this.nodejs()
     }
     mingwX64() {
         binaries {
@@ -42,8 +42,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.20.0")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-common:0.20.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.0.0-RC")
             }
         }
         val commonTest by getting {
@@ -56,8 +56,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:0.20.0")
             }
         }
         val jvmTest by getting {
@@ -69,8 +67,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.20.0")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:0.20.0")
             }
         }
 
@@ -92,20 +88,20 @@ kotlin {
             linuxX64Main,
             mingwX64Main
         )
+    }
+}
 
-        allNatives.forEach {
-            it.dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.20.0")
-                api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-native:0.20.0")
-            }
-        }
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi")
     }
 }
 
 configurations {
     this.all {
-        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-js:1.3.70")
-        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")
-        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-common:1.3.70")
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-js:1.4.0")
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0")
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0")
     }
 }

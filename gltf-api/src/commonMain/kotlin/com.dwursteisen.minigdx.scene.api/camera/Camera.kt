@@ -2,7 +2,7 @@ package com.dwursteisen.minigdx.scene.api.camera
 
 import com.dwursteisen.minigdx.scene.api.common.Transformation
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
 interface Camera {
     val name: String
@@ -11,28 +11,28 @@ interface Camera {
 
 @Serializable
 data class PerspectiveCamera(
-    @ProtoId(0)
+    @ProtoNumber(0)
     override val name: String,
-    @ProtoId(1)
+    @ProtoNumber(1)
     val far: Float,
-    @ProtoId(2)
+    @ProtoNumber(2)
     val near: Float,
-    @ProtoId(3)
+    @ProtoNumber(3)
     val fov: Float,
-    @ProtoId(4)
+    @ProtoNumber(4)
     override val transformation: Transformation
 ) : Camera
 
 @Serializable
 data class OrthographicCamera(
-    @ProtoId(0)
+    @ProtoNumber(0)
     override val name: String,
-    @ProtoId(1)
+    @ProtoNumber(1)
     val far: Float,
-    @ProtoId(2)
+    @ProtoNumber(2)
     val near: Float,
-    @ProtoId(3)
+    @ProtoNumber(3)
     val scale: Float,
-    @ProtoId(4)
+    @ProtoNumber(4)
     override val transformation: Transformation
 ) : Camera

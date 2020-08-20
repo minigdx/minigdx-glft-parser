@@ -24,6 +24,7 @@ configure<PublishingExtension> {
 dependencies {
     api(gradleApi())
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
     implementation(project(":gltf-parser"))
 
     testImplementation(gradleTestKit())

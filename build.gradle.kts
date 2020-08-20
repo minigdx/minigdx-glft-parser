@@ -1,7 +1,7 @@
 import java.util.*
 
 plugins {
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.4.0"
     id("com.gradle.plugin-publish") version "0.10.1"
     id("maven-publish")
     id("com.jfrog.bintray") version "1.8.5" apply (false)
@@ -11,6 +11,7 @@ repositories {
     maven {
         url = uri("https://dl.bintray.com/dwursteisen/minigdx")
     }
+    maven(url = "https://kotlin.bintray.com/kotlinx/")
     mavenCentral()
     jcenter()
 }
@@ -20,7 +21,7 @@ subprojects {
         maven {
             url = uri("https://dl.bintray.com/dwursteisen/minigdx")
         }
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
+        maven(url = "https://kotlin.bintray.com/kotlinx/")
         mavenCentral()
         jcenter()
     }

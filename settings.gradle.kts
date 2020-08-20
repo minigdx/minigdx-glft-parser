@@ -6,7 +6,7 @@ include(":gltf-api")
 
 pluginManagement {
     repositories {
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
+        maven(url = "https://kotlin.bintray.com/kotlinx/")
         gradlePluginPortal()
     }
 }

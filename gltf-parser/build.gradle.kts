@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.3.70"
+    kotlin("plugin.serialization") version "1.4.0"
 }
 
 
@@ -30,7 +30,7 @@ configure<PublishingExtension> {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
     implementation(project(":gltf-api"))
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jsoup:jsoup:1.12.2")

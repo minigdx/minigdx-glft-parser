@@ -1,7 +1,6 @@
 package com.github.dwursteisen.gltf
 
 import com.dwursteisen.gltf.parser.Parser
-import kotlinx.serialization.ImplicitReflectionSerializer
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Input
@@ -35,7 +34,6 @@ open class GltfTask : DefaultTask() {
     val format = project.createProperty<Format>()
 
     @ExperimentalStdlibApi
-    @ImplicitReflectionSerializer
     @TaskAction
     fun generate() {
         if (gltfFiles.isPresent) {
