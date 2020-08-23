@@ -7,6 +7,7 @@ import com.dwursteisen.minigdx.scene.api.camera.OrthographicCamera
 import com.dwursteisen.minigdx.scene.api.camera.PerspectiveCamera
 import com.dwursteisen.minigdx.scene.api.light.PointLight
 import com.dwursteisen.minigdx.scene.api.material.Material
+import com.dwursteisen.minigdx.scene.api.model.Boxe
 import com.dwursteisen.minigdx.scene.api.model.Model
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import kotlinx.serialization.Serializable
@@ -33,6 +34,8 @@ data class Scene(
     @ProtoId(6)
     val animations: Map<Int, List<Animation>> = emptyMap(),
     @ProtoId(7)
+    val boxes: Map<String, Boxe> = emptyMap(),
+    @ProtoId(8)
     val children: List<Node> = emptyList()
 ) {
 

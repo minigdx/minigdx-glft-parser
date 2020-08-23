@@ -16,3 +16,11 @@ val GltfNode.transformation: Mat4
 
         return t * r * s
     }
+
+val GltfNode.isBox: Boolean
+    get() {
+        return this.mesh == null &&
+                this.camera == null &&
+                this.skin == null &&
+                this.weights == null
+    }

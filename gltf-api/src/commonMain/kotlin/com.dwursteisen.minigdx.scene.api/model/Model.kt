@@ -91,8 +91,10 @@ class Primitive(
 @Serializable
 data class Boxe(
     @ProtoId(0)
-    val name: String,
+    val id: Id = -1,
     @ProtoId(1)
+    val name: String,
+    @ProtoId(2)
     val transformation: Transformation
 )
 
@@ -109,11 +111,13 @@ data class Model(
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
+    @Deprecated("Prefer check the transformation from the scene graph")
     val transformation: Transformation,
     @ProtoId(3)
     val mesh: Mesh,
     @ProtoId(4)
     val armatureId: Int = -1,
+    @Deprecated("Prefer check the box from the scene graph")
     @ProtoId(5)
     val boxes: List<Boxe> = emptyList()
 )

@@ -7,6 +7,7 @@ import com.dwursteisen.gltf.parser.camera.CameraParser
 import com.dwursteisen.gltf.parser.ligts.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
 import com.dwursteisen.gltf.parser.model.ModelParser
+import com.dwursteisen.gltf.parser.support.isBox
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.Scene
 import com.dwursteisen.minigdx.scene.api.common.Id
@@ -35,7 +36,8 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             pointLights = lights.pointLights(),
             armatures = armatures.armatures(),
             animations = armatures.animations(),
-            children = gltfAsset.nodes.flatMap { gltfNode -> gltfNode.toNode() }
+            boxes = models.boxes(),
+            children = gltfAsset.scene?.nodes?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()
         )
     }
 
@@ -47,8 +49,23 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             camera != null -> emptyList()
             // Light
             extensions?.containsKey("KHR_lights_punctual") == true -> emptyList()
+            isBox -> listOf(createBoxNode(this))
             else -> emptyList()
         }
+    }
+
+    private fun createBoxNode(node: GltfNode): Node {
+        val id: Id = gltfAsset.nodes.filter { it.isBox }
+            .mapIndexed { index, gltfNode -> index to gltfNode }
+            .first { it.second == node }
+            .first
+
+        return Node(
+            reference = id,
+            type = ObjectType.BOX,
+            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()
+        )
     }
 
     private fun createModelNode(node: GltfNode): Node {

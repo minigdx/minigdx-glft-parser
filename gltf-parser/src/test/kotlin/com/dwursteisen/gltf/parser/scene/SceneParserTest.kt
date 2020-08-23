@@ -21,6 +21,8 @@ class SceneParserTest {
 
     private val scene by gltf("/scene/camera_and_cube.gltf")
 
+    private val sceneWithEmpty by gltf("/scene/hierarchy.gltf")
+
     private val linkedObjects by gltf("/scene/cube_linked_with_customer_properties.gltf")
 
     @Test
@@ -61,11 +63,17 @@ class SceneParserTest {
         val scene = SceneParser(linkedObjects).parse()
 
         // 3 cubes  (1 camera + 1 light but unsupported yet)
-        assertEquals(3, scene.children.size)
+        assertEquals(5, scene.children.size)
         val models = scene.children.filter { it.type == ObjectType.MODEL }
         assertEquals(3, models.size)
         val modelReferences = models.map { model -> model.reference }.toSet()
         assertEquals(1, modelReferences.size)
         assertTrue(modelReferences.contains(0))
+    }
+
+    @Test
+    fun `parse | file with objects hierarchy and empty objects`() {
+        val scene = SceneParser(sceneWithEmpty).parse()
+        assertEquals(2, scene.children.first().children.size)
     }
 }
