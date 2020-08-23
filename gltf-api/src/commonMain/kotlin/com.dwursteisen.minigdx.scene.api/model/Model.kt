@@ -1,5 +1,6 @@
 package com.dwursteisen.minigdx.scene.api.model
 
+import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.common.Transformation
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoId
@@ -104,13 +105,15 @@ data class Mesh(
 @Serializable
 data class Model(
     @ProtoId(0)
-    val name: String,
+    val id: Id = -1,
     @ProtoId(1)
-    val transformation: Transformation,
+    val name: String,
     @ProtoId(2)
-    val mesh: Mesh,
+    val transformation: Transformation,
     @ProtoId(3)
-    val armatureId: Int = -1,
+    val mesh: Mesh,
     @ProtoId(4)
+    val armatureId: Int = -1,
+    @ProtoId(5)
     val boxes: List<Boxe> = emptyList()
 )

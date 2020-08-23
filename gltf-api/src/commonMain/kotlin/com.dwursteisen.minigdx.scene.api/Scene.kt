@@ -8,6 +8,7 @@ import com.dwursteisen.minigdx.scene.api.camera.PerspectiveCamera
 import com.dwursteisen.minigdx.scene.api.light.PointLight
 import com.dwursteisen.minigdx.scene.api.material.Material
 import com.dwursteisen.minigdx.scene.api.model.Model
+import com.dwursteisen.minigdx.scene.api.relation.Node
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerialModule
@@ -30,7 +31,9 @@ data class Scene(
     @ProtoId(5)
     val armatures: Map<Int, Armature> = emptyMap(),
     @ProtoId(6)
-    val animations: Map<Int, List<Animation>> = emptyMap()
+    val animations: Map<Int, List<Animation>> = emptyMap(),
+    @ProtoId(7)
+    val children: List<Node> = emptyList()
 ) {
 
     companion object {

@@ -7,6 +7,9 @@ import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.gltf.parser.support.assertMat4Equals
 import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.Scene
+import com.dwursteisen.minigdx.scene.api.relation.ObjectType
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.io.File
@@ -17,6 +20,8 @@ class SceneParserTest {
     private val sources = listOf("camera", "lights", "mesh", "uv", "joints", "empty")
 
     private val scene by gltf("/scene/camera_and_cube.gltf")
+
+    private val linkedObjects by gltf("/scene/cube_linked_with_customer_properties.gltf")
 
     @Test
     fun `parse | it parses all file tests`() {
@@ -49,5 +54,18 @@ class SceneParserTest {
 
         val cubeTransformation = Mat4.fromColumnMajor(*cube.transformation.matrix)
         assertMat4Equals(translation(Float3(0f, 0f, -5f)), cubeTransformation)
+    }
+
+    @Test
+    fun `parse | file with linked and custom properties is parsed`() {
+        val scene = SceneParser(linkedObjects).parse()
+
+        // 3 cubes  (1 camera + 1 light but unsupported yet)
+        assertEquals(3, scene.children.size)
+        val models = scene.children.filter { it.type == ObjectType.MODEL }
+        assertEquals(3, models.size)
+        val modelReferences = models.map { model -> model.reference }.toSet()
+        assertEquals(1, modelReferences.size)
+        assertTrue(modelReferences.contains(0))
     }
 }

@@ -20,7 +20,6 @@ subprojects {
         maven {
             url = uri("https://dl.bintray.com/dwursteisen/minigdx")
         }
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
         mavenCentral()
         jcenter()
     }

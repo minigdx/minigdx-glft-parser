@@ -14,7 +14,7 @@ class ModelParser(private val gltfAsset: GltfAsset) {
 
     fun objects(): Map<String, Model> {
         val nodes = gltfAsset.nodes.filter { it.mesh != null }
-        return nodes.map { it.toObject() }
+        return nodes.mapIndexed { index, it -> it.toObject().copy(id = index) }
             .map { it.name to it }
             .toMap()
     }
