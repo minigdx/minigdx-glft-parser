@@ -4,18 +4,27 @@ import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfMesh
 import com.adrienben.tools.gltf.models.GltfNode
-import com.dwursteisen.gltf.parser.support.isEmissiveTexture
-import com.dwursteisen.gltf.parser.support.toFloatArray
-import com.dwursteisen.gltf.parser.support.toIntArray
-import com.dwursteisen.gltf.parser.support.transformation
+import com.dwursteisen.gltf.parser.support.*
 import com.dwursteisen.minigdx.scene.api.model.*
 
 class ModelParser(private val gltfAsset: GltfAsset) {
 
     fun objects(): Map<String, Model> {
         val nodes = gltfAsset.nodes.filter { it.mesh != null }
-        return nodes.map { it.toObject() }
+        return nodes.mapIndexed { index, it -> it.toObject().copy(id = index) }
             .map { it.name to it }
+            .toMap()
+    }
+
+    fun boxes(): Map<String, Boxe> {
+        return gltfAsset.nodes.filter { it.isBox }
+            .mapIndexed { index, it ->
+                Boxe(
+                    id = index,
+                    name = it.name ?: "",
+                    transformation = Transformation(it.transformation.asGLArray().toFloatArray())
+                )
+            }.map { it.name to it }
             .toMap()
     }
 
@@ -33,11 +42,7 @@ class ModelParser(private val gltfAsset: GltfAsset) {
     }
 
     private fun List<GltfNode>?.toBoxes(): List<Boxe> {
-        val boxes = this?.filter { it.mesh == null &&
-                it.camera == null &&
-                it.skin == null &&
-                it.weights == null
-        } ?: emptyList()
+        val boxes = this?.filter { it.isBox } ?: emptyList()
 
         return boxes.map {
             Boxe(
