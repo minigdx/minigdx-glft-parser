@@ -62,6 +62,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
         return Node(
             reference = id,
+            name = node.name ?: "",
             type = ObjectType.BOX,
             transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()
@@ -76,6 +77,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
         return Node(
             reference = id,
+            name = node.name ?: "",
             type = ObjectType.MODEL,
             transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()

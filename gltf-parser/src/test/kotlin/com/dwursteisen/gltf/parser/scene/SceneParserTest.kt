@@ -25,6 +25,8 @@ class SceneParserTest {
 
     private val linkedObjects by gltf("/scene/cube_linked_with_customer_properties.gltf")
 
+    private val emptyWithCube by gltf("/scene/empty_parent_of_cube.gltf")
+
     @Test
     fun `parse | it parses all file tests`() {
         sources.flatMap {
@@ -75,5 +77,21 @@ class SceneParserTest {
     fun `parse | file with objects hierarchy and empty objects`() {
         val scene = SceneParser(sceneWithEmpty).parse()
         assertEquals(2, scene.children.first().children.size)
+    }
+
+    @Test
+    fun `parse | file with empty parent of a cube`() {
+        val scene = SceneParser(emptyWithCube).parse()
+        val parentCube = scene.children.first { it.name.startsWith("Cube") }
+        val empty = parentCube.children.first()
+        val cube = empty.children.first()
+
+        val positionParent = Mat4.fromColumnMajor(*parentCube.transformation.matrix)
+        val positionEmpty = positionParent * Mat4.fromColumnMajor(*empty.transformation.matrix)
+        val positionCube = positionEmpty * Mat4.fromColumnMajor(*cube.transformation.matrix)
+
+        assertMat4Equals(translation(Float3(1f, 0f, 0f)), positionParent)
+        assertMat4Equals(translation(Float3(2f, 0f, 0f)), positionEmpty)
+        assertMat4Equals(translation(Float3(4f, 0f, 0f)), positionCube)
     }
 }

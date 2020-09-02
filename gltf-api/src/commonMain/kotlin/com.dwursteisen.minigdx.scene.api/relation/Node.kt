@@ -11,11 +11,13 @@ data class Node(
     @ProtoId(0)
     val reference: Id = -1,
     @ProtoId(1)
-    val type: ObjectType,
+    val name: String,
     @ProtoId(2)
-    val transformation: Transformation,
+    val type: ObjectType,
     @ProtoId(3)
-    val children: List<Node> = emptyList(),
+    val transformation: Transformation,
     @ProtoId(4)
+    val children: List<Node> = emptyList(),
+    @ProtoId(5)
     val customProperties: Map<String, String> = emptyMap()
 )
