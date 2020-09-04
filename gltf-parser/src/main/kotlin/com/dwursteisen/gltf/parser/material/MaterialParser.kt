@@ -36,7 +36,8 @@ class MaterialParser(private val gltfAsset: GltfAsset) {
                     id = m.index,
                     data = result,
                     width = decoder.width,
-                    height = decoder.height
+                    height = decoder.height,
+                    hasAlpha = decoder.hasAlpha()
                 )
             }.map {
                 it.name to it

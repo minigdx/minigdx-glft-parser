@@ -14,5 +14,7 @@ class Material(
     @ProtoId(3)
     val height: Int,
     @ProtoId(4)
-    val data: ByteArray
+    val data: ByteArray,
+    @ProtoId(5)
+    val hasAlpha: Boolean = false
 )
