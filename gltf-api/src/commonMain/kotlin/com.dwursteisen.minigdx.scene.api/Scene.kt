@@ -5,9 +5,10 @@ import com.dwursteisen.minigdx.scene.api.armature.Armature
 import com.dwursteisen.minigdx.scene.api.camera.Camera
 import com.dwursteisen.minigdx.scene.api.camera.OrthographicCamera
 import com.dwursteisen.minigdx.scene.api.camera.PerspectiveCamera
+import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.light.PointLight
 import com.dwursteisen.minigdx.scene.api.material.Material
-import com.dwursteisen.minigdx.scene.api.model.Boxe
+import com.dwursteisen.minigdx.scene.api.model.Box
 import com.dwursteisen.minigdx.scene.api.model.Model
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import kotlinx.serialization.Serializable
@@ -20,21 +21,21 @@ import kotlinx.serialization.protobuf.ProtoId
 @Serializable
 data class Scene(
     @ProtoId(0)
-    val perspectiveCameras: Map<String, Camera> = emptyMap(),
+    val perspectiveCameras: Map<Id, Camera> = emptyMap(),
     @ProtoId(1)
-    val orthographicCameras: Map<String, Camera> = emptyMap(),
+    val orthographicCameras: Map<Id, Camera> = emptyMap(),
     @ProtoId(2)
-    val models: Map<String, Model> = emptyMap(),
+    val models: Map<Id, Model> = emptyMap(),
     @ProtoId(3)
-    val materials: Map<String, Material> = emptyMap(),
+    val materials: Map<Id, Material> = emptyMap(),
     @ProtoId(4)
-    val pointLights: Map<String, PointLight> = emptyMap(),
+    val pointLights: Map<Id, PointLight> = emptyMap(),
     @ProtoId(5)
-    val armatures: Map<Int, Armature> = emptyMap(),
+    val armatures: Map<Id, Armature> = emptyMap(),
     @ProtoId(6)
-    val animations: Map<Int, List<Animation>> = emptyMap(),
+    val animations: Map<Id, List<Animation>> = emptyMap(),
     @ProtoId(7)
-    val boxes: Map<String, Boxe> = emptyMap(),
+    val boxes: Map<Id, Box> = emptyMap(),
     @ProtoId(8)
     val children: List<Node> = emptyList()
 ) {

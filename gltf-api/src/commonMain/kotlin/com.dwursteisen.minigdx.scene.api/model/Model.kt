@@ -81,17 +81,19 @@ data class Vertex(
 @Serializable
 class Primitive(
     @ProtoId(0)
-    val vertices: List<Vertex> = emptyList(),
+    val id: Id = Id(),
     @ProtoId(1)
-    val verticesOrder: IntArray = intArrayOf(),
+    val vertices: List<Vertex> = emptyList(),
     @ProtoId(2)
-    val materialId: Int = -1
+    val verticesOrder: IntArray = intArrayOf(),
+    @ProtoId(3)
+    val materialId: Id = Id.None
 )
 
 @Serializable
-data class Boxe(
+data class Box(
     @ProtoId(0)
-    val id: Id = -1,
+    val id: Id,
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
@@ -107,17 +109,12 @@ data class Mesh(
 @Serializable
 data class Model(
     @ProtoId(0)
-    val id: Id = -1,
+    val id: Id,
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
-    @Deprecated("Prefer check the transformation from the scene graph")
-    val transformation: Transformation,
-    @ProtoId(3)
     val mesh: Mesh,
-    @ProtoId(4)
-    val armatureId: Int = -1,
-    @Deprecated("Prefer check the box from the scene graph")
-    @ProtoId(5)
-    val boxes: List<Boxe> = emptyList()
+    @Deprecated("Please prefer the graph")
+    @ProtoId(3)
+    val armatureId: Id = Id.None
 )

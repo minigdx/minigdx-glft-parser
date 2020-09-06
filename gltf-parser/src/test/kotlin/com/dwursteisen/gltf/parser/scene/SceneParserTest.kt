@@ -56,8 +56,8 @@ class SceneParserTest {
         val cameraTransformation = Mat4.fromColumnMajor(*camera.transformation.matrix)
         assertMat4Equals(Mat4.identity(), cameraTransformation)
 
-        val cubeTransformation = Mat4.fromColumnMajor(*cube.transformation.matrix)
-        assertMat4Equals(translation(Float3(0f, 0f, -5f)), cubeTransformation)
+        val cubeTransformation = scene.children.first { it.reference == cube.id }.transformation
+        assertMat4Equals(translation(Float3(0f, 0f, -5f)), Mat4.fromColumnMajor(*cubeTransformation.matrix))
     }
 
     @Test
@@ -70,7 +70,7 @@ class SceneParserTest {
         assertEquals(3, models.size)
         val modelReferences = models.map { model -> model.reference }.toSet()
         assertEquals(1, modelReferences.size)
-        assertTrue(modelReferences.contains(0))
+        assertTrue(modelReferences.contains(scene.models.values.first().id))
     }
 
     @Test

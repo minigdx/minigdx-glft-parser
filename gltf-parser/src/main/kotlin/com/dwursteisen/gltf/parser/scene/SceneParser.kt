@@ -7,6 +7,7 @@ import com.dwursteisen.gltf.parser.camera.CameraParser
 import com.dwursteisen.gltf.parser.ligts.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
 import com.dwursteisen.gltf.parser.model.ModelParser
+import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.gltf.parser.support.isBox
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.Scene
@@ -17,15 +18,17 @@ import com.dwursteisen.minigdx.scene.api.relation.ObjectType
 
 class SceneParser(private val gltfAsset: GltfAsset) {
 
-    private val cameras = CameraParser(gltfAsset)
+    private val ids: Dictionary = Dictionary()
 
-    private val models = ModelParser(gltfAsset)
+    private val cameras = CameraParser(gltfAsset, ids)
 
-    private val materials = MaterialParser(gltfAsset)
+    private val models = ModelParser(gltfAsset, ids)
 
-    private val lights = LightParser(gltfAsset)
+    private val materials = MaterialParser(gltfAsset, ids)
 
-    private val armatures = ArmatureParser(gltfAsset)
+    private val lights = LightParser(gltfAsset, ids)
+
+    private val armatures = ArmatureParser(gltfAsset, ids)
 
     fun parse(): Scene {
         return Scene(
@@ -37,50 +40,42 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             armatures = armatures.armatures(),
             animations = armatures.animations(),
             boxes = models.boxes(),
-            children = gltfAsset.scene?.nodes?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()
+            children = gltfAsset.scene?.nodes?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
 
-    private fun GltfNode.toNode(): List<Node> {
+    private fun GltfNode.toNode(ids: Dictionary): List<Node> {
         return when {
             // Model
-            mesh != null -> listOf(createModelNode(this))
+            mesh != null -> listOf(createModelNode(ids, this))
             // Camera
             camera != null -> emptyList()
             // Light
             extensions?.containsKey("KHR_lights_punctual") == true -> emptyList()
-            isBox -> listOf(createBoxNode(this))
+            isBox -> listOf(createBoxNode(ids, this))
             else -> emptyList()
         }
     }
 
-    private fun createBoxNode(node: GltfNode): Node {
-        val id: Id = gltfAsset.nodes.filter { it.isBox }
-            .mapIndexed { index, gltfNode -> index to gltfNode }
-            .first { it.second == node }
-            .first
-
+    private fun createBoxNode(ids: Dictionary, node: GltfNode): Node {
+        val id: Id = ids.get(node)
         return Node(
             reference = id,
             name = node.name ?: "",
             type = ObjectType.BOX,
             transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
 
-    private fun createModelNode(node: GltfNode): Node {
-        val id: Id = gltfAsset.nodes.filter { it.mesh != null }
-            .mapIndexed { index, gltfNode -> index to gltfNode }
-            .first { it.second.mesh == node.mesh }
-            .first
-
+    private fun createModelNode(ids: Dictionary, node: GltfNode): Node {
         return Node(
-            reference = id,
+            reference = ids.get(node.mesh!!),
             name = node.name ?: "",
             type = ObjectType.MODEL,
             transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode() } ?: emptyList()
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
         )
     }
 }
+

@@ -1,55 +1,41 @@
 package com.dwursteisen.gltf.parser.model
 
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfMesh
 import com.adrienben.tools.gltf.models.GltfNode
 import com.dwursteisen.gltf.parser.support.*
+import com.dwursteisen.minigdx.scene.api.common.Id
+import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.dwursteisen.minigdx.scene.api.model.*
 
-class ModelParser(private val gltfAsset: GltfAsset) {
+class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
 
-    fun objects(): Map<String, Model> {
+    fun objects(): Map<Id, Model> {
         val nodes = gltfAsset.nodes.filter { it.mesh != null }
-        return nodes.mapIndexed { index, it -> it.toObject().copy(id = index) }
-            .map { it.name to it }
+        return nodes.map { it.toObject() }
+            .map { it.id to it }
             .toMap()
     }
 
-    fun boxes(): Map<String, Boxe> {
+    fun boxes(): Map<Id, Box> {
         return gltfAsset.nodes.filter { it.isBox }
-            .mapIndexed { index, it ->
-                Boxe(
-                    id = index,
+            .map { it ->
+                Box(
+                    id = ids.get(it),
                     name = it.name ?: "",
                     transformation = Transformation(it.transformation.asGLArray().toFloatArray())
                 )
-            }.map { it.name to it }
+            }.map { it.id to it }
             .toMap()
     }
 
     private fun GltfNode.toObject(): Model {
-        val armatureId = gltfAsset.skin?.indexOf(skin) ?: -1
         return Model(
+            id = ids.get(this.mesh!!),
             name = name!!,
-            transformation = Transformation(
-                transformation.asGLArray().toFloatArray()
-            ),
             mesh = this.mesh!!.toMesh(),
-            armatureId = armatureId,
-            boxes = this.children.toBoxes()
+            armatureId = skin?.let { ids.get(it) } ?: Id.None
         )
-    }
-
-    private fun List<GltfNode>?.toBoxes(): List<Boxe> {
-        val boxes = this?.filter { it.isBox } ?: emptyList()
-
-        return boxes.map {
-            Boxe(
-                name = it.name ?: "",
-                transformation = Transformation(it.transformation.asGLArray().toFloatArray())
-            )
-        }
     }
 
     private fun GltfMesh.toMesh(): Mesh {
@@ -112,9 +98,9 @@ class ModelParser(private val gltfAsset: GltfAsset) {
             }
 
             val materialId = if (primitive.material.isEmissiveTexture()) {
-                primitive.material.index
+                ids.get(primitive.material)
             } else {
-                -1
+                Id.None
             }
             Primitive(
                 vertices = vertices,

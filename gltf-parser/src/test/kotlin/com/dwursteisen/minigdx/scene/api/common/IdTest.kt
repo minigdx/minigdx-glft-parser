@@ -7,8 +7,8 @@ class IdTest {
 
     @Test
     fun generate_new_random_id() {
-        val id = NewId()
-        assertNotEquals(id.value, NewId().value)
+        val id = Id()
+        assertNotEquals(id.value, Id().value)
         assertEquals(8, id.value.length)
     }
 }

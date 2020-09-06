@@ -4,10 +4,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoId
 import kotlin.random.Random
 
-typealias Id = Int
-
 @Serializable
-data class NewId(
+data class Id(
     @ProtoId(0)
     val value: String = generate()
 ) {
@@ -24,5 +22,7 @@ data class NewId(
         private const val ID_SIZE = 8
 
         private val CONVERT = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F")
+
+        val None = Id("NONE")
     }
 }

@@ -1,12 +1,10 @@
 package com.dwursteisen.gltf.parser.mesh
 
-import com.curiouscreature.kotlin.math.Float3
-import com.curiouscreature.kotlin.math.Mat4
-import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.gltf.parser.model.ModelParser
-import com.dwursteisen.gltf.parser.support.assertMat4Equals
+import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.gltf.parser.support.assertPositionEquals
 import com.dwursteisen.gltf.parser.support.gltf
+import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.model.Position
 import com.dwursteisen.minigdx.scene.api.model.UV
 import org.junit.jupiter.api.Assertions.*
@@ -22,23 +20,20 @@ class ModelParserTest {
     private val cubeWithBoxes by gltf("/empty/cube_with_empty.gltf")
 
 
+    private val ids = Dictionary()
+
     @Test
     fun `parse | it parses a translated cube`() {
-        val objects = ModelParser(cube).objects()
+        val objects = ModelParser(cube, ids).objects()
 
         assertEquals(1, objects.size)
-
-        val cube = objects.getValue("Cube")
-        val transformation = translation(Float3(1f, 3f, -2f))
-
-        assertMat4Equals(transformation, Mat4.fromColumnMajor(*cube.transformation.matrix))
     }
 
     @Test
     fun `parse | it parses primitives of a cube`() {
-        val objects = ModelParser(cube).objects()
+        val objects = ModelParser(cube, ids).objects()
 
-        val cube = objects.getValue("Cube").mesh
+        val cube = objects.values.first { it.name == "Cube" }.mesh
         assertEquals(1, cube.primitives.size)
         // TODO: should try to be close to 8 instead
         assertEquals(24, cube.primitives.first().vertices.size)
@@ -46,9 +41,9 @@ class ModelParserTest {
 
     @Test
     fun `parse | it parses a plane with correct coordinates`() {
-        val objects = ModelParser(plane).objects()
+        val objects = ModelParser(plane, ids).objects()
 
-        val cube = objects.getValue("Plane").mesh
+        val cube = objects.values.first { it.name == "Plane" }.mesh
         assertEquals(1, cube.primitives.size)
         assertEquals(4, cube.primitives.first().vertices.size)
 
@@ -62,7 +57,7 @@ class ModelParserTest {
 
     @Test
     fun `parse | it parses a mesh with no material`() {
-        val objects = ModelParser(cube).objects()
+        val objects = ModelParser(cube, ids).objects()
         val uvs = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
             .map { it.uv }
@@ -70,12 +65,12 @@ class ModelParserTest {
 
         assertTrue(uvs.contains(UV.INVALID))
         assertEquals(1, uvs.size)
-        assertEquals(-1, objects.getValue("Cube").mesh.primitives.first().materialId)
+        assertEquals(Id.None, objects.values.first { it.name == "Cube" }.mesh.primitives.first().materialId)
     }
 
     @Test
     fun `parse | it parses a mesh with one material`() {
-        val objects = ModelParser(simpleUv).objects()
+        val objects = ModelParser(simpleUv, ids).objects()
         val uvs = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
             .map { it.uv }
@@ -86,7 +81,7 @@ class ModelParserTest {
 
     @Test
     fun `parse | it parses a mesh with more than one material`() {
-        val objects = ModelParser(multipleUv).objects()
+        val objects = ModelParser(multipleUv, ids).objects()
         val materials = objects.flatMap { it.value.mesh.primitives }
             .map { it.materialId }
 
@@ -95,20 +90,13 @@ class ModelParserTest {
 
     @Test
     fun `parse | it parses a mesh with influence`() {
-        val objects = ModelParser(cubeWithJoints).objects()
+        val objects = ModelParser(cubeWithJoints, ids).objects()
         val influences = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
             .flatMap { it.influences }
 
         assertTrue(influences.isNotEmpty())
 
-        assertEquals(0, objects.values.first().armatureId)
-    }
-
-    @Test
-    fun `parse | it parses boxes`() {
-        val objects = ModelParser(cubeWithBoxes).objects()
-        val boxes = objects.values.first().boxes
-        assertEquals(4, boxes.size)
+        assertNotNull(objects.values.first().armatureId)
     }
 }

@@ -5,6 +5,6 @@ import kotlinx.serialization.protobuf.ProtoId
 
 @Serializable
 class Transformation(
-    @ProtoId(1)
+    @ProtoId(0)
     val matrix: FloatArray
 )
