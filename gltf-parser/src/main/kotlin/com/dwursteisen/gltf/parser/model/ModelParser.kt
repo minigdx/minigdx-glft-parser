@@ -73,7 +73,7 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
             }
 
             val material = gltfAsset.materials.getOrNull(primitive.material.index)
-            val uvs = if (!material.isEmissiveTexture()) {
+            val uvs = if (!material.isSupportedTexture()) {
                 emptyList()
             } else {
                 primitive.attributes["TEXCOORD_0"].toFloatArray()
@@ -95,7 +95,7 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
                 )
             }
 
-            val materialId = if (primitive.material.isEmissiveTexture()) {
+            val materialId = if (primitive.material.isSupportedTexture()) {
                 ids.get(primitive.material)
             } else {
                 Id.None

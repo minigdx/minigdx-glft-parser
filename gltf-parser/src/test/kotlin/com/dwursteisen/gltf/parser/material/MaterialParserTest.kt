@@ -13,6 +13,8 @@ class MaterialParserTest {
 
     private val alpha by gltf("/uv/alpha.gltf")
 
+    private val bsdfTexture by gltf("/uv/bsdf_texture.gltf")
+
     private val ids = Dictionary()
 
     @Test
@@ -35,5 +37,12 @@ class MaterialParserTest {
         val result = MaterialParser(alpha, ids).materials()
         assertEquals(1, result.size)
         assertEquals(true, result.values.first().hasAlpha)
+    }
+
+    @Test
+    fun `parse | it parses bsdf texture`() {
+        val result = MaterialParser(bsdfTexture, ids).materials()
+        assertEquals(1, result.size)
+        assertEquals(false, result.values.first().hasAlpha)
     }
 }
