@@ -19,7 +19,7 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
 
     private fun <T : Camera> GltfAsset.convertToCameras(
         type: GltfCameraType,
-        factory: (name: String, camera: GltfCamera, transformation: Mat4) -> T
+        factory: (name: String, camera: GltfCamera) -> T
     ): List<T> {
         val cameras = this.nodes.filter { node ->
             val children = node.children ?: emptyList()
@@ -29,30 +29,18 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
         return cameras
             .map { node ->
                 val cam = node.children!!.first { it.camera != null }
-                // Default camera orientation in blender is rotated by 90 on x and y.
-                val transformation = node.transformation *
-                        rotation(
-                            Float3(
-                                1f,
-                                0f,
-                                0f
-                            ), -90f
-                        )
-                factory(node.name ?: "", cam.camera!!, inverse(transformation))
+                factory(node.name ?: "", cam.camera!!)
             }
     }
 
     fun orthographicCameras(): Map<Id, OrthographicCamera> {
-        val factory = { name: String, camera: GltfCamera, transformation: Mat4 ->
+        val factory = { name: String, camera: GltfCamera ->
             OrthographicCamera(
                 id = ids.get(camera),
                 name = name,
                 far = camera.orthographic?.zFar ?: 0f,
                 near = camera.orthographic?.zNear ?: 0f,
-                scale = camera.orthographic?.xMag ?: 0f,
-                transformation = Transformation(
-                    transformation.asGLArray().toFloatArray()
-                )
+                scale = camera.orthographic?.xMag ?: 0f
             )
         }
         return source.convertToCameras(
@@ -63,16 +51,13 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
     }
 
     fun perspectiveCameras(): Map<Id, PerspectiveCamera> {
-        val factory = { name: String, camera: GltfCamera, transformation: Mat4 ->
+        val factory = { name: String, camera: GltfCamera ->
             PerspectiveCamera(
                 id = ids.get(camera),
                 name = name,
                 far = camera.perspective?.zFar ?: 0f,
                 near = camera.perspective?.zNear ?: 0f,
-                fov = camera.perspective?.yFov?.let { it * 100f } ?: 90f,
-                transformation = Transformation(
-                    transformation.asGLArray().toFloatArray()
-                )
+                fov = camera.perspective?.yFov?.let { it * 100f } ?: 90f
             )
         }
         return source.convertToCameras(

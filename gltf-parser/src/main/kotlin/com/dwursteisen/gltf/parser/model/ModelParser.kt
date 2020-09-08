@@ -22,8 +22,7 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
             .map { it ->
                 Box(
                     id = ids.get(it),
-                    name = it.name ?: "",
-                    transformation = Transformation(it.transformation.asGLArray().toFloatArray())
+                    name = it.name ?: ""
                 )
             }.map { it.id to it }
             .toMap()
@@ -33,8 +32,7 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
         return Model(
             id = ids.get(this.mesh!!),
             name = name!!,
-            mesh = this.mesh!!.toMesh(),
-            armatureId = skin?.let { ids.get(it) } ?: Id.None
+            mesh = this.mesh!!.toMesh()
         )
     }
 

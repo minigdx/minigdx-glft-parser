@@ -20,7 +20,6 @@ class CameraParserTest {
 
         val camera = cameras.values.first()
         assertEquals("Orthographic", camera.name)
-        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*camera.transformation.matrix))
     }
 
     @Test
@@ -30,7 +29,6 @@ class CameraParserTest {
 
         val camera = cameras.values.first()
         assertEquals("Perspective", camera.name)
-        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*camera.transformation.matrix))
 
         assertEquals(100f, camera.far)
         assertEquals(0.1f, camera.near)

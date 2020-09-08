@@ -8,7 +8,6 @@ import kotlinx.serialization.protobuf.ProtoId
 interface Camera {
     val id: Id
     val name: String
-    val transformation: Transformation
 }
 
 @Serializable
@@ -22,9 +21,7 @@ data class PerspectiveCamera(
     @ProtoId(3)
     val near: Float,
     @ProtoId(4)
-    val fov: Float,
-    @ProtoId(5)
-    override val transformation: Transformation
+    val fov: Float
 ) : Camera
 
 @Serializable
@@ -38,7 +35,5 @@ data class OrthographicCamera(
     @ProtoId(3)
     val near: Float,
     @ProtoId(4)
-    val scale: Float,
-    @ProtoId(5)
-    override val transformation: Transformation
+    val scale: Float
 ) : Camera

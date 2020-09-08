@@ -1,6 +1,6 @@
 package com.dwursteisen.gltf.parser.light
 
-import com.dwursteisen.gltf.parser.ligts.LightParser
+import com.dwursteisen.gltf.parser.lights.LightParser
 import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.gltf.parser.support.gltf
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -95,9 +95,7 @@ data class Box(
     @ProtoId(0)
     val id: Id,
     @ProtoId(1)
-    val name: String,
-    @ProtoId(2)
-    val transformation: Transformation
+    val name: String
 )
 
 @Serializable
@@ -113,8 +111,5 @@ data class Model(
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
-    val mesh: Mesh,
-    @Deprecated("Please prefer the graph")
-    @ProtoId(3)
-    val armatureId: Id = Id.None
+    val mesh: Mesh
 )

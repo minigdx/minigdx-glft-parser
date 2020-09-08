@@ -1,4 +1,4 @@
-package com.dwursteisen.gltf.parser.ligts
+package com.dwursteisen.gltf.parser.lights
 
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfNode

@@ -27,6 +27,10 @@ class SceneParserTest {
 
     private val emptyWithCube by gltf("/scene/empty_parent_of_cube.gltf")
 
+    private val camera by gltf("/camera/camera_default.gltf")
+
+    private val animation by gltf("/joints/cube_joints_animated.gltf")
+
     @Test
     fun `parse | it parses all file tests`() {
         sources.flatMap {
@@ -52,9 +56,6 @@ class SceneParserTest {
         val scene = SceneParser(scene).parse()
         val camera = scene.perspectiveCameras.values.first()
         val cube = scene.models.values.first()
-
-        val cameraTransformation = Mat4.fromColumnMajor(*camera.transformation.matrix)
-        assertMat4Equals(Mat4.identity(), cameraTransformation)
 
         val cubeTransformation = scene.children.first { it.reference == cube.id }.transformation
         assertMat4Equals(translation(Float3(0f, 0f, -5f)), Mat4.fromColumnMajor(*cubeTransformation.matrix))
@@ -93,5 +94,22 @@ class SceneParserTest {
         assertMat4Equals(translation(Float3(1f, 0f, 0f)), positionParent)
         assertMat4Equals(translation(Float3(2f, 0f, 0f)), positionEmpty)
         assertMat4Equals(translation(Float3(4f, 0f, 0f)), positionCube)
+    }
+
+    @Test
+    fun `parse | it parses cameras`() {
+        val scene = SceneParser(camera).parse()
+        val (perspective, ortho) = scene.children.filter { it.type == ObjectType.CAMERA }
+        assertEquals("Perspective", perspective.name)
+        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*perspective.transformation.matrix))
+        assertEquals("Orthographic", ortho.name)
+        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*ortho.transformation.matrix))
+    }
+
+    @Test
+    fun `parse | it parses armature`() {
+        val scene = SceneParser(animation).parse()
+        val armature = scene.children.first() { it.type == ObjectType.ARMATURE }
+        assertMat4Equals(translation(Float3(0f, 0f, 1f)), Mat4.fromColumnMajor(*armature.transformation.matrix))
     }
 }

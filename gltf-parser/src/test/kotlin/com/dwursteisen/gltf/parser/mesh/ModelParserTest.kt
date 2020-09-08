@@ -96,7 +96,5 @@ class ModelParserTest {
             .flatMap { it.influences }
 
         assertTrue(influences.isNotEmpty())
-
-        assertNotNull(objects.values.first().armatureId)
     }
 }

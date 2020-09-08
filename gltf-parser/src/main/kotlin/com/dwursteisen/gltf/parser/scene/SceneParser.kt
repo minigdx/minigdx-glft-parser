@@ -2,9 +2,12 @@ package com.dwursteisen.gltf.parser.scene
 
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfNode
+import com.curiouscreature.kotlin.math.Float3
+import com.curiouscreature.kotlin.math.inverse
+import com.curiouscreature.kotlin.math.rotation
 import com.dwursteisen.gltf.parser.armature.ArmatureParser
 import com.dwursteisen.gltf.parser.camera.CameraParser
-import com.dwursteisen.gltf.parser.ligts.LightParser
+import com.dwursteisen.gltf.parser.lights.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
 import com.dwursteisen.gltf.parser.model.ModelParser
 import com.dwursteisen.gltf.parser.support.Dictionary
@@ -49,14 +52,47 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             // Model
             mesh != null -> listOf(createModelNode(ids, this))
             // Camera
-            camera != null -> emptyList()
+            children?.any { it.camera != null } == true -> listOf(createCamera(ids, this))
             // Light
             extensions?.containsKey("KHR_lights_punctual") == true -> emptyList()
+            // Armature
+            children?.any { it.skin != null} == true -> listOf(createArmature(ids, this))
+            // Box
             isBox -> listOf(createBoxNode(ids, this))
             else -> emptyList()
         }
     }
 
+    private fun createArmature(ids: Dictionary, node: GltfNode): Node {
+        val skin = node.children!!.first { it.skin != null }
+        return Node(
+            reference = ids.get(skin),
+            name = node.name ?: "",
+            type = ObjectType.ARMATURE,
+            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
+        )
+    }
+
+    private fun createCamera(ids: Dictionary, node: GltfNode): Node {
+        val camera = node.children!!.first { it.camera != null }
+        val id: Id = ids.get(camera)
+        val transformation = node.transformation *
+                rotation(
+                    Float3(
+                        1f,
+                        0f,
+                        0f
+                    ), -90f
+                )
+        return Node(
+            reference = id,
+            name = node.name ?: "",
+            type = ObjectType.CAMERA,
+            transformation = Transformation(inverse(transformation).asGLArray().toFloatArray()),
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
+        )
+    }
     private fun createBoxNode(ids: Dictionary, node: GltfNode): Node {
         val id: Id = ids.get(node)
         return Node(
