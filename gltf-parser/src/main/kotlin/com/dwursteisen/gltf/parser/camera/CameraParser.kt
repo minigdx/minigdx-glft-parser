@@ -1,15 +1,9 @@
 package com.dwursteisen.gltf.parser.camera
 
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfCamera
 import com.adrienben.tools.gltf.models.GltfCameraType
-import com.curiouscreature.kotlin.math.Float3
-import com.curiouscreature.kotlin.math.Mat4
-import com.curiouscreature.kotlin.math.inverse
-import com.curiouscreature.kotlin.math.rotation
 import com.dwursteisen.gltf.parser.support.Dictionary
-import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.camera.Camera
 import com.dwursteisen.minigdx.scene.api.camera.OrthographicCamera
 import com.dwursteisen.minigdx.scene.api.camera.PerspectiveCamera

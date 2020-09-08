@@ -66,7 +66,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
     private fun createArmature(ids: Dictionary, node: GltfNode): Node {
         val skin = node.children!!.first { it.skin != null }
         return Node(
-            reference = ids.get(skin),
+            reference = ids.get(skin.skin!!),
             name = node.name ?: "",
             type = ObjectType.ARMATURE,
             transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
@@ -76,7 +76,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     private fun createCamera(ids: Dictionary, node: GltfNode): Node {
         val camera = node.children!!.first { it.camera != null }
-        val id: Id = ids.get(camera)
+        val id: Id = ids.get(camera.camera!!)
         val transformation = node.transformation *
                 rotation(
                     Float3(
