@@ -1,6 +1,7 @@
 package com.dwursteisen.gltf.parser.armature
 
 import com.curiouscreature.kotlin.math.Mat4
+import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.Scene
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -14,23 +15,25 @@ class ArmatureParserTest {
     private val cubeAnimated by gltf("/joints/cube_joints_animated.gltf")
     private val noJoint by gltf("/mesh/cube_translated.gltf")
 
+    private val ids = Dictionary()
+
     @Test
     fun `parse | it parse armatures`() {
-        val parser = ArmatureParser(cube)
+        val parser = ArmatureParser(cube, ids)
         assertEquals(1, parser.armatures().size)
         assertTrue(parser.animations().isEmpty())
     }
 
     @Test
     fun `parse | when there is no armature, it parse nothing`() {
-        val parser = ArmatureParser(noJoint)
+        val parser = ArmatureParser(noJoint, ids)
         assertTrue(parser.armatures().isEmpty())
         assertTrue(parser.animations().isEmpty())
     }
 
     @Test
     fun `parse | it parse animations`() {
-        val parser = ArmatureParser(cubeAnimated)
+        val parser = ArmatureParser(cubeAnimated, ids)
         val animations = parser.animations()
         assertEquals(1, parser.armatures().size)
         assertEquals(1, animations.size)
@@ -41,7 +44,7 @@ class ArmatureParserTest {
 
     @Test
     fun `animations | it returns computed animations`() {
-        val parser = ArmatureParser(cubeAnimated)
+        val parser = ArmatureParser(cubeAnimated, ids)
         val scene = Scene(
             armatures = parser.armatures(),
             animations = parser.animations()
@@ -52,7 +55,7 @@ class ArmatureParserTest {
 
     @Test
     fun `animations | it returns computed correct animations`() {
-        val parser = ArmatureParser(simpleAnimation)
+        val parser = ArmatureParser(simpleAnimation, ids)
         val scene = Scene(
             armatures = parser.armatures(),
             animations = parser.animations()

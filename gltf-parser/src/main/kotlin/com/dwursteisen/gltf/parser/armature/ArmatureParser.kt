@@ -1,20 +1,22 @@
 package com.dwursteisen.gltf.parser.armature
 
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.adrienben.tools.gltf.models.*
 import com.curiouscreature.kotlin.math.*
+import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.gltf.parser.support.toFloatArray
 import com.dwursteisen.minigdx.scene.api.armature.Animation
 import com.dwursteisen.minigdx.scene.api.armature.Armature
 import com.dwursteisen.minigdx.scene.api.armature.Frame
 import com.dwursteisen.minigdx.scene.api.armature.Joint
+import com.dwursteisen.minigdx.scene.api.common.Id
+import com.dwursteisen.minigdx.scene.api.common.Transformation
 
 typealias KeyFrame = Pair<Float, Mat4>
 typealias GltfIndex = Int
 
-class ArmatureParser(private val gltf: GltfAsset) {
+class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
 
-    private fun GltfSkin.toArmature(index: Int): Armature {
+    private fun GltfSkin.toArmature(): Armature {
         val matrices = inverseBindMatrices.toFloatArray()
             .toList()
             .chunked(16)
@@ -29,23 +31,22 @@ class ArmatureParser(private val gltf: GltfAsset) {
         }
 
         return Armature(
-            id = index,
+            id = ids.get(this),
             name = name ?: "",
             joints = joints.toTypedArray()
         )
     }
 
-    fun armatures(): Map<Int, Armature> {
+    fun armatures(): Map<Id, Armature> {
         val skins = gltf.skin ?: emptyList()
-        return skins.mapIndexed { index, skin -> skin.toArmature(index) }
+        return skins.map { skin -> skin.toArmature() }
             .map { it.id to it }
             .toMap()
     }
 
-    fun animations(): Map<Int, List<Animation>> {
-        return gltf.animations.mapIndexed { index, it ->
-            it.toAnimation(index)
-        }.flatten()
+    fun animations(): Map<Id, List<Animation>> {
+        return gltf.animations.map { it.toAnimation() }
+            .flatten()
             .groupBy { it.armatureId }
     }
 
@@ -115,14 +116,8 @@ class ArmatureParser(private val gltf: GltfAsset) {
         }
     }
 
-    private class AnimationDescription(
-        val name: String,
-        val skinId: Int,
-        val channels: List<GltfChannel>
-    )
-
-    private fun GltfAnimation.toAnimation(animationIndex: Int): List<Animation> {
-        return gltf.skin?.mapIndexed { index, skin ->
+    private fun GltfAnimation.toAnimation(): List<Animation> {
+        return gltf.skin?.map { skin ->
             val channels = this.channels.filter { skin.joints.contains(it.target.node) }
             val transformations: Map<Int, List<KeyFrame>> = channels.groupBy { it.target.node!!.index }
                 .mapValues { it.value.toKeyframes() }
@@ -135,8 +130,8 @@ class ArmatureParser(private val gltf: GltfAsset) {
                 skin.toFrames(localTransforms)
             }
             Animation(
-                id = animationIndex,
-                armatureId = index,
+                id = ids.get(this),
+                armatureId = ids.get(skin),
                 name = name ?: "",
                 duration = animation.keys.max() ?: 0f,
                 frames = animation.map { (time, globalTransformations) ->
@@ -160,6 +155,7 @@ class ArmatureParser(private val gltf: GltfAsset) {
             globals[index] = global
             children?.forEach { it.traverse(global) }
         }
+
         val filterIndex = joints.flatMap { it.children ?: emptyList() }
             .map { it.index }
 
