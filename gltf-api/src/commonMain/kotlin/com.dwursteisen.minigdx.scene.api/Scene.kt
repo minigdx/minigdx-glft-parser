@@ -11,6 +11,8 @@ import com.dwursteisen.minigdx.scene.api.material.Material
 import com.dwursteisen.minigdx.scene.api.model.Box
 import com.dwursteisen.minigdx.scene.api.model.Model
 import com.dwursteisen.minigdx.scene.api.relation.Node
+import com.dwursteisen.minigdx.scene.api.sprite.AnimationName
+import com.dwursteisen.minigdx.scene.api.sprite.Sprite
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerialModule
@@ -37,7 +39,9 @@ data class Scene(
     @ProtoId(7)
     val boxes: Map<Id, Box> = emptyMap(),
     @ProtoId(8)
-    val children: List<Node> = emptyList()
+    val children: List<Node> = emptyList(),
+    @ProtoId(9)
+    val sprites: Map<Id, Sprite> = emptyMap()
 ) {
 
     companion object {
