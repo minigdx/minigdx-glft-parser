@@ -20,6 +20,7 @@ data class PerspectiveCamera(
     val far: Float,
     @ProtoId(3)
     val near: Float,
+    // in degrees
     @ProtoId(4)
     val fov: Float
 ) : Camera

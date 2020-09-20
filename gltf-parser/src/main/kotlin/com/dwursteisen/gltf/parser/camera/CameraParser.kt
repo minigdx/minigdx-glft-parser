@@ -3,6 +3,7 @@ package com.dwursteisen.gltf.parser.camera
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfCamera
 import com.adrienben.tools.gltf.models.GltfCameraType
+import com.curiouscreature.kotlin.math.degrees
 import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.minigdx.scene.api.camera.Camera
 import com.dwursteisen.minigdx.scene.api.camera.OrthographicCamera
@@ -51,7 +52,7 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
                 name = name,
                 far = camera.perspective?.zFar ?: 0f,
                 near = camera.perspective?.zNear ?: 0f,
-                fov = camera.perspective?.yFov?.let { it * 100f } ?: 90f
+                fov = camera.perspective?.yFov?.let { degrees(it) } ?: 90f
             )
         }
         return source.convertToCameras(

@@ -32,6 +32,6 @@ class CameraParserTest {
 
         assertEquals(100f, camera.far)
         assertEquals(0.1f, camera.near)
-        assertEquals(39.6f, camera.fov, 1f)
+        assertEquals(22.895191f, camera.fov, 1f)
     }
 }
