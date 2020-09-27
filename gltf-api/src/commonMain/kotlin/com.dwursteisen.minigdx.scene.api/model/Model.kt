@@ -8,33 +8,33 @@ import kotlinx.serialization.protobuf.ProtoId
 @Serializable
 data class Position(
     @ProtoId(0)
-    val x: Float,
+    var x: Float,
     @ProtoId(1)
-    val y: Float,
+    var y: Float,
     @ProtoId(2)
-    val z: Float
+    var z: Float
 )
 
 @Serializable
 data class Normal(
     @ProtoId(0)
-    val x: Float,
+    var x: Float,
     @ProtoId(1)
-    val y: Float,
+    var y: Float,
     @ProtoId(2)
-    val z: Float
+    var z: Float
 )
 
 @Serializable
 data class Color(
     @ProtoId(0)
-    val r: Float,
+    var r: Float,
     @ProtoId(1)
-    val g: Float,
+    var g: Float,
     @ProtoId(2)
-    val b: Float,
+    var b: Float,
     @ProtoId(3)
-    val alpha: Float = 1.0f
+    var alpha: Float = 1.0f
 ) {
 
     companion object {
@@ -45,9 +45,9 @@ data class Color(
 @Serializable
 data class UV(
     @ProtoId(0)
-    val x: Float,
+    var x: Float,
     @ProtoId(1)
-    val y: Float
+    var y: Float
 ) {
 
     companion object {
@@ -57,37 +57,37 @@ data class UV(
 
 
 @Serializable
-class Influence(
+data class Influence(
     @ProtoId(1)
-    val jointId: Int,
+    var jointId: Int,
     @ProtoId(2)
-    val weight: Float
+    var weight: Float
 )
 
 @Serializable
 data class Vertex(
     @ProtoId(0)
-    val position: Position,
+    var position: Position,
     @ProtoId(1)
-    val normal: Normal,
+    var normal: Normal,
     @ProtoId(2)
-    val color: Color = Color.INVALID,
+    var color: Color = Color.INVALID,
     @ProtoId(3)
-    val uv: UV = UV.INVALID,
+    var uv: UV = UV.INVALID,
     @ProtoId(4)
-    val influences: List<Influence> = emptyList()
+    var influences: List<Influence> = emptyList()
 )
 
 @Serializable
-class Primitive(
+data class Primitive(
     @ProtoId(0)
     val id: Id = Id(),
     @ProtoId(1)
-    val vertices: List<Vertex> = emptyList(),
+    var vertices: List<Vertex> = emptyList(),
     @ProtoId(2)
-    val verticesOrder: IntArray = intArrayOf(),
+    var verticesOrder: IntArray = intArrayOf(),
     @ProtoId(3)
-    val materialId: Id = Id.None
+    var materialId: Id = Id.None
 )
 
 @Serializable
@@ -101,7 +101,7 @@ data class Box(
 @Serializable
 data class Mesh(
     @ProtoId(0)
-    val primitives: List<Primitive>
+    var primitives: List<Primitive>
 )
 
 @Serializable
@@ -111,5 +111,5 @@ data class Model(
     @ProtoId(1)
     val name: String,
     @ProtoId(2)
-    val mesh: Mesh
+    var mesh: Mesh
 )

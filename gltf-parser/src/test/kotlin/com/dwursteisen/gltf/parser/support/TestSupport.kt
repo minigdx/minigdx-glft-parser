@@ -2,7 +2,11 @@ package com.dwursteisen.gltf.parser.support
 
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.curiouscreature.kotlin.math.Mat4
+import com.dwursteisen.gltf.parser.sprite.internal.AsepriteDataModel
 import com.dwursteisen.minigdx.scene.api.model.Position
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.jupiter.api.Assertions
 import org.opentest4j.AssertionFailedError
 import java.io.File
@@ -29,6 +33,17 @@ class GltfDelegate(resourceName: String) {
 
 fun gltf(resourceName: String): GltfDelegate {
     return GltfDelegate(resourceName)
+}
+
+fun aseprite(resourceName: String): Pair<AsepriteDataModel, File> {
+    val resource = GltfDelegate::class.java.getResource(resourceName) ?: throw IllegalArgumentException(
+        "$resourceName is not a valid Aseprite JSON file."
+    )
+
+    return ObjectMapper()
+        .registerModule(KotlinModule())
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .readValue(resource, AsepriteDataModel::class.java) to File(resource.toURI())
 }
 
 fun assertPositionEquals(expected: Position, actual: Position) {

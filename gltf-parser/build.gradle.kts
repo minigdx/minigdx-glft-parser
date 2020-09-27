@@ -39,6 +39,9 @@ dependencies {
     implementation("org.jmonkeyengine:jme3-core:3.2.2-stable")
     implementation("com.github.dwursteisen.kotlin-math:kotlin-math-jvm:1.0.0-alpha18")
     implementation("org.l33tlabs.twl:pngdecoder:1.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.11.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
+
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 }
