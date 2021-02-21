@@ -28,8 +28,8 @@ fun GltfAccessor?.toIntArray(): IntArray {
     if (this == null) {
         return intArrayOf()
     }
-    if (componentType != GltfComponentType.UNSIGNED_SHORT) {
-        throw IllegalStateException("The component type is '$componentType'. Expected Float instead.")
+    if (componentType != GltfComponentType.UNSIGNED_SHORT && componentType != GltfComponentType.UNSIGNED_BYTE) {
+        throw IllegalStateException("The component type is '$componentType'. Expected Short or Byte instead.")
     }
 
     return bufferView?.let {
