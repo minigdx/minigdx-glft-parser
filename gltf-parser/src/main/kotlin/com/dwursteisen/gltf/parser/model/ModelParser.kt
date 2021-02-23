@@ -5,7 +5,6 @@ import com.adrienben.tools.gltf.models.GltfMesh
 import com.adrienben.tools.gltf.models.GltfNode
 import com.dwursteisen.gltf.parser.support.*
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.dwursteisen.minigdx.scene.api.model.*
 
 class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
@@ -38,30 +37,25 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
 
     private fun GltfMesh.toMesh(): Mesh {
         val primitives = primitives.map { primitive ->
-            val positions = primitive.attributes["POSITION"].toFloatArray()
-                .toList()
-                .chunked(3)
+            val positions = primitive.attributes["POSITION"]
+                .toChunckedFloat()
                 .map { Position(it[0], it[1], it[2]) }
 
-            val normals = primitive.attributes["NORMAL"].toFloatArray()
-                .toList()
-                .chunked(3)
+            val normals = primitive.attributes["NORMAL"]
+                .toChunckedFloat()
                 .map { Normal(it[0], it[1], it[2]) }
 
-            val colors = primitive.attributes["COLOR_0"].toFloatArray()
-                .toList()
-                .chunked(4)
+            val colors = primitive.attributes["COLOR_0"]
+                .toChunckedFloat()
                 .map { Color(it[0], it[1], it[2], it[3]) }
 
-            val joints = primitive.attributes["JOINTS_0"].toIntArray()
-                .toList()
-                .chunked(4)
+            val joints = primitive.attributes["JOINTS_0"]
+                .toChunckedInt()
 
-            val weights = primitive.attributes["WEIGHTS_0"].toFloatArray()
-                .toList()
-                .chunked(4)
+            val weights = primitive.attributes["WEIGHTS_0"]
+                .toChunckedFloat()
 
-            val influences = joints.zip(weights) { j, w ->
+            val influences: List<List<Influence>> = joints.zip(weights) { j, w ->
                 val (j1, j2, j3, j4) = j
                 val (w1, w2, w3, w4) = w
                 listOf(
@@ -76,16 +70,17 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
             val uvs = if (!material.isSupportedTexture()) {
                 emptyList()
             } else {
-                primitive.attributes["TEXCOORD_0"].toFloatArray()
-                    .toList()
-                    .chunked(2)
+                primitive.attributes["TEXCOORD_0"]
+                    .toChunckedFloat()
                     .map { UV(it[0], it[1]) }
             }
             val vertices = positions.mapIndexed { index, p ->
                 val n = normals[index]
                 val c = colors.getOrElse(index) { Color.INVALID }
                 val uv = uvs.getOrElse(index) { UV.INVALID }
-                val influence = influences.getOrElse(index) { emptyList() }
+                val influence = influences.getOrElse(index) {
+                    emptyList()
+                }
                 Vertex(
                     position = p,
                     normal = n,

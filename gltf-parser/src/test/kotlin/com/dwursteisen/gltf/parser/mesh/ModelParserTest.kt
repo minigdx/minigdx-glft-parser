@@ -97,4 +97,16 @@ class ModelParserTest {
 
         assertTrue(influences.isNotEmpty())
     }
+
+    private val kong by gltf("/joints/kong.gltf")
+
+    @Test
+    fun `parse | it parses a mesh with influenceshtshtsth`() {
+        val objects = ModelParser(kong, ids).objects()
+        val influences = objects.flatMap { it.value.mesh.primitives }
+            .flatMap { it.vertices }
+            .flatMap { it.influences }
+
+        assertEquals(3760, influences.size)
+    }
 }
