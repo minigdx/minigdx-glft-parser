@@ -1,7 +1,11 @@
 package com.dwursteisen.gltf.parser.support
 
 import com.adrienben.tools.gltf.models.GltfNode
-import com.curiouscreature.kotlin.math.*
+import com.curiouscreature.kotlin.math.Float3
+import com.curiouscreature.kotlin.math.Mat4
+import com.curiouscreature.kotlin.math.Quaternion
+import com.curiouscreature.kotlin.math.scale
+import com.curiouscreature.kotlin.math.translation
 
 val GltfNode.transformation: Mat4
     get() {
@@ -20,7 +24,7 @@ val GltfNode.transformation: Mat4
 val GltfNode.isBox: Boolean
     get() {
         return this.mesh == null &&
-                this.camera == null &&
-                this.skin == null &&
-                this.weights == null
+            this.camera == null &&
+            this.skin == null &&
+            this.weights == null
     }

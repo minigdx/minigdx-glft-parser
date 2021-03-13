@@ -1,7 +1,16 @@
 package com.dwursteisen.gltf.parser.armature
 
-import com.adrienben.tools.gltf.models.*
-import com.curiouscreature.kotlin.math.*
+import com.adrienben.tools.gltf.models.GltfAnimation
+import com.adrienben.tools.gltf.models.GltfAnimationTargetPath
+import com.adrienben.tools.gltf.models.GltfAsset
+import com.adrienben.tools.gltf.models.GltfChannel
+import com.adrienben.tools.gltf.models.GltfNode
+import com.adrienben.tools.gltf.models.GltfSkin
+import com.curiouscreature.kotlin.math.Float3
+import com.curiouscreature.kotlin.math.Mat4
+import com.curiouscreature.kotlin.math.Quaternion
+import com.curiouscreature.kotlin.math.scale
+import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.gltf.parser.support.toFloatArray
 import com.dwursteisen.minigdx.scene.api.armature.Animation
@@ -133,7 +142,7 @@ class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
                 id = ids.get(this),
                 armatureId = ids.get(skin),
                 name = name ?: "",
-                duration = animation.keys.max() ?: 0f,
+                duration = animation.keys.maxOrNull() ?: 0f,
                 frames = animation.map { (time, globalTransformations) ->
                     Frame(
                         time = time,

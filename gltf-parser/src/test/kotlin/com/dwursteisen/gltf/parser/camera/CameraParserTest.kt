@@ -1,8 +1,6 @@
 package com.dwursteisen.gltf.parser.camera
 
-import com.curiouscreature.kotlin.math.Mat4
 import com.dwursteisen.gltf.parser.support.Dictionary
-import com.dwursteisen.gltf.parser.support.assertMat4Equals
 import com.dwursteisen.gltf.parser.support.gltf
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -14,7 +12,7 @@ class CameraParserTest {
     private val ids = Dictionary()
 
     @Test
-    fun `parse | it parses orthographic camera`() {
+    fun `parse - it parses orthographic camera`() {
         val cameras = CameraParser(gltf, ids).orthographicCameras()
         assertEquals(1, cameras.size)
 
@@ -23,7 +21,7 @@ class CameraParserTest {
     }
 
     @Test
-    fun `parse | it parses perspective camera`() {
+    fun `parse - it parses perspective camera`() {
         val cameras = CameraParser(gltf, ids).perspectiveCameras()
         assertEquals(1, cameras.size)
 

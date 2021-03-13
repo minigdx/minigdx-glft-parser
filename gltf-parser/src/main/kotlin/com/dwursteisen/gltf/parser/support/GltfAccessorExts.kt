@@ -77,4 +77,3 @@ fun GltfAccessor?.toIntArray(): IntArray {
         shorts.map { it.toInt() }.toIntArray()
     } ?: intArrayOf()
 }
-

@@ -18,6 +18,7 @@ import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import com.dwursteisen.minigdx.scene.api.relation.ObjectType
+import kotlinx.serialization.ExperimentalSerializationApi
 
 class SceneParser(private val gltfAsset: GltfAsset) {
 
@@ -33,6 +34,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     private val armatures = ArmatureParser(gltfAsset, ids)
 
+    @ExperimentalSerializationApi
     fun parse(): Scene {
         return Scene(
             perspectiveCameras = cameras.perspectiveCameras(),
@@ -47,6 +49,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         )
     }
 
+    @ExperimentalSerializationApi
     private fun GltfNode.toNode(ids: Dictionary): List<Node> {
         return when {
             // Model
@@ -56,13 +59,14 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             // Light
             extensions?.containsKey("KHR_lights_punctual") == true -> emptyList()
             // Armature
-            children?.any { it.skin != null} == true -> listOf(createArmature(ids, this))
+            children?.any { it.skin != null } == true -> listOf(createArmature(ids, this))
             // Box
             isBox -> listOf(createBoxNode(ids, this))
             else -> emptyList()
         }
     }
 
+    @ExperimentalSerializationApi
     private fun createArmature(ids: Dictionary, node: GltfNode): Node {
         val skin = node.children!!.first { it.skin != null }
         return Node(
@@ -74,17 +78,19 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         )
     }
 
+    @ExperimentalSerializationApi
     private fun createCamera(ids: Dictionary, node: GltfNode): Node {
         val camera = node.children!!.first { it.camera != null }
         val id: Id = ids.get(camera.camera!!)
         val transformation = node.transformation *
-                rotation(
-                    Float3(
-                        1f,
-                        0f,
-                        0f
-                    ), -90f
-                )
+            rotation(
+                Float3(
+                    1f,
+                    0f,
+                    0f
+                ),
+                -90f
+            )
         return Node(
             reference = id,
             name = node.name ?: "",
@@ -93,6 +99,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
+    @ExperimentalSerializationApi
     private fun createBoxNode(ids: Dictionary, node: GltfNode): Node {
         val id: Id = ids.get(node)
         return Node(
@@ -104,6 +111,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         )
     }
 
+    @ExperimentalSerializationApi
     private fun createModelNode(ids: Dictionary, node: GltfNode): Node {
         return Node(
             reference = ids.get(node.mesh!!),
@@ -114,4 +122,3 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         )
     }
 }
-

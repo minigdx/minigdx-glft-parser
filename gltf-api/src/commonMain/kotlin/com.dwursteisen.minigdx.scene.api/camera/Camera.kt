@@ -1,40 +1,46 @@
 package com.dwursteisen.minigdx.scene.api.camera
 
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.common.Transformation
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
 interface Camera {
+    @ExperimentalSerializationApi
     val id: Id
     val name: String
 }
 
+@ExperimentalSerializationApi
 @Serializable
+// @SerialName("perspective")
 data class PerspectiveCamera(
-    @ProtoId(0)
+    @ProtoNumber(1)
     override val id: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     override val name: String,
-    @ProtoId(2)
+    @ProtoNumber(3)
     val far: Float,
-    @ProtoId(3)
+    @ProtoNumber(4)
     val near: Float,
     // in degrees
-    @ProtoId(4)
+    @ProtoNumber(5)
     val fov: Float
 ) : Camera
 
+@ExperimentalSerializationApi
 @Serializable
+// @SerialName("orthographic")
 data class OrthographicCamera(
-    @ProtoId(0)
+    @ProtoNumber(1)
     override val id: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     override val name: String,
-    @ProtoId(2)
+    @ProtoNumber(3)
     val far: Float,
-    @ProtoId(3)
+    @ProtoNumber(4)
     val near: Float,
-    @ProtoId(4)
+    @ProtoNumber(5)
     val scale: Float
 ) : Camera

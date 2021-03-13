@@ -17,7 +17,6 @@ import java.nio.ByteBuffer
 
 class SpriteParser(private val assetsFile: File, private val assets: AsepriteDataModel) {
 
-
     private val indexedFrames: Array<FrameDetail> = indexFrames()
 
     fun parse(): Scene {
@@ -84,7 +83,6 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
         }.ifEmpty { listOf("default" to toSpriteAnimation("default", 0, indexedFrames.size - 1)) }
             .toMap()
     }
-
 
     private fun extractIndex(frameName: FrameName): Int {
         val result = REGEX.matcher(frameName)

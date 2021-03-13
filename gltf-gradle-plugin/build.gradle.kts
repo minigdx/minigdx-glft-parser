@@ -30,7 +30,7 @@ pluginBundle {
         "gltfGradlePlugin" {
             // id is captured from java-gradle-plugin configuration
             displayName = "MiniGDX gltf parser plugin"
-            description = """Configure gltf parser to transform gltf files into minigdx file format."""
+            description = "Configure gltf parser to transform gltf files into minigdx file format."
             tags = listOf("minigdx", "gltf", "kotlin")
         }
     }

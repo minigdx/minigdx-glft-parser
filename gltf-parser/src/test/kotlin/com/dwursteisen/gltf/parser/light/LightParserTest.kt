@@ -13,7 +13,7 @@ class LightParserTest {
     private val ids = Dictionary()
 
     @Test
-    fun `pointLights | it returns point lights`() {
+    fun `pointLights - it returns point lights`() {
         val lights = LightParser(lights, ids).pointLights()
         assertEquals(2, lights.values.size)
     }

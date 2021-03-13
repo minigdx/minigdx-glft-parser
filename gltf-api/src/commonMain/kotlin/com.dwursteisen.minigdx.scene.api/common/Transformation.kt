@@ -1,10 +1,12 @@
 package com.dwursteisen.minigdx.scene.api.common
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@ExperimentalSerializationApi
 @Serializable
 class Transformation(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val matrix: FloatArray
 )

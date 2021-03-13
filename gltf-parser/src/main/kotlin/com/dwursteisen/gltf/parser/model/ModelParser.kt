@@ -3,9 +3,23 @@ package com.dwursteisen.gltf.parser.model
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfMesh
 import com.adrienben.tools.gltf.models.GltfNode
-import com.dwursteisen.gltf.parser.support.*
+import com.dwursteisen.gltf.parser.support.Dictionary
+import com.dwursteisen.gltf.parser.support.isBox
+import com.dwursteisen.gltf.parser.support.isSupportedTexture
+import com.dwursteisen.gltf.parser.support.toChunckedFloat
+import com.dwursteisen.gltf.parser.support.toChunckedInt
+import com.dwursteisen.gltf.parser.support.toIntArray
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.model.*
+import com.dwursteisen.minigdx.scene.api.model.Box
+import com.dwursteisen.minigdx.scene.api.model.Color
+import com.dwursteisen.minigdx.scene.api.model.Influence
+import com.dwursteisen.minigdx.scene.api.model.Mesh
+import com.dwursteisen.minigdx.scene.api.model.Model
+import com.dwursteisen.minigdx.scene.api.model.Normal
+import com.dwursteisen.minigdx.scene.api.model.Position
+import com.dwursteisen.minigdx.scene.api.model.Primitive
+import com.dwursteisen.minigdx.scene.api.model.UV
+import com.dwursteisen.minigdx.scene.api.model.Vertex
 
 class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
 

@@ -32,7 +32,7 @@ class SceneParserTest {
     private val animation by gltf("/joints/cube_joints_animated.gltf")
 
     @Test
-    fun `parse | it parses all file tests`() {
+    fun `parse - it parses all file tests`() {
         sources.flatMap {
             File(SceneParser::class.java.getResource("/$it").toURI())
                 .walkBottomUp()
@@ -52,9 +52,10 @@ class SceneParserTest {
     }
 
     @Test
-    fun `parse | file is parsed correctly`() {
+    fun `parse - file is parsed correctly`() {
         val scene = SceneParser(scene).parse()
-        val camera = scene.perspectiveCameras.values.first()
+        // Check that there is one camera
+        scene.perspectiveCameras.values.first()
         val cube = scene.models.values.first()
 
         val cubeTransformation = scene.children.first { it.reference == cube.id }.transformation
@@ -62,7 +63,7 @@ class SceneParserTest {
     }
 
     @Test
-    fun `parse | file with linked and custom properties is parsed`() {
+    fun `parse - file with linked and custom properties is parsed`() {
         val scene = SceneParser(linkedObjects).parse()
 
         // 3 cubes  (1 camera + 1 light but unsupported yet)
@@ -75,13 +76,13 @@ class SceneParserTest {
     }
 
     @Test
-    fun `parse | file with objects hierarchy and empty objects`() {
+    fun `parse - file with objects hierarchy and empty objects`() {
         val scene = SceneParser(sceneWithEmpty).parse()
         assertEquals(2, scene.children.first().children.size)
     }
 
     @Test
-    fun `parse | file with empty parent of a cube`() {
+    fun `parse - file with empty parent of a cube`() {
         val scene = SceneParser(emptyWithCube).parse()
         val parentCube = scene.children.first { it.name.startsWith("Cube") }
         val empty = parentCube.children.first()
@@ -97,7 +98,7 @@ class SceneParserTest {
     }
 
     @Test
-    fun `parse | it parses cameras`() {
+    fun `parse - it parses cameras`() {
         val scene = SceneParser(camera).parse()
         val (perspective, ortho) = scene.children.filter { it.type == ObjectType.CAMERA }
         assertEquals("Perspective", perspective.name)
@@ -107,7 +108,7 @@ class SceneParserTest {
     }
 
     @Test
-    fun `parse | it parses armature`() {
+    fun `parse - it parses armature`() {
         val scene = SceneParser(animation).parse()
         val armature = scene.children.first() { it.type == ObjectType.ARMATURE }
         assertMat4Equals(translation(Float3(0f, 0f, 1f)), Mat4.fromColumnMajor(*armature.transformation.matrix))

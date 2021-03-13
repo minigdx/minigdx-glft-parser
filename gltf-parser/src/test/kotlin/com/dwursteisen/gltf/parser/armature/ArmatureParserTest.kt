@@ -18,21 +18,21 @@ class ArmatureParserTest {
     private val ids = Dictionary()
 
     @Test
-    fun `parse | it parse armatures`() {
+    fun `parse - it parse armatures`() {
         val parser = ArmatureParser(cube, ids)
         assertEquals(1, parser.armatures().size)
         assertTrue(parser.animations().isEmpty())
     }
 
     @Test
-    fun `parse | when there is no armature, it parse nothing`() {
+    fun `parse - when there is no armature, it parse nothing`() {
         val parser = ArmatureParser(noJoint, ids)
         assertTrue(parser.armatures().isEmpty())
         assertTrue(parser.animations().isEmpty())
     }
 
     @Test
-    fun `parse | it parse animations`() {
+    fun `parse - it parse animations`() {
         val parser = ArmatureParser(cubeAnimated, ids)
         val animations = parser.animations()
         assertEquals(1, parser.armatures().size)
@@ -43,7 +43,7 @@ class ArmatureParserTest {
     }
 
     @Test
-    fun `animations | it returns computed animations`() {
+    fun `animations - it returns computed animations`() {
         val parser = ArmatureParser(cubeAnimated, ids)
         val scene = Scene(
             armatures = parser.armatures(),
@@ -54,7 +54,7 @@ class ArmatureParserTest {
     }
 
     @Test
-    fun `animations | it returns computed correct animations`() {
+    fun `animations - it returns computed correct animations`() {
         val parser = ArmatureParser(simpleAnimation, ids)
         val scene = Scene(
             armatures = parser.armatures(),

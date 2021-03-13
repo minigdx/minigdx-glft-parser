@@ -2,7 +2,6 @@ plugins {
     id("com.github.minigdx.gradle.plugin.developer.jvm")
 }
 
-
 tasks {
     test {
         useJUnitPlatform()
@@ -13,7 +12,8 @@ tasks {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.0.1")
 
     implementation(project(":gltf-api"))
 

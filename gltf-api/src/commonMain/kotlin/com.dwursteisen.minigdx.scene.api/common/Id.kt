@@ -1,12 +1,14 @@
 package com.dwursteisen.minigdx.scene.api.common
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 import kotlin.random.Random
 
+@ExperimentalSerializationApi
 @Serializable
 data class Id(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val value: String = generate()
 ) {
 
@@ -16,7 +18,6 @@ data class Id(
             Random.nextBytes(randomValues)
             return randomValues.map { it.toInt() and 0x0F }
                 .joinToString("") { CONVERT[it] }
-
         }
 
         private const val ID_SIZE = 8
