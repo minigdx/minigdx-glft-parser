@@ -11,6 +11,10 @@ import com.dwursteisen.gltf.parser.lights.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
 import com.dwursteisen.gltf.parser.model.ModelParser
 import com.dwursteisen.gltf.parser.support.Dictionary
+import com.dwursteisen.gltf.parser.support.asMat4
+import com.dwursteisen.gltf.parser.support.combined
+import com.dwursteisen.gltf.parser.support.fromComposite
+import com.dwursteisen.gltf.parser.support.fromTransformation
 import com.dwursteisen.gltf.parser.support.isBox
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.Scene
@@ -73,7 +77,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             reference = ids.get(skin.skin!!),
             name = node.name ?: "",
             type = ObjectType.ARMATURE,
-            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            transformation = node.transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
         )
     }
@@ -82,23 +86,26 @@ class SceneParser(private val gltfAsset: GltfAsset) {
     private fun createCamera(ids: Dictionary, node: GltfNode): Node {
         val camera = node.children!!.first { it.camera != null }
         val id: Id = ids.get(camera.camera!!)
-        val transformation = node.transformation *
-            rotation(
-                Float3(
-                    1f,
-                    0f,
-                    0f
-                ),
-                -90f
-            )
+        val correction = rotation(
+            Float3(
+                1f,
+                0f,
+                0f
+            ),
+            -90f
+        )
+
+        val transformation = fromTransformation(node.transformation.combined * correction)
+
         return Node(
             reference = id,
             name = node.name ?: "",
             type = ObjectType.CAMERA,
-            transformation = Transformation(inverse(transformation).asGLArray().toFloatArray()),
+            transformation = transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
+
     @ExperimentalSerializationApi
     private fun createBoxNode(ids: Dictionary, node: GltfNode): Node {
         val id: Id = ids.get(node)
@@ -106,7 +113,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             reference = id,
             name = node.name ?: "",
             type = ObjectType.BOX,
-            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            transformation = node.transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
@@ -117,7 +124,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             reference = ids.get(node.mesh!!),
             name = node.name ?: "",
             type = ObjectType.MODEL,
-            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            transformation = node.transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
         )
     }

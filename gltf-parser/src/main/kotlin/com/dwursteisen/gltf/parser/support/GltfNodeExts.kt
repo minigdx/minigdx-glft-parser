@@ -6,8 +6,9 @@ import com.curiouscreature.kotlin.math.Mat4
 import com.curiouscreature.kotlin.math.Quaternion
 import com.curiouscreature.kotlin.math.scale
 import com.curiouscreature.kotlin.math.translation
+import com.dwursteisen.minigdx.scene.api.common.Transformation
 
-val GltfNode.transformation: Mat4
+val GltfNode.transformation: Transformation
     get() {
         val t = translation.let { Float3(it.x, it.y, it.z) }
             .let { translation(it) }
@@ -18,7 +19,7 @@ val GltfNode.transformation: Mat4
         val s = scale.let { Float3(it.x, it.y, it.z) }
             .let { scale(it) }
 
-        return t * r * s
+        return fromComposite(t,r,s)
     }
 
 val GltfNode.isBox: Boolean

@@ -5,6 +5,7 @@ import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Mat4
 import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.gltf.parser.support.assertMat4Equals
+import com.dwursteisen.gltf.parser.support.combined
 import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.Scene
 import com.dwursteisen.minigdx.scene.api.relation.ObjectType
@@ -59,7 +60,7 @@ class SceneParserTest {
         val cube = scene.models.values.first()
 
         val cubeTransformation = scene.children.first { it.reference == cube.id }.transformation
-        assertMat4Equals(translation(Float3(0f, 0f, -5f)), Mat4.fromColumnMajor(*cubeTransformation.matrix))
+        assertMat4Equals(translation(Float3(0f, 0f, -5f)), Mat4.fromColumnMajor(*cubeTransformation.translation))
     }
 
     @Test
@@ -88,9 +89,9 @@ class SceneParserTest {
         val empty = parentCube.children.first()
         val cube = empty.children.first()
 
-        val positionParent = Mat4.fromColumnMajor(*parentCube.transformation.matrix)
-        val positionEmpty = positionParent * Mat4.fromColumnMajor(*empty.transformation.matrix)
-        val positionCube = positionEmpty * Mat4.fromColumnMajor(*cube.transformation.matrix)
+        val positionParent = Mat4.fromColumnMajor(*parentCube.transformation.translation)
+        val positionEmpty = positionParent * Mat4.fromColumnMajor(*empty.transformation.translation)
+        val positionCube = positionEmpty * Mat4.fromColumnMajor(*cube.transformation.translation)
 
         assertMat4Equals(translation(Float3(1f, 0f, 0f)), positionParent)
         assertMat4Equals(translation(Float3(2f, 0f, 0f)), positionEmpty)
@@ -102,15 +103,15 @@ class SceneParserTest {
         val scene = SceneParser(camera).parse()
         val (perspective, ortho) = scene.children.filter { it.type == ObjectType.CAMERA }
         assertEquals("Perspective", perspective.name)
-        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*perspective.transformation.matrix))
+        assertMat4Equals(Mat4.identity(),perspective.transformation.combined)
         assertEquals("Orthographic", ortho.name)
-        assertMat4Equals(Mat4.identity(), Mat4.fromColumnMajor(*ortho.transformation.matrix))
+        assertMat4Equals(Mat4.identity(), perspective.transformation.combined)
     }
 
     @Test
     fun `parse - it parses armature`() {
         val scene = SceneParser(animation).parse()
         val armature = scene.children.first() { it.type == ObjectType.ARMATURE }
-        assertMat4Equals(translation(Float3(0f, 0f, 1f)), Mat4.fromColumnMajor(*armature.transformation.matrix))
+        assertMat4Equals(translation(Float3(0f, 0f, 1f)), armature.transformation.combined)
     }
 }

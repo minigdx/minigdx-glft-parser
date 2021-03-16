@@ -8,5 +8,9 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 class Transformation(
     @ProtoNumber(1)
-    val matrix: FloatArray
+    val translation: FloatArray,
+    @ProtoNumber(2)
+    val rotation: FloatArray,
+    @ProtoNumber(3)
+    val scale: FloatArray
 )

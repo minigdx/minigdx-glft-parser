@@ -12,13 +12,13 @@ import com.curiouscreature.kotlin.math.Quaternion
 import com.curiouscreature.kotlin.math.scale
 import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.gltf.parser.support.Dictionary
+import com.dwursteisen.gltf.parser.support.fromTransformation
 import com.dwursteisen.gltf.parser.support.toFloatArray
 import com.dwursteisen.minigdx.scene.api.armature.Animation
 import com.dwursteisen.minigdx.scene.api.armature.Armature
 import com.dwursteisen.minigdx.scene.api.armature.Frame
 import com.dwursteisen.minigdx.scene.api.armature.Joint
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 
 typealias KeyFrame = Pair<Float, Mat4>
 typealias GltfIndex = Int
@@ -33,9 +33,7 @@ class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
         val joints = this.joints.mapIndexed { index, gltfNode ->
             Joint(
                 name = gltfNode.name ?: "",
-                inverseGlobalTransformation = Transformation(
-                    matrices[index].toFloatArray()
-                )
+                inverseGlobalTransformation = fromTransformation(Mat4.fromColumnMajor(*matrices[index].toFloatArray()))
             )
         }
 
@@ -146,11 +144,7 @@ class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
                 frames = animation.map { (time, globalTransformations) ->
                     Frame(
                         time = time,
-                        globalTransformations = globalTransformations.map {
-                            Transformation(
-                                it.asGLArray().toFloatArray()
-                            )
-                        }.toTypedArray()
+                        globalTransformations = globalTransformations.map { fromTransformation(it) }.toTypedArray()
                     )
                 }
             )

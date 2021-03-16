@@ -14,7 +14,6 @@ interface Camera {
 
 @ExperimentalSerializationApi
 @Serializable
-// @SerialName("perspective")
 data class PerspectiveCamera(
     @ProtoNumber(1)
     override val id: Id,
@@ -31,7 +30,6 @@ data class PerspectiveCamera(
 
 @ExperimentalSerializationApi
 @Serializable
-// @SerialName("orthographic")
 data class OrthographicCamera(
     @ProtoNumber(1)
     override val id: Id,

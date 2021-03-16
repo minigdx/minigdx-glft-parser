@@ -63,8 +63,8 @@ class ArmatureParserTest {
 
         val keyframes = scene.animations.values.first().first()
         val (first, second, third) = keyframes.frames
-        assertEquals(1f, Mat4.fromColumnMajor(*first.globalTransformations.first().matrix).translation.x)
-        assertEquals(2f, Mat4.fromColumnMajor(*second.globalTransformations.first().matrix).translation.x)
-        assertEquals(0f, Mat4.fromColumnMajor(*third.globalTransformations.first().matrix).translation.x)
+        assertEquals(1f, Mat4.fromColumnMajor(*first.globalTransformations.first().translation).translation.x)
+        assertEquals(2f, Mat4.fromColumnMajor(*second.globalTransformations.first().translation).translation.x)
+        assertEquals(0f, Mat4.fromColumnMajor(*third.globalTransformations.first().translation).translation.x)
     }
 }
