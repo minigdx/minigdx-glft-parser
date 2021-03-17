@@ -61,13 +61,24 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             // Camera
             children?.any { it.camera != null } == true -> listOf(createCamera(ids, this))
             // Light
-            extensions?.containsKey("KHR_lights_punctual") == true -> emptyList()
+            extensions?.containsKey("KHR_lights_punctual") == true -> listOf(createLight(ids, this))
             // Armature
             children?.any { it.skin != null } == true -> listOf(createArmature(ids, this))
             // Box
             isBox -> listOf(createBoxNode(ids, this))
             else -> emptyList()
         }
+    }
+
+    private fun createLight(ids: Dictionary, node: GltfNode): Node {
+        val id: Id = ids.get(node)
+        return Node(
+            reference = id,
+            name = node.name ?: "",
+            type = ObjectType.LIGHT,
+            transformation = node.transformation,
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
+        )
     }
 
     @ExperimentalSerializationApi
