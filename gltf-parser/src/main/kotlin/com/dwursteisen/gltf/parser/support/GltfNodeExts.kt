@@ -19,7 +19,7 @@ val GltfNode.transformation: Transformation
         val s = scale.let { Float3(it.x, it.y, it.z) }
             .let { scale(it) }
 
-        return fromComposite(t,r,s)
+        return fromComposite(t, r, s)
     }
 
 val GltfNode.isBox: Boolean

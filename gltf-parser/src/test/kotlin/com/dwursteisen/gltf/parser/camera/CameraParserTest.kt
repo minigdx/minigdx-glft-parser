@@ -1,12 +1,6 @@
 package com.dwursteisen.gltf.parser.camera
 
-import com.curiouscreature.kotlin.math.Float3
-import com.curiouscreature.kotlin.math.Mat4
-import com.curiouscreature.kotlin.math.rotation
-import com.dwursteisen.gltf.parser.scene.SceneParser
 import com.dwursteisen.gltf.parser.support.Dictionary
-import com.dwursteisen.gltf.parser.support.asMat4
-import com.dwursteisen.gltf.parser.support.assertMat4Equals
 import com.dwursteisen.gltf.parser.support.gltf
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

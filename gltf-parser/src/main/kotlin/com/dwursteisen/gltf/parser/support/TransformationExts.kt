@@ -7,13 +7,12 @@ import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.curiouscreature.kotlin.math.inverse as inv
 
-
 fun fromComposite(translation: Mat4, rotation: Mat4, scale: Mat4): Transformation {
-        return Transformation(
-            translation.asGLArray().toFloatArray(),
-            rotation.asGLArray().toFloatArray(),
-            scale.asGLArray().toFloatArray()
-        )
+    return Transformation(
+        translation.asGLArray().toFloatArray(),
+        rotation.asGLArray().toFloatArray(),
+        scale.asGLArray().toFloatArray()
+    )
 }
 
 fun fromTransformation(transformation: Mat4): Transformation {
@@ -33,11 +32,11 @@ fun Transformation.inverse(): Transformation {
 }
 
 val Transformation.combined: Mat4
-get() {
-    return Mat4.fromColumnMajor(*this.translation) *
+    get() {
+        return Mat4.fromColumnMajor(*this.translation) *
             Mat4.fromColumnMajor(*this.rotation) *
             Mat4.fromColumnMajor(*this.scale)
-}
+    }
 
 fun FloatArray.asMat4(): Mat4 {
     return Mat4.fromColumnMajor(*this)

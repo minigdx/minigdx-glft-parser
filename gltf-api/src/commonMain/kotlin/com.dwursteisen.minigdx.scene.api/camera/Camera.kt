@@ -2,7 +2,6 @@ package com.dwursteisen.minigdx.scene.api.camera
 
 import com.dwursteisen.minigdx.scene.api.common.Id
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 

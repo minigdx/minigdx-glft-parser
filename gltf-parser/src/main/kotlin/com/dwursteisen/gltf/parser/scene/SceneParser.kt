@@ -3,7 +3,6 @@ package com.dwursteisen.gltf.parser.scene
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfNode
 import com.curiouscreature.kotlin.math.Float3
-import com.curiouscreature.kotlin.math.inverse
 import com.curiouscreature.kotlin.math.rotation
 import com.dwursteisen.gltf.parser.armature.ArmatureParser
 import com.dwursteisen.gltf.parser.camera.CameraParser
@@ -11,15 +10,12 @@ import com.dwursteisen.gltf.parser.lights.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
 import com.dwursteisen.gltf.parser.model.ModelParser
 import com.dwursteisen.gltf.parser.support.Dictionary
-import com.dwursteisen.gltf.parser.support.asMat4
 import com.dwursteisen.gltf.parser.support.combined
-import com.dwursteisen.gltf.parser.support.fromComposite
 import com.dwursteisen.gltf.parser.support.fromTransformation
 import com.dwursteisen.gltf.parser.support.isBox
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.Scene
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import com.dwursteisen.minigdx.scene.api.relation.ObjectType
 import kotlinx.serialization.ExperimentalSerializationApi

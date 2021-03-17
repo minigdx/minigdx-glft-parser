@@ -103,7 +103,7 @@ class SceneParserTest {
         val scene = SceneParser(camera).parse()
         val (perspective, ortho) = scene.children.filter { it.type == ObjectType.CAMERA }
         assertEquals("Perspective", perspective.name)
-        assertMat4Equals(Mat4.identity(),perspective.transformation.combined)
+        assertMat4Equals(Mat4.identity(), perspective.transformation.combined)
         assertEquals("Orthographic", ortho.name)
         assertMat4Equals(Mat4.identity(), perspective.transformation.combined)
     }

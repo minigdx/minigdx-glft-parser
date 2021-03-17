@@ -59,7 +59,6 @@ data class Scene(
             }
         }
 
-
         @ExperimentalStdlibApi
         fun readJson(data: ByteArray): Scene {
             val json = Json { serializersModule = serialModule }
