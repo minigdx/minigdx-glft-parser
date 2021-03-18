@@ -1,39 +1,42 @@
 package com.dwursteisen.minigdx.scene.api.model
 
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.common.Transformation
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@ExperimentalSerializationApi
 @Serializable
 data class Position(
-    @ProtoId(0)
+    @ProtoNumber(1)
     var x: Float,
-    @ProtoId(1)
+    @ProtoNumber(2)
     var y: Float,
-    @ProtoId(2)
+    @ProtoNumber(3)
     var z: Float
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Normal(
-    @ProtoId(0)
+    @ProtoNumber(1)
     var x: Float,
-    @ProtoId(1)
+    @ProtoNumber(2)
     var y: Float,
-    @ProtoId(2)
+    @ProtoNumber(3)
     var z: Float
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Color(
-    @ProtoId(0)
+    @ProtoNumber(1)
     var r: Float,
-    @ProtoId(1)
+    @ProtoNumber(2)
     var g: Float,
-    @ProtoId(2)
+    @ProtoNumber(3)
     var b: Float,
-    @ProtoId(3)
+    @ProtoNumber(4)
     var alpha: Float = 1.0f
 ) {
 
@@ -42,11 +45,12 @@ data class Color(
     }
 }
 
+@ExperimentalSerializationApi
 @Serializable
 data class UV(
-    @ProtoId(0)
+    @ProtoNumber(1)
     var x: Float,
-    @ProtoId(1)
+    @ProtoNumber(2)
     var y: Float
 ) {
 
@@ -55,61 +59,66 @@ data class UV(
     }
 }
 
-
+@ExperimentalSerializationApi
 @Serializable
 data class Influence(
-    @ProtoId(1)
+    @ProtoNumber(2)
     var jointId: Int,
-    @ProtoId(2)
+    @ProtoNumber(3)
     var weight: Float
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Vertex(
-    @ProtoId(0)
+    @ProtoNumber(1)
     var position: Position,
-    @ProtoId(1)
+    @ProtoNumber(2)
     var normal: Normal,
-    @ProtoId(2)
+    @ProtoNumber(3)
     var color: Color = Color.INVALID,
-    @ProtoId(3)
+    @ProtoNumber(4)
     var uv: UV = UV.INVALID,
-    @ProtoId(4)
+    @ProtoNumber(5)
     var influences: List<Influence> = emptyList()
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Primitive(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val id: Id = Id(),
-    @ProtoId(1)
+    @ProtoNumber(2)
     var vertices: List<Vertex> = emptyList(),
-    @ProtoId(2)
+    @ProtoNumber(3)
     var verticesOrder: IntArray = intArrayOf(),
-    @ProtoId(3)
+    @ProtoNumber(4)
     var materialId: Id = Id.None
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Box(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val id: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val name: String
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Mesh(
-    @ProtoId(0)
+    @ProtoNumber(1)
     var primitives: List<Primitive>
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Model(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val id: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val name: String,
-    @ProtoId(2)
+    @ProtoNumber(3)
     var mesh: Mesh
 )

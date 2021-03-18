@@ -2,23 +2,26 @@ package com.dwursteisen.minigdx.scene.api.armature
 
 import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.common.Transformation
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@ExperimentalSerializationApi
 @Serializable
 class Joint(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val name: String,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val inverseGlobalTransformation: Transformation
 )
 
+@ExperimentalSerializationApi
 @Serializable
 class Armature(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val id: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val name: String,
-    @ProtoId(2)
+    @ProtoNumber(3)
     val joints: Array<Joint>
 )

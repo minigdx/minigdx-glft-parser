@@ -7,6 +7,6 @@ include(":gltf-api")
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        jcenter()
+        mavenLocal()
     }
 }

@@ -18,7 +18,7 @@ class MaterialParserTest {
     private val ids = Dictionary()
 
     @Test
-    fun `parse | it returns materials`() {
+    fun `parse - it returns materials`() {
         val result = MaterialParser(uv, ids).materials()
         assertEquals(2, result.size)
         assertEquals(4, result.values.first().width)
@@ -27,20 +27,20 @@ class MaterialParserTest {
     }
 
     @Test
-    fun `parse | it returns no material`() {
+    fun `parse - it returns no material`() {
         val result = MaterialParser(cube, ids).materials()
         assertEquals(0, result.size)
     }
 
     @Test
-    fun `parse | it parses material with alpha`() {
+    fun `parse - it parses material with alpha`() {
         val result = MaterialParser(alpha, ids).materials()
         assertEquals(1, result.size)
         assertEquals(true, result.values.first().hasAlpha)
     }
 
     @Test
-    fun `parse | it parses bsdf texture`() {
+    fun `parse - it parses bsdf texture`() {
         val result = MaterialParser(bsdfTexture, ids).materials()
         assertEquals(1, result.size)
         assertEquals(false, result.values.first().hasAlpha)

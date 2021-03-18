@@ -26,8 +26,8 @@ class PluginTest {
         buildFile.writeText(
             """
 plugins {
-    kotlin("jvm") version "1.3.70"
-    id("com.github.dwursteisen.gltf") version "1.0-SNAPSHOT"
+    kotlin("jvm") version "1.4.20"
+    id("com.github.minigdx.gradle.plugin.gltf") version "1.0-SNAPSHOT"
 }
 
 group = "org.example"
@@ -58,7 +58,7 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 }
-        """.trimIndent()
+            """.trimIndent()
         )
     }
 

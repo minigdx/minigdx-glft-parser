@@ -7,7 +7,9 @@ import com.dwursteisen.gltf.parser.support.gltf
 import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.model.Position
 import com.dwursteisen.minigdx.scene.api.model.UV
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class ModelParserTest {
@@ -19,18 +21,17 @@ class ModelParserTest {
     private val cubeWithJoints by gltf("/joints/cube_joints.gltf")
     private val cubeWithBoxes by gltf("/empty/cube_with_empty.gltf")
 
-
     private val ids = Dictionary()
 
     @Test
-    fun `parse | it parses a translated cube`() {
+    fun `parse - it parses a translated cube`() {
         val objects = ModelParser(cube, ids).objects()
 
         assertEquals(1, objects.size)
     }
 
     @Test
-    fun `parse | it parses primitives of a cube`() {
+    fun `parse - it parses primitives of a cube`() {
         val objects = ModelParser(cube, ids).objects()
 
         val cube = objects.values.first { it.name == "Cube" }.mesh
@@ -40,7 +41,7 @@ class ModelParserTest {
     }
 
     @Test
-    fun `parse | it parses a plane with correct coordinates`() {
+    fun `parse - it parses a plane with correct coordinates`() {
         val objects = ModelParser(plane, ids).objects()
 
         val cube = objects.values.first { it.name == "Plane" }.mesh
@@ -56,7 +57,7 @@ class ModelParserTest {
     }
 
     @Test
-    fun `parse | it parses a mesh with no material`() {
+    fun `parse - it parses a mesh with no material`() {
         val objects = ModelParser(cube, ids).objects()
         val uvs = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
@@ -69,7 +70,7 @@ class ModelParserTest {
     }
 
     @Test
-    fun `parse | it parses a mesh with one material`() {
+    fun `parse - it parses a mesh with one material`() {
         val objects = ModelParser(simpleUv, ids).objects()
         val uvs = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
@@ -80,7 +81,7 @@ class ModelParserTest {
     }
 
     @Test
-    fun `parse | it parses a mesh with more than one material`() {
+    fun `parse - it parses a mesh with more than one material`() {
         val objects = ModelParser(multipleUv, ids).objects()
         val materials = objects.flatMap { it.value.mesh.primitives }
             .map { it.materialId }
@@ -89,12 +90,24 @@ class ModelParserTest {
     }
 
     @Test
-    fun `parse | it parses a mesh with influence`() {
+    fun `parse - it parses a mesh with influence`() {
         val objects = ModelParser(cubeWithJoints, ids).objects()
         val influences = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
             .flatMap { it.influences }
 
         assertTrue(influences.isNotEmpty())
+    }
+
+    private val kong by gltf("/joints/kong.gltf")
+
+    @Test
+    fun `parse - it parses a mesh with influenceshtshtsth`() {
+        val objects = ModelParser(kong, ids).objects()
+        val influences = objects.flatMap { it.value.mesh.primitives }
+            .flatMap { it.vertices }
+            .flatMap { it.influences }
+
+        assertEquals(3760, influences.size)
     }
 }
