@@ -32,6 +32,8 @@ class SceneParserTest {
 
     private val animation by gltf("/joints/cube_joints_animated.gltf")
 
+    private val lights by gltf("/lights/lights.gltf")
+
     @Test
     fun `parse - it parses all file tests`() {
         sources.flatMap {
@@ -113,5 +115,13 @@ class SceneParserTest {
         val scene = SceneParser(animation).parse()
         val armature = scene.children.first() { it.type == ObjectType.ARMATURE }
         assertMat4Equals(translation(Float3(0f, 0f, 1f)), armature.transformation.combined)
+    }
+
+    @Test
+    fun `parse - it parses lights`() {
+        val scene = SceneParser(lights).parse()
+
+        assertEquals(2, scene.pointLights.size)
+        assertEquals(ObjectType.LIGHT, scene.children.first().type)
     }
 }
