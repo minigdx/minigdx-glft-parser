@@ -8,10 +8,13 @@ import com.dwursteisen.minigdx.scene.api.Scene
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import kotlinx.serialization.ExperimentalSerializationApi
 import java.io.File
 
 class Parser(private val input: File) {
 
+    @ExperimentalStdlibApi
+    @ExperimentalSerializationApi
     fun toProtobuf(output: File) {
         val model = if (input.extension == "gltf") {
             val gltf = GltfAsset.fromFile(input.absolutePath)
@@ -24,6 +27,7 @@ class Parser(private val input: File) {
         output.writeBytes(data)
     }
 
+    @ExperimentalSerializationApi
     @ExperimentalStdlibApi
     fun toJson(output: File) {
         val model = if (input.extension == "gltf") {

@@ -3,7 +3,6 @@ package com.dwursteisen.gltf.parser.scene
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfNode
 import com.curiouscreature.kotlin.math.Float3
-import com.curiouscreature.kotlin.math.inverse
 import com.curiouscreature.kotlin.math.rotation
 import com.dwursteisen.gltf.parser.armature.ArmatureParser
 import com.dwursteisen.gltf.parser.camera.CameraParser
@@ -11,13 +10,15 @@ import com.dwursteisen.gltf.parser.lights.LightParser
 import com.dwursteisen.gltf.parser.material.MaterialParser
 import com.dwursteisen.gltf.parser.model.ModelParser
 import com.dwursteisen.gltf.parser.support.Dictionary
+import com.dwursteisen.gltf.parser.support.combined
+import com.dwursteisen.gltf.parser.support.fromTransformation
 import com.dwursteisen.gltf.parser.support.isBox
 import com.dwursteisen.gltf.parser.support.transformation
 import com.dwursteisen.minigdx.scene.api.Scene
 import com.dwursteisen.minigdx.scene.api.common.Id
-import com.dwursteisen.minigdx.scene.api.common.Transformation
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import com.dwursteisen.minigdx.scene.api.relation.ObjectType
+import kotlinx.serialization.ExperimentalSerializationApi
 
 class SceneParser(private val gltfAsset: GltfAsset) {
 
@@ -33,6 +34,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     private val armatures = ArmatureParser(gltfAsset, ids)
 
+    @ExperimentalSerializationApi
     fun parse(): Scene {
         return Scene(
             perspectiveCameras = cameras.perspectiveCameras(),
@@ -47,6 +49,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         )
     }
 
+    @ExperimentalSerializationApi
     private fun GltfNode.toNode(ids: Dictionary): List<Node> {
         return when {
             // Model
@@ -54,64 +57,83 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             // Camera
             children?.any { it.camera != null } == true -> listOf(createCamera(ids, this))
             // Light
-            extensions?.containsKey("KHR_lights_punctual") == true -> emptyList()
+            children?.firstOrNull()?.extensions?.containsKey("KHR_lights_punctual") == true -> listOf(createLight(ids, this))
             // Armature
-            children?.any { it.skin != null} == true -> listOf(createArmature(ids, this))
+            children?.any { it.skin != null } == true -> listOf(createArmature(ids, this))
             // Box
             isBox -> listOf(createBoxNode(ids, this))
             else -> emptyList()
         }
     }
 
+    private fun createLight(ids: Dictionary, node: GltfNode): Node {
+        val light = node.children!!.first()
+        val id: Id = ids.get(node)
+        return Node(
+            reference = id,
+            name = light.name ?: "",
+            type = ObjectType.LIGHT,
+            transformation = light.transformation,
+            children = light.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
+        )
+    }
+
+    @ExperimentalSerializationApi
     private fun createArmature(ids: Dictionary, node: GltfNode): Node {
         val skin = node.children!!.first { it.skin != null }
         return Node(
             reference = ids.get(skin.skin!!),
             name = node.name ?: "",
             type = ObjectType.ARMATURE,
-            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            transformation = node.transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
         )
     }
 
+    @ExperimentalSerializationApi
     private fun createCamera(ids: Dictionary, node: GltfNode): Node {
         val camera = node.children!!.first { it.camera != null }
         val id: Id = ids.get(camera.camera!!)
-        val transformation = node.transformation *
-                rotation(
-                    Float3(
-                        1f,
-                        0f,
-                        0f
-                    ), -90f
-                )
+        val correction = rotation(
+            Float3(
+                1f,
+                0f,
+                0f
+            ),
+            -90f
+        )
+
+        val transformation = fromTransformation(node.transformation.combined * correction)
+
         return Node(
             reference = id,
             name = node.name ?: "",
             type = ObjectType.CAMERA,
-            transformation = Transformation(inverse(transformation).asGLArray().toFloatArray()),
+            transformation = transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
+
+    @ExperimentalSerializationApi
     private fun createBoxNode(ids: Dictionary, node: GltfNode): Node {
         val id: Id = ids.get(node)
         return Node(
             reference = id,
             name = node.name ?: "",
             type = ObjectType.BOX,
-            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            transformation = node.transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids) } ?: emptyList()
         )
     }
 
+    @ExperimentalSerializationApi
     private fun createModelNode(ids: Dictionary, node: GltfNode): Node {
         return Node(
             reference = ids.get(node.mesh!!),
             name = node.name ?: "",
             type = ObjectType.MODEL,
-            transformation = Transformation(node.transformation.asGLArray().toFloatArray()),
+            transformation = node.transformation,
             children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
         )
     }
 }
-

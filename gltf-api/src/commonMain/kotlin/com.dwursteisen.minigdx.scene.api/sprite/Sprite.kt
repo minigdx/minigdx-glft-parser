@@ -2,6 +2,7 @@ package com.dwursteisen.minigdx.scene.api.sprite
 
 import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.model.UV
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
 typealias AnimationName = String
@@ -19,6 +20,7 @@ data class SpriteAnimation(
     val frames: List<Frame>
 )
 
+@ExperimentalSerializationApi
 @Serializable
 data class Sprite(
     val id: Id,

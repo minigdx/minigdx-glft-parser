@@ -2,7 +2,6 @@ package com.dwursteisen.gltf.parser.material
 
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.dwursteisen.gltf.parser.support.Dictionary
-import com.dwursteisen.gltf.parser.support.isEmissiveTexture
 import com.dwursteisen.gltf.parser.support.isSupportedTexture
 import com.dwursteisen.gltf.parser.support.source
 import com.dwursteisen.minigdx.scene.api.common.Id

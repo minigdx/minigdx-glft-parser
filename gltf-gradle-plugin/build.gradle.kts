@@ -1,41 +1,37 @@
 plugins {
-    `java-library`
-    kotlin("jvm")
+    id("com.github.minigdx.gradle.plugin.developer.jvm")
     id("java-gradle-plugin")
-}
 
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-}
-
-configure<PublishingExtension> {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
+    // Plugin publication plugin.
+    id("com.gradle.plugin-publish") version "0.13.0"
 }
 
 dependencies {
     api(gradleApi())
-    implementation(kotlin("stdlib-jdk8"))
     implementation(project(":gltf-parser"))
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.12")
 }
 
-configure<GradlePluginDevelopmentExtension> {
-    this.plugins {
-        create("gltf-gradle-plugin") {
-            this.id = "com.github.dwursteisen.gltf"
-            this.implementationClass = "com.github.dwursteisen.gltf.GltfPlugin"
-        }
+gradlePlugin {
+    val gltfGradlePlugin by plugins.creating {
+        this.id = "com.github.minigdx.gradle.plugin.gltf"
+        this.implementationClass = "com.github.dwursteisen.gltf.GltfPlugin"
     }
 }
 
+pluginBundle {
+    website = "https://github.com/minigdx/minigdx-glft-parser"
+    vcsUrl = "https://github.com/minigdx/minigdx-glft-parser"
+
+    (plugins) {
+        // first plugin
+        "gltfGradlePlugin" {
+            // id is captured from java-gradle-plugin configuration
+            displayName = "MiniGDX gltf parser plugin"
+            description = "Configure gltf parser to transform gltf files into minigdx file format."
+            tags = listOf("minigdx", "gltf", "kotlin")
+        }
+    }
+}

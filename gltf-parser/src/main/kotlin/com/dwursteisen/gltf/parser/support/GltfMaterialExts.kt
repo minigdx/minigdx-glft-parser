@@ -18,9 +18,9 @@ fun GltfMaterial?.isSupportedTexture(): Boolean {
 val GltfMaterial?.source: GltfImage?
     get() {
         if (this == null) return null
-        return if(isEmissiveTexture()) {
+        return if (isEmissiveTexture()) {
             this.emissiveTexture?.texture?.source
-        } else if(isBSDFTexture()) {
+        } else if (isBSDFTexture()) {
             this.pbrMetallicRoughness.baseColorTexture?.texture?.source
         } else {
             null

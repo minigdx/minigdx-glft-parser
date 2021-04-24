@@ -2,27 +2,30 @@ package com.dwursteisen.minigdx.scene.api.armature
 
 import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.common.Transformation
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@ExperimentalSerializationApi
 @Serializable
 class Frame(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val time: Float,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val globalTransformations: Array<Transformation>
 )
 
+@ExperimentalSerializationApi
 @Serializable
 class Animation(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val id: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val armatureId: Id,
-    @ProtoId(2)
+    @ProtoNumber(3)
     val name: String,
-    @ProtoId(3)
+    @ProtoNumber(4)
     val duration: Float,
-    @ProtoId(4)
+    @ProtoNumber(5)
     val frames: List<Frame> = emptyList()
 )

@@ -2,22 +2,23 @@ package com.dwursteisen.minigdx.scene.api.relation
 
 import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.common.Transformation
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
-
+@ExperimentalSerializationApi
 @Serializable
 data class Node(
-    @ProtoId(0)
+    @ProtoNumber(1)
     val reference: Id,
-    @ProtoId(1)
+    @ProtoNumber(2)
     val name: String,
-    @ProtoId(2)
+    @ProtoNumber(3)
     val type: ObjectType,
-    @ProtoId(3)
+    @ProtoNumber(4)
     val transformation: Transformation,
-    @ProtoId(4)
+    @ProtoNumber(5)
     val children: List<Node> = emptyList(),
-    @ProtoId(5)
+    @ProtoNumber(6)
     val customProperties: Map<String, String> = emptyMap()
 )
