@@ -13,6 +13,7 @@ import com.dwursteisen.minigdx.scene.api.sprite.Sprite
 import com.dwursteisen.minigdx.scene.api.sprite.SpriteAnimation
 import de.matthiasmann.twl.utils.PNGDecoder
 import java.io.File
+import java.nio.Buffer
 import java.nio.ByteBuffer
 
 class SpriteParser(private val assetsFile: File, private val assets: AsepriteDataModel) {
@@ -69,7 +70,7 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
         decoder.decode(txt, decoder.width * 4, PNGDecoder.Format.RGBA)
 
         // flip the buffer so its ready to read
-        txt.flip()
+        (txt as Buffer).flip()
 
         val result = ByteArray(txt.remaining())
         txt.get(result)
