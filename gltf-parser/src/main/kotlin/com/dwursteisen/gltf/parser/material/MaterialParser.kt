@@ -8,6 +8,7 @@ import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.material.Material
 import de.matthiasmann.twl.utils.PNGDecoder
 import java.io.ByteArrayInputStream
+import java.nio.Buffer
 import java.nio.ByteBuffer
 
 class MaterialParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
@@ -29,7 +30,7 @@ class MaterialParser(private val gltfAsset: GltfAsset, private val ids: Dictiona
                 decoder.decode(txt, decoder.width * 4, PNGDecoder.Format.RGBA)
 
                 // flip the buffer so its ready to read
-                txt.flip()
+                (txt as Buffer).flip()
 
                 val result = ByteArray(txt.remaining())
                 txt.get(result)
