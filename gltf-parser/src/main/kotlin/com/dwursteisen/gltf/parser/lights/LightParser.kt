@@ -12,17 +12,17 @@ import com.dwursteisen.minigdx.scene.api.model.Color
 class LightParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
 
     private fun toPointLight(node: GltfNode, obj: JsonObject): PointLight {
-        val colors = obj.array<Int>("color")?.value ?: mutableListOf(0, 0, 0)
+        val colors = obj.array<Float>("color")?.value ?: mutableListOf(0f, 0f, 0f)
         val intensity = obj.int("intensity") ?: 0
         val name = obj.string("name") ?: ""
 
         return PointLight(
             id = ids.get(node),
             color = Color(
-                colors[0] / 255f,
-                colors[1] / 255f,
-                colors[2] / 255f,
-                1f
+                colors[0],
+                colors[1],
+                colors[2],
+                colors.getOrNull(3) ?: 1f
             ),
             name = name,
             intensity = intensity
