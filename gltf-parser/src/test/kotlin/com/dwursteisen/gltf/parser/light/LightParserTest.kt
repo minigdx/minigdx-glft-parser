@@ -16,5 +16,14 @@ class LightParserTest {
     fun `pointLights - it returns point lights`() {
         val lights = LightParser(lights, ids).pointLights()
         assertEquals(2, lights.values.size)
+        val pointLight = lights.values.first()
+
+        val color = pointLight.color
+        assertEquals(color.r, 1.0f)
+        assertEquals(color.g, 1.0f)
+        assertEquals(color.b, 1.0f)
+        assertEquals(color.alpha, 1.0f)
+
+        assertEquals(pointLight.intensity, 1000)
     }
 }

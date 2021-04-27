@@ -73,7 +73,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             reference = id,
             name = light.name ?: "",
             type = ObjectType.LIGHT,
-            transformation = light.transformation,
+            transformation = node.transformation,
             children = light.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids) } ?: emptyList()
         )
     }
