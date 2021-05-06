@@ -17,8 +17,8 @@ dependencies {
 
     implementation(project(":gltf-api"))
 
-    implementation("com.github.minigdx:gltf-loader:LATEST-SNAPSHOT")
-    implementation("com.github.minigdx:kotlin-math-jvm:LATEST-SNAPSHOT")
+    implementation("com.github.minigdx:gltf-loader:1.6.0")
+    implementation("com.github.minigdx:kotlin-math-jvm:1.0.0")
 
     implementation("org.jsoup:jsoup:1.12.2")
     implementation("org.jmonkeyengine:jme3-core:3.2.2-stable")
