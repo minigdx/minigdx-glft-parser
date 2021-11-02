@@ -1,0 +1,70 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.6.16",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "name" : "Empty",
+            "translation" : [
+                -6.907740592956543,
+                0,
+                0
+            ]
+        },
+        {
+            "name" : "Empty.001",
+            "translation" : [
+                2.4573886394500732,
+                0,
+                0
+            ]
+        },
+        {
+            "name" : "Empty.002",
+            "translation" : [
+                0,
+                0,
+                -1.8139079809188843
+            ]
+        },
+        {
+            "name" : "Empty.003",
+            "translation" : [
+                -2.494565963745117,
+                0,
+                0
+            ]
+        },
+        {
+            "name" : "Empty.004",
+            "translation" : [
+                0,
+                0,
+                -4.292550086975098
+            ]
+        },
+        {
+            "name" : "Empty.005",
+            "translation" : [
+                0,
+                0,
+                4.158693313598633
+            ]
+        }
+    ]
+}
