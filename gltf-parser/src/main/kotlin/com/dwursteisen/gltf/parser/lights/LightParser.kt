@@ -1,8 +1,9 @@
 package com.dwursteisen.gltf.parser.lights
 
 import com.adrienben.tools.gltf.models.GltfAsset
+import com.adrienben.tools.gltf.models.GltfLightPunctualExtension
+import com.adrienben.tools.gltf.models.GltfLightType
 import com.adrienben.tools.gltf.models.GltfNode
-import com.beust.klaxon.JsonObject
 import com.dwursteisen.gltf.parser.support.Dictionary
 import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.light.Light
@@ -11,45 +12,45 @@ import com.dwursteisen.minigdx.scene.api.model.Color
 
 class LightParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
 
-    private fun toPointLight(node: GltfNode, obj: JsonObject): PointLight {
-        val colors = obj.array<Float>("color")?.value ?: mutableListOf(0f, 0f, 0f)
-        val intensity = obj.int("intensity") ?: 0
-        val name = obj.string("name") ?: ""
-
+    private fun toPointLight(node: GltfNode, obj: GltfLightPunctualExtension): PointLight {
+        obj as GltfLightPunctualExtension.GltfPointLight
         return PointLight(
             id = ids.get(node),
             color = Color(
-                colors[0],
-                colors[1],
-                colors[2],
-                colors.getOrNull(3) ?: 1f
+                obj.color.r,
+                obj.color.g,
+                obj.color.b,
+                obj.color.a
             ),
-            name = name,
-            intensity = intensity
+            name = obj.name,
+            intensity = obj.intensity.toInt()
         )
     }
 
     fun pointLights(): Map<Id, PointLight> {
-        return extractLight("point", ::toPointLight)
+        return extractLight(GltfLightType.POINT, ::toPointLight)
     }
 
-    private fun <T : Light> extractLight(type: String, mapper: (GltfNode, JsonObject) -> T): Map<Id, T> {
-        val lightsExtension = gltfAsset.extensions["KHR_lights_punctual"] ?: return emptyMap()
-        val lights = (lightsExtension as? JsonObject)?.array<JsonObject>("lights") ?: return emptyMap()
-        val lightsStructure = lights.mapChildrenObjectsOnly { it }.value
-
-        val nodesWithLight = gltfAsset.nodes.filter { it.extensions?.containsKey("KHR_lights_punctual") == true }
-            .map { it to (it.extensions!!.getValue("KHR_lights_punctual") as JsonObject).int("light")!! }
-            .map { it.first to lightsStructure[it.second] }
-            .filter { it.second.string("type") == type }
+    private fun <T : Light> extractLight(
+        type: GltfLightType,
+        mapper: (GltfNode, GltfLightPunctualExtension) -> T
+    ): Map<Id, T> {
+        val lightsExtension = gltfAsset.extensions?.lightsPunctual ?: return emptyMap()
+        val filtered = lightsExtension.mapIndexed { index, light ->  index to light }
+            .filter { (_, light) -> light.type == type }
             .toMap()
 
-        val n = nodesWithLight.keys
-        return gltfAsset.nodes
-            .flatMap { p -> p.children?.map { p to it } ?: emptyList() }
-            .filter { n.contains(it.second) }
-            .map { mapper(it.first, nodesWithLight.getValue(it.second)) }
+        val nodesWithLightReference = gltfAsset.nodes.mapNotNull { node ->
+            val ref = node.extensions?.get(EXTENSION_NAME) as? Map<String, Int>
+            ref?.get("light")?.let { it to node }
+        }.toMap()
+
+        return filtered.map { (index, light) -> mapper(nodesWithLightReference[index]!!, light) }
             .map { it.id to it }
             .toMap()
+    }
+
+    companion object {
+        private const val EXTENSION_NAME = "KHR_lights_punctual"
     }
 }

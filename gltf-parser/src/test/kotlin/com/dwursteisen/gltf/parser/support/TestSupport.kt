@@ -7,6 +7,7 @@ import com.dwursteisen.minigdx.scene.api.model.Position
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.junit.jupiter.api.Assertions
 import org.opentest4j.AssertionFailedError
 import java.io.File
@@ -41,7 +42,7 @@ fun aseprite(resourceName: String): Pair<AsepriteDataModel, File> {
     )
 
     return ObjectMapper()
-        .registerModule(KotlinModule())
+        .registerKotlinModule()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .readValue(resource, AsepriteDataModel::class.java) to File(resource.toURI())
 }
