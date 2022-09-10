@@ -76,7 +76,8 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             name = light.name ?: "",
             type = ObjectType.LIGHT,
             transformation = transformation,
-            children = light.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList()
+            children = light.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList(),
+            customProperties = convertExtras(node.extras)
         )
     }
 
@@ -89,7 +90,8 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             name = node.name ?: "",
             type = ObjectType.ARMATURE,
             transformation = transformation,
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList()
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList(),
+            customProperties = convertExtras(node.extras)
         )
     }
 
@@ -114,7 +116,8 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             type = ObjectType.CAMERA,
             transformation = transformation,
             // Add an alteration so children will be placed correctly regarding the camera
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids, alteration * rotation(Float3(90f, 0f, 0f))) } ?: emptyList()
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids, alteration * rotation(Float3(90f, 0f, 0f))) } ?: emptyList(),
+            customProperties = convertExtras(node.extras)
         )
     }
 
@@ -127,7 +130,8 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             name = node.name ?: "",
             type = ObjectType.BOX,
             transformation = transformation,
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids, alteration) } ?: emptyList()
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids, alteration) } ?: emptyList(),
+            customProperties = convertExtras(node.extras)
         )
     }
 
@@ -139,7 +143,19 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             name = node.name ?: "",
             type = ObjectType.MODEL,
             transformation = transformation,
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList()
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList(),
+            customProperties = convertExtras(node.extras)
         )
+    }
+
+    private fun convertExtras(extras: Map<kotlin.String, kotlin.Any?>?): Map<String, String> {
+        extras ?: return emptyMap()
+        return extras.mapNotNull {(key, value) ->
+            if(value == null) {
+                null
+            } else {
+                key to value.toString()
+            }
+        }.toMap()
     }
 }
