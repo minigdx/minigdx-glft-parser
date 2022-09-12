@@ -43,8 +43,8 @@ class MaterialParser(private val gltfAsset: GltfAsset, private val ids: Dictiona
                     height = decoder.height,
                     hasAlpha = decoder.hasAlpha()
                 )
-            }.map {
-                it.id to it
-            }.toMap()
+            }.associateBy {
+                it.id
+            }
     }
 }

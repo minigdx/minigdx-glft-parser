@@ -6,7 +6,6 @@ import com.dwursteisen.gltf.parser.sprite.internal.AsepriteDataModel
 import com.dwursteisen.minigdx.scene.api.model.Position
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.junit.jupiter.api.Assertions
 import org.opentest4j.AssertionFailedError

@@ -35,7 +35,6 @@ class Merger(private val inputs: List<File>) {
     private fun <A, B> merge(scenes: List<Scene>, extractor: (Scene) -> Map<A, B>): Map<A, B> {
         return scenes.map { extractor(it) }
             .flatMap { it.entries }
-            .map { (key, value) -> key to value }
-            .toMap()
+            .associate { (key, value) -> key to value }
     }
 }

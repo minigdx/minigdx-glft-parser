@@ -22,6 +22,7 @@ import com.dwursteisen.minigdx.scene.api.common.Id
 
 typealias KeyFrame = Pair<Float, Mat4>
 typealias GltfIndex = Int
+typealias Timestamp = Float
 
 class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
 
@@ -124,14 +125,32 @@ class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
     }
 
     private fun GltfAnimation.toAnimation(): List<Animation> {
+        data class NodeTransformation(val index: GltfIndex, val transformation: Mat4)
+
         return gltf.skin?.map { skin ->
+            // Get all related channel from this skin
             val channels = this.channels.filter { skin.joints.contains(it.target.node) }
-            val transformations: Map<Int, List<KeyFrame>> = channels.groupBy { it.target.node!!.index }
-                .mapValues { it.value.toKeyframes() }
-            val byTime: Map<Float, Map<GltfIndex, Mat4>> = transformations.flatMap { (index, frames) ->
-                frames.map { it.first to (index to it.second) }
-            }.groupBy { it.first }
-                .mapValues { it.value.map { it.second }.toMap() }
+
+            val channelsPerNodes: Map<GltfIndex, List<GltfChannel>> = channels.groupBy { it.target.node!!.index }
+
+            // For all channels, get all keyframes from this channels.
+            // The transformation is a composite of channels of translation/rotation/scale
+            val transformations: Map<GltfIndex, List<KeyFrame>> = channelsPerNodes
+                .mapValues { (_, channels) -> channels.toKeyframes() }
+
+            // Group all node transformation per time.
+            // So at a specific point of time, there is all transformation for all nodes grouped.
+            val forEachTimeGetTransformation: Map<Float, List<NodeTransformation>> =
+                transformations.flatMap { (index, frames) ->
+                    frames.map { (time, transformation) -> time to NodeTransformation(index, transformation) }
+                }.groupBy { (time, _) -> time }
+                    .mapValues { (_, timeAndTransformation) -> timeAndTransformation.map { it.second } }
+
+            // Transform the list of NodeTransformation into a map
+            val byTime: Map<Timestamp, Map<GltfIndex, Mat4>> = forEachTimeGetTransformation
+                .mapValues { (_, nodeTransformations) ->
+                    nodeTransformations.associate { (index, transformation) -> index to transformation }
+                }
 
             val animation = byTime.mapValues { (_, localTransforms) ->
                 skin.toFrames(localTransforms)
@@ -151,6 +170,9 @@ class ArmatureParser(private val gltf: GltfAsset, private val ids: Dictionary) {
         } ?: emptyList()
     }
 
+    /**
+     * Transform all local transformation into global transformations
+     */
     private fun GltfSkin.toFrames(localTransforms: Map<GltfIndex, Mat4>): List<Mat4> {
         val globals = mutableMapOf<GltfIndex, Mat4>()
         fun GltfNode.traverse(parent: Mat4 = Mat4.identity()) {

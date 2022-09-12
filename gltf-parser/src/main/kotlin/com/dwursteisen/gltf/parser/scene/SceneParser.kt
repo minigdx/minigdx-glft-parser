@@ -150,8 +150,8 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     private fun convertExtras(extras: Map<kotlin.String, kotlin.Any?>?): Map<String, String> {
         extras ?: return emptyMap()
-        return extras.mapNotNull {(key, value) ->
-            if(value == null) {
+        return extras.mapNotNull { (key, value) ->
+            if (value == null) {
                 null
             } else {
                 key to value.toString()

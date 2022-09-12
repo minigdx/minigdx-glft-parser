@@ -36,7 +36,7 @@ class LightParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
         mapper: (GltfNode, GltfLightPunctualExtension) -> T
     ): Map<Id, T> {
         val lightsExtension = gltfAsset.extensions?.lightsPunctual ?: return emptyMap()
-        val filtered = lightsExtension.mapIndexed { index, light ->  index to light }
+        val filtered = lightsExtension.mapIndexed { index, light -> index to light }
             .filter { (_, light) -> light.type == type }
             .toMap()
 
@@ -46,8 +46,7 @@ class LightParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
         }.toMap()
 
         return filtered.map { (index, light) -> mapper(nodesWithLightReference[index]!!, light) }
-            .map { it.id to it }
-            .toMap()
+            .associateBy { it.id }
     }
 
     companion object {

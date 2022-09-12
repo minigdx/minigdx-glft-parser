@@ -41,8 +41,7 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
         return source.convertToCameras(
             GltfCameraType.ORTHOGRAPHIC,
             factory
-        ).map { it.id to it }
-            .toMap()
+        ).associateBy { it.id }
     }
 
     fun perspectiveCameras(): Map<Id, PerspectiveCamera> {
@@ -58,7 +57,6 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
         return source.convertToCameras(
             GltfCameraType.PERSPECTIVE,
             factory
-        ).map { it.id to it }
-            .toMap()
+        ).associateBy { it.id }
     }
 }
