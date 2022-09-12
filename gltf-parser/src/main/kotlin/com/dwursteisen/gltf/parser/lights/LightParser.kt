@@ -31,6 +31,7 @@ class LightParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
         return extractLight(GltfLightType.POINT, ::toPointLight)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun <T : Light> extractLight(
         type: GltfLightType,
         mapper: (GltfNode, GltfLightPunctualExtension) -> T

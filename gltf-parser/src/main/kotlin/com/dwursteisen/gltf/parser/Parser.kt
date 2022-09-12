@@ -16,9 +16,8 @@ class Parser(private val input: File) {
     @ExperimentalStdlibApi
     @ExperimentalSerializationApi
     fun toProtobuf(output: File) {
-        val model = if (input.extension == "gltf") {
+        val model = if (input.extension in GLTF_EXTENSIONS) {
             val gltf = GltfAsset.fromFile(input.absolutePath)
-                ?: throw IllegalArgumentException("'$input' is not a valid gltf file")
             SceneParser(gltf).parse()
         } else {
             SpriteParser(input, asepriteJsonMapper(input)).parse()
@@ -30,9 +29,8 @@ class Parser(private val input: File) {
     @ExperimentalSerializationApi
     @ExperimentalStdlibApi
     fun toJson(output: File) {
-        val model = if (input.extension == "gltf") {
+        val model = if (input.extension  in GLTF_EXTENSIONS) {
             val gltf = GltfAsset.fromFile(input.absolutePath)
-                ?: throw IllegalArgumentException("'$input' is not a valid gltf file")
             SceneParser(gltf).parse()
         } else {
             SpriteParser(input, asepriteJsonMapper(input)).parse()
@@ -45,4 +43,8 @@ class Parser(private val input: File) {
         .registerModule(KotlinModule())
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .readValue(resource, AsepriteDataModel::class.java)
+
+    companion object {
+        private val GLTF_EXTENSIONS = setOf("gltf", "glb")
+    }
 }
