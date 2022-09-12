@@ -26,7 +26,7 @@ class PluginTest {
         buildFile.writeText(
             """
 plugins {
-    kotlin("jvm") version "1.4.20"
+    kotlin("jvm") version "1.6.21"
     id("com.github.minigdx.gradle.plugin.gltf") version "1.0-SNAPSHOT"
 }
 
