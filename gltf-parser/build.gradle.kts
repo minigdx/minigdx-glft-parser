@@ -12,8 +12,8 @@ tasks {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.0.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.2")
 
     implementation(project(":gltf-api"))
 

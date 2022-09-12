@@ -1,7 +1,7 @@
 plugins {
-    id("com.github.minigdx.gradle.plugin.developer") version "1.1.0"
-    id("com.github.minigdx.gradle.plugin.developer.jvm") version "1.1.0" apply false
-    id("com.github.minigdx.gradle.plugin.developer.mpp") version "1.1.0" apply false
+    id("com.github.minigdx.gradle.plugin.developer") version "DEV-SNAPSHOT"
+    id("com.github.minigdx.gradle.plugin.developer.jvm") version "DEV-SNAPSHOT" apply false
+    id("com.github.minigdx.gradle.plugin.developer.mpp") version "DEV-SNAPSHOT" apply false
 }
 
 allprojects {
