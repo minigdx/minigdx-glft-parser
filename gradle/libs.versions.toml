@@ -3,7 +3,8 @@ minigdx-dev-plugin = "DEV-SNAPSHOT"
 minigdx-kotlin-math = "DEV-SNAPSHOT"
 minigdx-glft-loader = "DEV-SNAPSHOT"
 
-kotlin-serialization = "1.3.2"
+kotlin = "1.6.21"
+kotlinx-serialization = "1.3.2"
 jsoup = "1.15.3"
 jmonkey = "3.2.2-stable"
 pngdecoder = "1.0"
@@ -15,9 +16,24 @@ minigdx-common = { id = "com.github.minigdx.gradle.plugin.developer", version.re
 minigdx-jvm = { id = "com.github.minigdx.gradle.plugin.developer.jvm", version.ref = "minigdx-dev-plugin" }
 minigdx-mpp = { id = "com.github.minigdx.gradle.plugin.developer.mpp", version.ref = "minigdx-dev-plugin" }
 
+[bundles]
+serialization-common = ["kotlinx-serialization-json", "kotlinx-serialization-protobuf", "kotlinx-serialization-core"]
+serialization-js = ["kotlinx-serialization-js-json", "kotlinx-serialization-js-protobuf", "kotlinx-serialization-js-core"]
+serialization-jvm = ["kotlinx-serialization-jvm-json", "kotlinx-serialization-jvm-protobuf", "kotlinx-serialization-jvm-core"]
+
 [libraries]
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
-kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlin-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
+
+kotlinx-serialization-js-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-js", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-js-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-js-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core-js", version.ref = "kotlinx-serialization" }
+
+kotlinx-serialization-jvm-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-jvm-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-jvm-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm", version.ref = "kotlinx-serialization" }
+
 
 minigdx-gltf-loader = { module = "com.github.minigdx:gltf-loader", version.ref = "minigdx-glft-loader" }
 minigdx-kotlin-math  = { module = "com.github.minigdx:kotlin-math-jvm", version.ref = "minigdx-kotlin-math" }

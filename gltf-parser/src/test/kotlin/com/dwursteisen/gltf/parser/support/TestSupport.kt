@@ -21,9 +21,7 @@ class GltfDelegate(resourceName: String) {
         )
 
         val path = File(resource.toURI())
-        GltfAsset.fromFile(path.absolutePath) ?: throw IllegalArgumentException(
-            "${path.absolutePath} is not a valid Gltf file."
-        )
+        GltfAsset.fromFile(path.absolutePath)
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): GltfAsset {
