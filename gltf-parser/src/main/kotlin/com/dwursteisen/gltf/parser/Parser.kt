@@ -8,6 +8,7 @@ import com.dwursteisen.minigdx.scene.api.Scene
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.io.File
 
@@ -40,7 +41,7 @@ class Parser(private val input: File) {
     }
 
     private fun asepriteJsonMapper(resource: File) = ObjectMapper()
-        .registerModule(KotlinModule())
+        .registerKotlinModule()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .readValue(resource, AsepriteDataModel::class.java)
 
