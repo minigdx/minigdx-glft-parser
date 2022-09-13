@@ -11,7 +11,12 @@ dependencies {
     implementation(project(":gltf-parser"))
 
     testImplementation(gradleTestKit())
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.test.junit)
+}
+tasks {
+    test {
+        useJUnitPlatform()
+    }
 }
 
 gradlePlugin {
