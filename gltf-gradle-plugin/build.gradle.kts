@@ -20,6 +20,7 @@ tasks {
 }
 
 gradlePlugin {
+    this.isAutomatedPublishing = false
     val gltfGradlePlugin by plugins.creating {
         this.id = "com.github.minigdx.gradle.plugin.gltf"
         this.implementationClass = "com.github.dwursteisen.gltf.GltfPlugin"
