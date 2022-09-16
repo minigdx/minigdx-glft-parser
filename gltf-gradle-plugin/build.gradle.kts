@@ -44,4 +44,3 @@ project.afterEvaluate {
         this.onlyIf { this.publication.name == "pluginMaven" }
     }
 }
-
