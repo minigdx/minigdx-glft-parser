@@ -1,6 +1,6 @@
 [versions]
-minigdx-dev-plugin = "DEV-SNAPSHOT"
-minigdx-kotlin-math = "DEV-SNAPSHOT"
+minigdx-dev-plugin = "1.2.0"
+minigdx-kotlin-math = "1.1.0"
 minigdx-glft-loader = "DEV-SNAPSHOT"
 
 kotlin = "1.6.21"
