@@ -69,7 +69,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     private fun createLight(ids: Dictionary, node: GltfNode, alteration: Mat4): Node {
         val light = node.children!!.first()
-        val id: Id = ids.get(node)
+        val id: Id = ids.get(light)
         val transformation = fromTransformation(alteration * node.transformation.combined)
         return Node(
             reference = id,
