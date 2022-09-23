@@ -20,7 +20,6 @@ tasks {
 }
 
 gradlePlugin {
-    this.isAutomatedPublishing = false
     val gltfGradlePlugin by plugins.creating {
         this.id = "com.github.minigdx.gradle.plugin.gltf"
         this.implementationClass = "com.github.dwursteisen.gltf.GltfPlugin"
@@ -39,8 +38,6 @@ pluginBundle {
 
 project.afterEvaluate {
     tasks.withType(AbstractPublishToMaven::class.java) {
-        // Keep only the plugin publication and keep unique artifacts
-        this.publication.setArtifacts(this.publication.artifacts.distinctBy { it.file })
-        this.onlyIf { this.publication.name == "pluginMaven" }
+        this.onlyIf { this.name == "pluginMaven" }
     }
 }
