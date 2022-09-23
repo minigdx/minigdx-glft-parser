@@ -6,7 +6,7 @@ import com.dwursteisen.gltf.parser.sprite.internal.AsepriteDataModel
 import com.dwursteisen.minigdx.scene.api.model.Position
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.junit.jupiter.api.Assertions
 import org.opentest4j.AssertionFailedError
 import java.io.File
@@ -21,9 +21,7 @@ class GltfDelegate(resourceName: String) {
         )
 
         val path = File(resource.toURI())
-        GltfAsset.fromFile(path.absolutePath) ?: throw IllegalArgumentException(
-            "${path.absolutePath} is not a valid Gltf file."
-        )
+        GltfAsset.fromFile(path.absolutePath)
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): GltfAsset {
@@ -41,7 +39,7 @@ fun aseprite(resourceName: String): Pair<AsepriteDataModel, File> {
     )
 
     return ObjectMapper()
-        .registerModule(KotlinModule())
+        .registerKotlinModule()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .readValue(resource, AsepriteDataModel::class.java) to File(resource.toURI())
 }

@@ -3,30 +3,30 @@ package com.github.dwursteisen.gltf
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.writeText
 
 class PluginTest {
 
-    @Rule
-    @JvmField
-    val temporaryFolder = TemporaryFolder()
+    @TempDir
+    lateinit var temporaryFolder: Path
 
-    lateinit var buildFile: File
-
-    @Before
+    @BeforeEach
     fun setUp() {
-        buildFile = temporaryFolder.newFile("build.gradle.kts")
+        val buildFile = temporaryFolder.resolve("build.gradle.kts")
 
-        File("src/test/resources/cube.gltf").copyTo(temporaryFolder.newFolder("src", "main", "resources").resolve("cube.gltf"), true)
+        File("src/test/resources/cube.gltf").copyTo(
+            temporaryFolder.resolve("src/main/resources/cube.gltf").toFile(), true
+        )
 
         buildFile.writeText(
             """
 plugins {
-    kotlin("jvm") version "1.4.20"
+    kotlin("jvm") version "1.6.21"
     id("com.github.minigdx.gradle.plugin.gltf") version "1.0-SNAPSHOT"
 }
 
@@ -65,7 +65,7 @@ tasks {
     @Test
     fun runParser() {
         val result = GradleRunner.create()
-            .withProjectDir(temporaryFolder.root)
+            .withProjectDir(temporaryFolder.toFile())
             .withArguments(":gltf")
             .withPluginClasspath()
             .build()

@@ -25,9 +25,7 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
 
     fun objects(): Map<Id, Model> {
         val nodes = gltfAsset.nodes.filter { it.mesh != null }
-        return nodes.map { it.toObject() }
-            .map { it.id to it }
-            .toMap()
+        return nodes.map { it.toObject() }.associateBy { it.id }
     }
 
     fun boxes(): Map<Id, Box> {
@@ -37,8 +35,7 @@ class ModelParser(private val gltfAsset: GltfAsset, private val ids: Dictionary)
                     id = ids.get(it),
                     name = it.name ?: ""
                 )
-            }.map { it.id to it }
-            .toMap()
+            }.associateBy { it.id }
     }
 
     private fun GltfNode.toObject(): Model {

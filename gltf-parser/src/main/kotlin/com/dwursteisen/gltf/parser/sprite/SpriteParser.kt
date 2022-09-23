@@ -102,7 +102,7 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
         val frames = indexedFrames.copyOfRange(from, to + 1)
         return SpriteAnimation(
             name = name,
-            duration = frames.sumBy { it.duration } / 1000f,
+            duration = frames.sumOf { it.duration } / 1000f,
             frames = frames.mapIndexed { index, it -> toFrame(from + index, it) }
         )
     }

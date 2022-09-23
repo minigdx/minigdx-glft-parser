@@ -1,7 +1,10 @@
+// See https://youtrack.jetbrains.com/issue/KTIJ-19369/False-positive-cant-be-called-in-this-context-by-implicit-receiver-with-plugins-in-Gradle-version-catalogs-as-a-TOML-file#focus=Comments-27-5181027.0-0
+// libs is wrongly red in IntelliJ. The suppress is here until the bug is fixed.
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.github.minigdx.gradle.plugin.developer") version "1.1.0-alpha0"
-    id("com.github.minigdx.gradle.plugin.developer.jvm") version "1.1.0-alpha0" apply false
-    id("com.github.minigdx.gradle.plugin.developer.mpp") version "1.1.0-alpha0" apply false
+    alias(libs.plugins.minigdx.common)
+    alias(libs.plugins.minigdx.jvm) apply false
+    alias(libs.plugins.minigdx.mpp) apply false
 }
 
 allprojects {

@@ -42,7 +42,7 @@ class SceneParserTest {
                 .toList()
         }.filter { it.name.endsWith(".gltf") }
             .map {
-                it.name to SceneParser(GltfAsset.fromFile(it.absolutePath)!!)
+                it.name to SceneParser(GltfAsset.fromFile(it.absolutePath))
             }.forEach {
                 try {
                     val protobuf = Scene.writeProtobuf(it.second.parse())
