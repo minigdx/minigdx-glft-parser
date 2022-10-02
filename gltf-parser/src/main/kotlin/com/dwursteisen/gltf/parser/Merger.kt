@@ -16,7 +16,7 @@ class Merger(private val inputs: List<File>) {
         }
 
         val mergedScene = Scene(
-            generatorVersion = Merger::class.java.`package`.specificationVersion ?: "Unknown Version",
+            generatorVersion = Merger::class.java.`package`.implementationVersion ?: "Unknown Version",
             perspectiveCameras = merge(scenes) { it.perspectiveCameras },
             orthographicCameras = merge(scenes) { it.orthographicCameras },
             models = merge(scenes) { it.models },

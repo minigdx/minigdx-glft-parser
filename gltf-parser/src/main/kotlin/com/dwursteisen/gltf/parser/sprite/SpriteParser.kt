@@ -25,7 +25,7 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
         val spriteId = Id()
         val (decoder, data) = readImageData(assets.meta.image)
         return Scene(
-            generatorVersion = SpriteParser::class.java.`package`.specificationVersion ?: "Unknown Version",
+            generatorVersion = SpriteParser::class.java.`package`.implementationVersion ?: "Unknown Version",
             materials = mapOf(
                 materialId to Material(
                     id = materialId,

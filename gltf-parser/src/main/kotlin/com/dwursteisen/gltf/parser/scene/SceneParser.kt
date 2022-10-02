@@ -46,7 +46,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         }
 
         return Scene(
-            generatorVersion = this::class.java.`package`.specificationVersion ?: "Unknown Version",
+            generatorVersion = this::class.java.`package`.implementationVersion ?: "Unknown Version",
             perspectiveCameras = cameras.perspectiveCameras(),
             orthographicCameras = cameras.orthographicCameras(),
             models = models.objects(),
