@@ -2,9 +2,7 @@ package com.dwursteisen.gltf.parser.scene
 
 import com.adrienben.tools.gltf.models.GltfAsset
 import com.adrienben.tools.gltf.models.GltfNode
-import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Mat4
-import com.curiouscreature.kotlin.math.rotation
 import com.dwursteisen.gltf.parser.armature.ArmatureParser
 import com.dwursteisen.gltf.parser.camera.CameraParser
 import com.dwursteisen.gltf.parser.lights.LightParser
@@ -20,6 +18,7 @@ import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import com.dwursteisen.minigdx.scene.api.relation.ObjectType
 import kotlinx.serialization.ExperimentalSerializationApi
+import java.lang.IllegalStateException
 
 class SceneParser(private val gltfAsset: GltfAsset) {
 
@@ -37,7 +36,17 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     @ExperimentalSerializationApi
     fun parse(): Scene {
+        // Minimal Blender exporter version
+        if (extractVersion(gltfAsset.asset.generator) < MIN_VERSION) {
+            throw IllegalStateException(
+                "The generator used ('${gltfAsset.asset.generator}') " +
+                    "for the gltf file is not supported. The minimal version expected is '$MIN_VERSION'." +
+                    "Please use the last Blender version and export your assert in gltf again."
+            )
+        }
+
         return Scene(
+            generatorVersion = this::class.java.`package`.specificationVersion ?: "Unknown Version",
             perspectiveCameras = cameras.perspectiveCameras(),
             orthographicCameras = cameras.orthographicCameras(),
             models = models.objects(),
@@ -56,9 +65,9 @@ class SceneParser(private val gltfAsset: GltfAsset) {
             // Model
             mesh != null -> listOf(createModelNode(ids, this, alteration))
             // Camera
-            children?.any { it.camera != null } == true -> listOf(createCamera(ids, this, alteration))
+            camera != null -> listOf(createCamera(ids, this, alteration))
             // Light
-            children?.firstOrNull()?.extensions?.containsKey("KHR_lights_punctual") == true -> listOf(createLight(ids, this, alteration))
+            extensions?.containsKey("KHR_lights_punctual") == true -> listOf(createLight(ids, this, alteration))
             // Armature
             children?.any { it.skin != null } == true -> listOf(createArmature(ids, this, alteration))
             // Box
@@ -68,15 +77,14 @@ class SceneParser(private val gltfAsset: GltfAsset) {
     }
 
     private fun createLight(ids: Dictionary, node: GltfNode, alteration: Mat4): Node {
-        val light = node.children!!.first()
-        val id: Id = ids.get(light)
+        val id: Id = ids.get(node)
         val transformation = fromTransformation(alteration * node.transformation.combined)
         return Node(
             reference = id,
-            name = light.name ?: "",
+            name = node.name ?: "",
             type = ObjectType.LIGHT,
             transformation = transformation,
-            children = light.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList(),
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(this.ids, alteration) } ?: emptyList(),
             customProperties = convertExtras(node.extras)
         )
     }
@@ -97,26 +105,16 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     @ExperimentalSerializationApi
     private fun createCamera(ids: Dictionary, node: GltfNode, alteration: Mat4): Node {
-        val camera = node.children!!.first { it.camera != null }
-        val id: Id = ids.get(camera.camera!!)
-        val correction = rotation(
-            Float3(
-                1f,
-                0f,
-                0f
-            ),
-            -90f
-        )
+        val id: Id = ids.get(node.camera!!)
 
-        val transformation = fromTransformation(alteration * node.transformation.combined * correction)
+        val transformation = fromTransformation(alteration * node.transformation.combined)
 
         return Node(
             reference = id,
             name = node.name ?: "",
             type = ObjectType.CAMERA,
             transformation = transformation,
-            // Add an alteration so children will be placed correctly regarding the camera
-            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids, alteration * rotation(Float3(90f, 0f, 0f))) } ?: emptyList(),
+            children = node.children?.flatMap { gltfNode -> gltfNode.toNode(ids, alteration) } ?: emptyList(),
             customProperties = convertExtras(node.extras)
         )
     }
@@ -148,7 +146,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
         )
     }
 
-    private fun convertExtras(extras: Map<kotlin.String, kotlin.Any?>?): Map<String, String> {
+    private fun convertExtras(extras: Map<String, Any?>?): Map<String, String> {
         extras ?: return emptyMap()
         return extras.mapNotNull { (key, value) ->
             if (value == null) {
@@ -157,5 +155,14 @@ class SceneParser(private val gltfAsset: GltfAsset) {
                 key to value.toString()
             }
         }.toMap()
+    }
+
+    companion object {
+        internal fun extractVersion(generatorVersion: String?): String {
+            val (version) = generatorVersion?.split(" ")?.takeLast(1) ?: listOf("")
+            return version
+        }
+
+        private const val MIN_VERSION = "v3.3.27"
     }
 }

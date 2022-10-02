@@ -16,15 +16,16 @@ class CameraParser(private val source: GltfAsset, private val ids: Dictionary) {
         type: GltfCameraType,
         factory: (name: String, camera: GltfCamera) -> T
     ): List<T> {
+        // Only select nodes attached to a camera
         val cameras = this.nodes.filter { node ->
-            val children = node.children ?: emptyList()
-            children.any { it.camera != null && it.camera?.type == type }
+            node.camera != null && node.camera?.type == type
         }
 
+        // Create cameras using those nodes
         return cameras
             .map { node ->
-                val cam = node.children!!.first { it.camera != null }
-                factory(node.name ?: "", cam.camera!!)
+                val camera = node.camera!!
+                factory(camera.name ?: "", camera)
             }
     }
 

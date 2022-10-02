@@ -70,8 +70,8 @@ fun assertMat4Equals(expected: Mat4, actual: Mat4) {
             |expected rotation: ${expected.rotation}
             |actual rotation: ${actual.rotation}
             |
-            |expected position: ${expected.scale}
-            |actual position: ${actual.scale}
+            |expected scale: ${expected.scale}
+            |actual scale: ${actual.scale}
         """.trimMargin(),
             expected,
             actual

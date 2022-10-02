@@ -34,6 +34,16 @@ class SceneParserTest {
 
     private val lights by gltf("/lights/lights.gltf")
 
+    private val multipleMaterials by gltf("/uv/multiple_materials.gltf")
+
+    @Test
+    fun `parse - it parses materials`() {
+        val scene = SceneParser(multipleMaterials).parse()
+        val primitives = scene.models.flatMap { it.value.mesh.primitives }
+        val primitivesWithMissingMaterials = primitives.filter { p -> scene.materials[p.materialId] == null }
+        assertTrue(primitivesWithMissingMaterials.isEmpty())
+    }
+
     @Test
     fun `parse - it parses all file tests`() {
         sources.flatMap {
@@ -123,5 +133,11 @@ class SceneParserTest {
 
         assertEquals(2, scene.pointLights.size)
         assertEquals(ObjectType.LIGHT, scene.children.first().type)
+    }
+
+    @Test
+    fun `extractVersion - it extracts the version from the glft file`() {
+        val version = SceneParser.extractVersion("Khronos glTF Blender I/O v3.3.27")
+        assertEquals("v3.3.27", version)
     }
 }

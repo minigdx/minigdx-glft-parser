@@ -49,6 +49,10 @@ class ModelParserTest {
         assertEquals(4, cube.primitives.first().vertices.size)
 
         val (a, b, c, d) = cube.primitives.first().vertices
+            // Order by distance from (0, 0, 0) to always have the same order
+            .sortedBy {
+                it.position.x * it.position.x + it.position.y * it.position.y + it.position.z * it.position.z
+            }
 
         assertPositionEquals(Position(0f, 0f, 0f), a.position)
         assertPositionEquals(Position(1f, 0f, 0f), b.position)
@@ -102,7 +106,7 @@ class ModelParserTest {
     private val kong by gltf("/joints/kong.gltf")
 
     @Test
-    fun `parse - it parses a mesh with influenceshtshtsth`() {
+    fun `parse - it parses a mesh with more influences`() {
         val objects = ModelParser(kong, ids).objects()
         val influences = objects.flatMap { it.value.mesh.primitives }
             .flatMap { it.vertices }
