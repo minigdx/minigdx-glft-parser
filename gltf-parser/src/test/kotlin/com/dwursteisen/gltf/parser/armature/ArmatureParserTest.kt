@@ -47,10 +47,15 @@ class ArmatureParserTest {
         val parser = ArmatureParser(cubeAnimated, ids)
         val scene = Scene(
             armatures = parser.armatures(),
-            animations = parser.animations()
+            animations = parser.animations(),
+            generatorVersion = "TEST",
         )
 
         assertEquals(1, scene.animations.values.first().size)
+    }
+
+    @Test
+    fun `animations - it parses correct joints`() {
     }
 
     @Test
@@ -58,7 +63,8 @@ class ArmatureParserTest {
         val parser = ArmatureParser(simpleAnimation, ids)
         val scene = Scene(
             armatures = parser.armatures(),
-            animations = parser.animations()
+            animations = parser.animations(),
+            generatorVersion = "TEST"
         )
 
         val keyframes = scene.animations.values.first().first()

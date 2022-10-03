@@ -14,6 +14,8 @@ class CameraParserTest {
 
     private val rotationCamera by gltf("/camera/camera_rotation.gltf")
 
+    private val rotationCamera3_3 by gltf("/camera/camera_rotation_blender_3.3.gltf")
+
     private val cameraChildren by gltf("/camera/camera_child.gltf")
 
     private val ids = Dictionary()
@@ -24,7 +26,7 @@ class CameraParserTest {
         assertEquals(1, cameras.size)
 
         val camera = cameras.values.first()
-        assertEquals("Orthographic", camera.name)
+        assertEquals("Camera.001", camera.name)
     }
 
     @Test
@@ -33,7 +35,7 @@ class CameraParserTest {
         assertEquals(1, cameras.size)
 
         val camera = cameras.values.first()
-        assertEquals("Perspective", camera.name)
+        assertEquals("Camera", camera.name)
 
         assertEquals(100f, camera.far)
         assertEquals(0.1f, camera.near)

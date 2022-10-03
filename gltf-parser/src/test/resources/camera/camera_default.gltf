@@ -1,6 +1,6 @@
 {
     "asset" : {
-        "generator" : "Khronos glTF Blender I/O v1.2.75",
+        "generator" : "Khronos glTF Blender I/O v3.3.27",
         "version" : "2.0"
     },
     "scene" : 0,
@@ -8,61 +8,26 @@
         {
             "name" : "Scene",
             "nodes" : [
-                1,
-                3
+                0,
+                1
             ]
         }
     ],
     "nodes" : [
         {
             "camera" : 0,
-            "name" : "Perspective_Orientation",
-            "rotation" : [
-                -0.7071067690849304,
-                0,
-                0,
-                0.7071067690849304
-            ]
-        },
-        {
-            "children" : [
-                0
-            ],
-            "name" : "Perspective",
-            "rotation" : [
-                0.7071067690849304,
-                0,
-                0,
-                0.7071067690849304
-            ]
+            "name" : "Perspective"
         },
         {
             "camera" : 1,
-            "name" : "Orthographic_Orientation",
-            "rotation" : [
-                -0.7071067690849304,
-                0,
-                0,
-                0.7071067690849304
-            ]
-        },
-        {
-            "children" : [
-                2
-            ],
-            "name" : "Orthographic",
-            "rotation" : [
-                0.7071067690849304,
-                0,
-                0,
-                0.7071067690849304
-            ]
+            "name" : "Orthographic"
         }
     ],
     "cameras" : [
         {
             "name" : "Camera",
             "perspective" : {
+                "aspectRatio" : 1.7777777777777777,
                 "yfov" : 0.39959648408210363,
                 "zfar" : 100,
                 "znear" : 0.10000000149011612

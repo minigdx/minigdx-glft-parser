@@ -7,6 +7,7 @@ import com.curiouscreature.kotlin.math.Quaternion
 import com.curiouscreature.kotlin.math.scale
 import com.curiouscreature.kotlin.math.translation
 import com.dwursteisen.minigdx.scene.api.common.Transformation
+import kotlin.math.abs
 
 val GltfNode.transformation: Transformation
     get() {
@@ -16,7 +17,8 @@ val GltfNode.transformation: Transformation
         val r = rotation.let { Quaternion(it.i, it.j, it.k, it.a) }
             .let { Mat4.from(it) }
 
-        val s = scale.let { Float3(it.x, it.y, it.z) }
+        // Absolute value for scale as MiniGDX doesn't deal well with negative scale.
+        val s = scale.let { Float3(abs(it.x), abs(it.y), abs(it.z)) }
             .let { scale(it) }
 
         return fromComposite(t, r, s)

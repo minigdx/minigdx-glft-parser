@@ -1,6 +1,6 @@
 {
     "asset" : {
-        "generator" : "Khronos glTF Blender I/O v1.2.75",
+        "generator" : "Khronos glTF Blender I/O v3.3.27",
         "version" : "2.0"
     },
     "scene" : 0,
@@ -73,28 +73,32 @@
         {
             "buffer" : 0,
             "byteLength" : 48,
-            "byteOffset" : 0
+            "byteOffset" : 0,
+            "target" : 34962
         },
         {
             "buffer" : 0,
             "byteLength" : 48,
-            "byteOffset" : 48
+            "byteOffset" : 48,
+            "target" : 34962
         },
         {
             "buffer" : 0,
             "byteLength" : 32,
-            "byteOffset" : 96
+            "byteOffset" : 96,
+            "target" : 34962
         },
         {
             "buffer" : 0,
             "byteLength" : 12,
-            "byteOffset" : 128
+            "byteOffset" : 128,
+            "target" : 34963
         }
     ],
     "buffers" : [
         {
             "byteLength" : 140,
-            "uri" : "data:application/octet-stream;base64,AAAAAAAAAAAAAACAAACAPwAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAQEAAAACA6NxyP5vooT4AAACA6NxyP5vooT4AAACA6NxyP5vooT4AAACA6NxyP5vooT4AAACAAAAAAAAAgD8AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAEAAgADAAAAAgA="
+            "uri" : "data:application/octet-stream;base64,AAAAAAAAAAAAAACAAACAPwAAAAAAAACAAAAAAAAAQEAAAACAAAAAAAAAAAAAAADA6NxyP5vooT4AAACA6NxyP5vooT4AAACA6NxyP5vooT4AAACA6NxyP5vooT4AAACAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAACAPwAAAAAAAAEAAwAAAAMAAgA="
         }
     ]
 }

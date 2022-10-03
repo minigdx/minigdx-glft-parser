@@ -28,6 +28,8 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @ExperimentalSerializationApi
 @Serializable
 data class Scene(
+    @ProtoNumber(11)
+    val generatorVersion: String,
     @ProtoNumber(1)
     val perspectiveCameras: Map<Id, Camera> = emptyMap(),
     @ProtoNumber(2)
