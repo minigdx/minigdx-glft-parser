@@ -1,7 +1,7 @@
 [versions]
-minigdx-dev-plugin = "DEV-SNAPSHOT"
-minigdx-kotlin-math = "DEV-SNAPSHOT"
-minigdx-glft-loader = "DEV-SNAPSHOT"
+minigdx-dev-plugin = "LATEST-SNAPSHOT"
+minigdx-kotlin-math = "LATEST-SNAPSHOT"
+minigdx-glft-loader = "LATEST-SNAPSHOT"
 
 kotlin = "1.6.21"
 kotlinx-serialization = "1.3.2"
