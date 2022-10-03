@@ -1,5 +1,5 @@
 [versions]
-minigdx-dev-plugin = "LATEST-SNAPSHOT"
+minigdx-dev-plugin = "1.2.2"
 minigdx-kotlin-math = "LATEST-SNAPSHOT"
 minigdx-glft-loader = "LATEST-SNAPSHOT"
 
