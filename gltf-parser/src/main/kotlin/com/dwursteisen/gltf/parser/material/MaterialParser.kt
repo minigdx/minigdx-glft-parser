@@ -10,6 +10,7 @@ import de.matthiasmann.twl.utils.PNGDecoder
 import java.io.ByteArrayInputStream
 import java.nio.Buffer
 import java.nio.ByteBuffer
+import java.util.Base64
 
 class MaterialParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
 
@@ -38,7 +39,7 @@ class MaterialParser(private val gltfAsset: GltfAsset, private val ids: Dictiona
                 Material(
                     name = m.name ?: "",
                     id = ids.get(m),
-                    data = result,
+                    data = Base64.getEncoder().encode(data),
                     width = decoder.width,
                     height = decoder.height,
                     hasAlpha = decoder.hasAlpha()
