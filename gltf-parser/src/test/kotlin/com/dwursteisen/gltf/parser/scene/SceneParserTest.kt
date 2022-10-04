@@ -59,7 +59,15 @@ class SceneParserTest {
                     val scene = Scene.readProtobuf(protobuf)
                     assertNotNull(scene.animations)
                 } catch (ex: Exception) {
-                    fail("Impossible to parse the file ${it.first}", ex)
+                    fail("Impossible to parse the file ${it.first} in protobuf", ex)
+                }
+
+                try {
+                    val protobuf = Scene.writeJson(it.second.parse())
+                    val scene = Scene.readJson(protobuf)
+                    assertNotNull(scene.animations)
+                } catch (ex: Exception) {
+                    fail("Impossible to parse the file ${it.first} in JSON", ex)
                 }
             }
     }

@@ -63,7 +63,10 @@ data class Scene(
 
         @ExperimentalStdlibApi
         fun readJson(data: ByteArray): Scene {
-            val json = Json { serializersModule = serialModule }
+            val json = Json {
+                allowStructuredMapKeys = true
+                serializersModule = serialModule
+            }
             return json.decodeFromString(data.decodeToString())
         }
 
@@ -75,7 +78,10 @@ data class Scene(
 
         @ExperimentalStdlibApi
         fun writeJson(model: Scene): ByteArray {
-            val json = Json { serializersModule = serialModule }
+            val json = Json {
+                allowStructuredMapKeys = true
+                serializersModule = serialModule
+            }
             return json.encodeToString(model).encodeToByteArray()
         }
 
