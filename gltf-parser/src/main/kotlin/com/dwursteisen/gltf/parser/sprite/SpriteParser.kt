@@ -15,6 +15,7 @@ import de.matthiasmann.twl.utils.PNGDecoder
 import java.io.File
 import java.nio.Buffer
 import java.nio.ByteBuffer
+import java.util.Base64
 
 class SpriteParser(private val assetsFile: File, private val assets: AsepriteDataModel) {
 
@@ -23,7 +24,7 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
     fun parse(): Scene {
         val materialId = Id()
         val spriteId = Id()
-        val (decoder, data) = readImageData(assets.meta.image)
+        val (hasAlpha, data) = readImageData(assets.meta.image)
         return Scene(
             generatorVersion = SpriteParser::class.java.`package`.implementationVersion ?: "Unknown Version",
             materials = mapOf(
@@ -32,8 +33,8 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
                     name = assets.meta.image,
                     width = assets.meta.size.w,
                     height = assets.meta.size.h,
-                    data = data,
-                    hasAlpha = decoder.hasAlpha()
+                    data = Base64.getEncoder().encode(data),
+                    hasAlpha = hasAlpha
                 )
             ),
             sprites = mapOf(
@@ -57,26 +58,14 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
         )
     }
 
-    private fun readImageData(image: String): Pair<PNGDecoder, ByteArray> {
+    private fun readImageData(image: String): Pair<Boolean, ByteArray> {
         val imagePath = if (assetsFile.isDirectory) {
             assetsFile.resolve(image)
         } else {
             assetsFile.parentFile.resolve(image)
         }
         val decoder = PNGDecoder(imagePath.inputStream())
-        // create a byte buffer big enough to store RGBA values
-        val txt = ByteBuffer.allocateDirect(4 * decoder.width * decoder.height)
-
-        // decode
-        decoder.decode(txt, decoder.width * 4, PNGDecoder.Format.RGBA)
-
-        // flip the buffer so its ready to read
-        (txt as Buffer).flip()
-
-        val result = ByteArray(txt.remaining())
-        txt.get(result)
-
-        return decoder to result
+        return decoder.hasAlpha() to imagePath.readBytes()
     }
 
     private fun parseAnimations(): Map<AnimationName, SpriteAnimation> {
