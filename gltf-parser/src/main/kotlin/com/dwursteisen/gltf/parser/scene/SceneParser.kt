@@ -18,9 +18,10 @@ import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.relation.Node
 import com.dwursteisen.minigdx.scene.api.relation.ObjectType
 import kotlinx.serialization.ExperimentalSerializationApi
+import java.io.File
 import java.lang.IllegalStateException
 
-class SceneParser(private val gltfAsset: GltfAsset) {
+class SceneParser(rootPath: File, private val gltfAsset: GltfAsset) {
 
     private val ids: Dictionary = Dictionary()
 
@@ -28,7 +29,7 @@ class SceneParser(private val gltfAsset: GltfAsset) {
 
     private val models = ModelParser(gltfAsset, ids)
 
-    private val materials = MaterialParser(gltfAsset, ids)
+    private val materials = MaterialParser(rootPath, gltfAsset, ids)
 
     private val lights = LightParser(gltfAsset, ids)
 

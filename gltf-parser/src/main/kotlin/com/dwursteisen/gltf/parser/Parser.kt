@@ -18,7 +18,7 @@ class Parser(private val input: File) {
     fun toProtobuf(output: File) {
         val model = if (input.extension in GLTF_EXTENSIONS) {
             val gltf = GltfAsset.fromFile(input.absolutePath)
-            SceneParser(gltf).parse()
+            SceneParser(input.absoluteFile, gltf).parse()
         } else {
             SpriteParser(input, asepriteJsonMapper(input)).parse()
         }
@@ -31,7 +31,7 @@ class Parser(private val input: File) {
     fun toJson(output: File) {
         val model = if (input.extension in GLTF_EXTENSIONS) {
             val gltf = GltfAsset.fromFile(input.absolutePath)
-            SceneParser(gltf).parse()
+            SceneParser(input.absoluteFile, gltf).parse()
         } else {
             SpriteParser(input, asepriteJsonMapper(input)).parse()
         }

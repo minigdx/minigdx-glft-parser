@@ -19,5 +19,9 @@ class Material(
     @ProtoNumber(5)
     val data: ByteArray,
     @ProtoNumber(6)
-    val hasAlpha: Boolean = false
+    val hasAlpha: Boolean = false,
+    @ProtoNumber(7)
+    val uri: String?,
+    @ProtoNumber(8)
+    val isExternal: Boolean,
 )

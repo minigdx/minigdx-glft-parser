@@ -34,7 +34,9 @@ class SpriteParser(private val assetsFile: File, private val assets: AsepriteDat
                     width = assets.meta.size.w,
                     height = assets.meta.size.h,
                     data = Base64.getEncoder().encode(data),
-                    hasAlpha = hasAlpha
+                    hasAlpha = hasAlpha,
+                    uri = null,
+                    isExternal = false,
                 )
             ),
             sprites = mapOf(
