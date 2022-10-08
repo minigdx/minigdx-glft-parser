@@ -47,7 +47,7 @@ open class GltfTask : DefaultTask() {
                 }
                 dependencies.forEach { deps ->
                     logger.info("Copying ${deps.file.name} as dependency of  ${it.name}")
-                    deps.file.copyTo(outputDirectory.get().asFile.resolve(deps.uri))
+                    deps.file.copyTo(outputDirectory.get().asFile.resolve(deps.uri), overwrite = true)
                 }
             }
         }
