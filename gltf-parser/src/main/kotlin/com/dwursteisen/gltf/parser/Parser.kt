@@ -11,11 +11,13 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.io.File
 
+class Dependency(val file: File, val uri: String)
+
 class Parser(private val input: File) {
 
     @ExperimentalStdlibApi
     @ExperimentalSerializationApi
-    fun toProtobuf(output: File) {
+    fun toProtobuf(output: File): List<Dependency> {
         val model = if (input.extension in GLTF_EXTENSIONS) {
             val gltf = GltfAsset.fromFile(input.absolutePath)
             SceneParser(input.absoluteFile, gltf).parse()
@@ -24,11 +26,12 @@ class Parser(private val input: File) {
         }
         val data = Scene.writeProtobuf(model)
         output.writeBytes(data)
+        return dependencies(model, input)
     }
 
     @ExperimentalSerializationApi
     @ExperimentalStdlibApi
-    fun toJson(output: File) {
+    fun toJson(output: File): List<Dependency> {
         val model = if (input.extension in GLTF_EXTENSIONS) {
             val gltf = GltfAsset.fromFile(input.absolutePath)
             SceneParser(input.absoluteFile, gltf).parse()
@@ -37,6 +40,17 @@ class Parser(private val input: File) {
         }
         val data = Scene.writeJson(model)
         output.writeBytes(data)
+        return dependencies(model, input)
+    }
+
+    private fun dependencies(
+        model: Scene,
+        input: File
+    ): List<Dependency> {
+        val dependencies = model.materials.values.filter { m -> m.isExternal }
+            .mapNotNull { m -> m.uri }
+            .map { uri -> Dependency(input.parentFile.resolve(uri), uri) }
+        return dependencies
     }
 
     private fun asepriteJsonMapper(resource: File) = ObjectMapper()

@@ -13,8 +13,6 @@ import com.dwursteisen.minigdx.scene.api.sprite.Sprite
 import com.dwursteisen.minigdx.scene.api.sprite.SpriteAnimation
 import de.matthiasmann.twl.utils.PNGDecoder
 import java.io.File
-import java.nio.Buffer
-import java.nio.ByteBuffer
 import java.util.Base64
 
 class SpriteParser(private val assetsFile: File, private val assets: AsepriteDataModel) {
