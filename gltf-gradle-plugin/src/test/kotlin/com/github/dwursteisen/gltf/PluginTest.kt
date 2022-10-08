@@ -9,6 +9,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import kotlin.test.assertTrue
 
 class PluginTest {
 
@@ -71,5 +72,25 @@ tasks {
             .build()
 
         assertEquals(result.task(":gltf")?.outcome, TaskOutcome.SUCCESS)
+    }
+
+    @Test
+    fun runParserWithConfigurationCache() {
+        // Run the build
+        GradleRunner.create()
+            .forwardOutput()
+            .withPluginClasspath()
+            .withArguments("--configuration-cache", ":gltf")
+            .withProjectDir(temporaryFolder.toFile())
+            .build()
+
+        val buildResult = GradleRunner.create()
+            .forwardOutput()
+            .withPluginClasspath()
+            .withArguments("--configuration-cache", ":gltf")
+            .withProjectDir(temporaryFolder.toFile())
+            .build()
+
+        assertTrue(buildResult.output.contains("Reusing configuration cache."))
     }
 }
