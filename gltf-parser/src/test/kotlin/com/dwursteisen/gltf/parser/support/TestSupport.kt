@@ -33,6 +33,16 @@ fun gltf(resourceName: String): GltfDelegate {
     return GltfDelegate(resourceName)
 }
 
+data class GlftRessource(val asset: GltfAsset, val path: File)
+fun gltfResource(resourceName: String): GlftRessource {
+    val resource = GltfDelegate::class.java.getResource(resourceName) ?: throw IllegalArgumentException(
+        "$resourceName is not a valid Gltf file."
+    )
+    val path = File(resource.toURI())
+    val asset = GltfAsset.fromFile(path.absolutePath)
+    return GlftRessource(asset, path)
+}
+
 fun aseprite(resourceName: String): Pair<AsepriteDataModel, File> {
     val resource = GltfDelegate::class.java.getResource(resourceName) ?: throw IllegalArgumentException(
         "$resourceName is not a valid Aseprite JSON file."

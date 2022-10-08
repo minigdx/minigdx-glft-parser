@@ -14,6 +14,7 @@ enum class Format(val exts: String) {
     PROTOBUF(".protobuf")
 }
 
+@Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
 open class GltfTask : DefaultTask() {
 
     init {
@@ -40,9 +41,13 @@ open class GltfTask : DefaultTask() {
             gltfFiles.get().forEach {
                 val outputFile = outputDirectory.get().file(it.nameWithoutExtension + format.get().exts)
                 logger.info("Will generate ${outputFile.asFile.absoluteFile}…")
-                when (format.get()) {
+                val dependencies = when (format.get()) {
                     Format.JSON -> Parser(it).toJson(outputFile.asFile)
                     Format.PROTOBUF -> Parser(it).toProtobuf(outputFile.asFile)
+                }
+                dependencies.forEach { deps ->
+                    logger.info("Copying ${deps.file.name} as dependency of  ${it.name}")
+                    deps.file.copyTo(outputDirectory.get().asFile.resolve(deps.uri))
                 }
             }
         }

@@ -8,41 +8,48 @@ import com.dwursteisen.minigdx.scene.api.common.Id
 import com.dwursteisen.minigdx.scene.api.material.Material
 import de.matthiasmann.twl.utils.PNGDecoder
 import java.io.ByteArrayInputStream
-import java.nio.Buffer
-import java.nio.ByteBuffer
+import java.io.File
 import java.util.Base64
 
-class MaterialParser(private val gltfAsset: GltfAsset, private val ids: Dictionary) {
+class MaterialParser(
+    private val rootPath: File,
+    private val gltfAsset: GltfAsset,
+    private val ids: Dictionary
+) {
 
     fun materials(): Map<Id, Material> {
         return gltfAsset.materials
             // keep only materials using texture
             .filter { m -> m.isSupportedTexture() }
             .map { m ->
-                val buffer = m.source!!.bufferView!!
-                val data = buffer.buffer.data.copyOfRange(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
 
+                val (data, uri, isExternal) = if (m.source!!.bufferView != null) {
+                    // Get data from the buffer
+                    val buffer = m.source!!.bufferView!!
+                    val data = buffer.buffer.data.copyOfRange(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
+                    Triple(data, null, false)
+                } else {
+                    // Get the data from the file if the texture is external.
+                    val data = rootPath.parentFile.resolve(m.source!!.uri!!).readBytes()
+                    Triple(data, m.source!!.uri!!, true)
+                }
+
+                // Read the PNG to know if some alpha are used in the texture.
                 val decoder = PNGDecoder(ByteArrayInputStream(data))
-                // create a byte buffer big enough to store RGBA values
-                val txt =
-                    ByteBuffer.allocateDirect(4 * decoder.width * decoder.height)
-
-                // decode
-                decoder.decode(txt, decoder.width * 4, PNGDecoder.Format.RGBA)
-
-                // flip the buffer so its ready to read
-                (txt as Buffer).flip()
-
-                val result = ByteArray(txt.remaining())
-                txt.get(result)
 
                 Material(
                     name = m.name ?: "",
                     id = ids.get(m),
-                    data = Base64.getEncoder().encode(data),
+                    data = if (!isExternal) {
+                        Base64.getEncoder().encode(data)
+                    } else {
+                        ByteArray(0)
+                    },
                     width = decoder.width,
                     height = decoder.height,
-                    hasAlpha = decoder.hasAlpha()
+                    hasAlpha = decoder.hasAlpha(),
+                    uri = uri,
+                    isExternal = isExternal,
                 )
             }.associateBy {
                 it.id
